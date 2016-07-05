@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+// Use Java 8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Repository which contains the external dependencies
+repositories {
+    jcenter()
+}
+
+// Dependencies for this project
+dependencies {
+    //TODO ...
+}
+
+// Configure the generated JAR file
+jar {
+    manifest {
+        attributes "Main-Class": "eu.ortlepp.blogbuilder.BlogBuilder"
+    }
+    archiveName "BlogBuilder.jar"
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
