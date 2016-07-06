@@ -7,9 +7,11 @@ import java.nio.file.Paths;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import eu.ortlepp.blogbuilder.action.Build;
+
 /**
  * This is the main class for BlogBuilder. It contains the main() method which starts the
- * application and handles the console parameters.
+ * application and handles the command line arguments.
  *
  * @author Thorsten Ortlepp
  */
@@ -25,9 +27,9 @@ public final class BlogBuilder {
     /**
      * Main method to start the application.
      *
-     * @param args Parameters for the application; Two parameters are necessary to start:
-     *  The first parameter is the action to start (initialize or build), the second
-     *  parameter ist path to the project directory
+     * @param args Arguments for the application; Two arguments are necessary to start:
+     *  The first argument is the action to start (initialize or build), the second
+     *  argument ist path to the project directory
      *
      */
     public static void main(String[] args) {
@@ -53,10 +55,10 @@ public final class BlogBuilder {
 
 
     /**
-     * Run the application, start the action specified by the first parameter.
+     * Run the application, start the action specified by the first command line argument.
      *
-     * @param action The action to do (first console parameter)
-     * @param directory The directory / project (second console parameter)
+     * @param action The action to do (first command line argument)
+     * @param directory The directory / project (second command line argument)
      */
     private void run(String action, String directory) {
         Path path = Paths.get(directory);
@@ -77,7 +79,7 @@ public final class BlogBuilder {
             LOGGER.info(String.format("Starting build process for %s", path.getFileName()));
 
             if (Files.exists(path) && Files.isDirectory(path)) {
-                //TODO BUILD ...
+                Build.build(path);
             } else {
                 LOGGER.severe(String.format("Directory %s does not exist, build aborted", path.getFileName()));
             }
