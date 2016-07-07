@@ -3,6 +3,7 @@ package eu.ortlepp.blogbuilder.action;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -85,6 +86,9 @@ public final class Build {
                 return !document.isBlog();
             }
         });
+
+        /* Sort the blog posts by creation date (most recent first) */
+        Collections.sort(blogposts);
 
         LOGGER.info(String.format("Scan completed, found %d blog posts and %d pages", blogposts.size(), pages.size()));
     }

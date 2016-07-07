@@ -6,11 +6,12 @@ import java.time.LocalDateTime;
 import org.pegdown.PegDownProcessor;
 
 /**
- * Data object for a document (a Markdown file).
+ * Data object for a document (a Markdown file). If multiple objects are sorted in a list the
+ * sorting is done by the creation date (with most recent date at the beginning).
  *
  * @author Thorsten Ortlepp
  */
-public class Document {
+public class Document implements Comparable<Document> {
 
     /** The name and path of the file. */
     private final Path file;
@@ -190,6 +191,23 @@ public class Document {
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * Compare the Document to another document (used to sort lists).
+     *
+     * @param The document to which this document is compared
+     * @param The result of the comparison
+     */
+    @Override
+    public int compareTo(Document other) {
+        if (getCreated().isBefore(other.getCreated())) {
+            return 1;
+        } else if (getCreated().isAfter(other.getCreated())) {
+            return -1;
+        }
+         return 0;
     }
 
 }
