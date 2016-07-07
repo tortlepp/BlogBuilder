@@ -60,6 +60,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
             Files.walkFileTree(directory, this);
         } catch (IOException ex) {
             LOGGER.severe(String.format("Scanning %s failed: %s", directory.getFileName(), ex.getMessage()));
+            throw new RuntimeException(ex);
         }
         return files;
     }
@@ -70,7 +71,8 @@ public class Scanner extends SimpleFileVisitor<Path> {
      * to the list of read files. After visiting a file visit the next file.
      *
      * @param file The visited file itself
-     * @param attrs The attributes of the
+     * @param attrs The attributes of the file
+     * @return The result of the visit: Continue to visit other files and directories
      * @throws IOException Error while reading the file
      */
     @Override

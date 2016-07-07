@@ -8,7 +8,9 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.tools.Cleaner;
 import eu.ortlepp.blogbuilder.tools.Scanner;
+import eu.ortlepp.blogbuilder.tools.Writer;
 
 /**
  * Action: Build a project.
@@ -56,7 +58,9 @@ public final class Build {
      * Run the build process step by step.
      */
     private void process() {
+        Cleaner.clean(Paths.get(directory.toString(), "blog"));
         scanDirectory();
+        writeFiles();
     }
 
 
@@ -83,6 +87,16 @@ public final class Build {
         });
 
         LOGGER.info(String.format("Scan completed, found %d blog posts and %d pages", blogposts.size(), pages.size()));
+    }
+
+
+    /**
+     * Write all blog posts and pages to HTML files.
+     */
+    private void writeFiles() {
+        Writer writer = new Writer(directory);
+        writer.writeBlogPosts(blogposts);
+        writer.writePages(pages);
     }
 
 }

@@ -3,6 +3,8 @@ package eu.ortlepp.blogbuilder.model;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 
+import org.pegdown.PegDownProcessor;
+
 /**
  * Data object for a document (a Markdown file).
  *
@@ -27,6 +29,17 @@ public class Document {
 
     /** The content of the document. */
     private StringBuilder content;
+
+    /** A Markdown processor to transform the content from Markdown to HTML. */
+    private static final PegDownProcessor PROCESSOR;
+
+
+    /**
+     * Static initializer, initialize the Markdown processor.
+     */
+    static {
+        PROCESSOR = new PegDownProcessor();
+    }
 
 
     /**
@@ -144,6 +157,16 @@ public class Document {
      */
     public String getContent() {
         return content.toString().trim();
+    }
+
+
+    /**
+     * Getter for the content of the document. The content is returned as HTML.
+     *
+     * @return Content of the document as HTML
+     */
+    public String getContentAsHtml() {
+        return PROCESSOR.markdownToHtml(getContent());
     }
 
 
