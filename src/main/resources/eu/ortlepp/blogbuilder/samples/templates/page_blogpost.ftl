@@ -1,8 +1,8 @@
 <html>
 <head>
-<title>Blog: ${page.title} (${page.created?datetime})</title>
+<title>Blog: ${post.title} (${post.created?datetime})</title>
 </head>
 <body>
-${page.content}
+${post.content}
 </body>
 </html>

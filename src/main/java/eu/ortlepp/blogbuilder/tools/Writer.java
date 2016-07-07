@@ -69,7 +69,7 @@ public class Writer {
      * @param blogposts The list of blog posts
      */
     public void writeBlogPosts(List<Document> blogposts) {
-        int written = writeDocuments(blogposts, "page_blogpost.ftl");
+        int written = writeDocuments(blogposts, "post", "page_blogpost.ftl");
         LOGGER.info(String.format("%d blog posts written", written));
     }
 
@@ -80,7 +80,7 @@ public class Writer {
      * @param pages The list of simple pages
      */
     public void writePages(List<Document> pages) {
-        int written = writeDocuments(pages, "page_page.ftl");
+        int written = writeDocuments(pages, "page", "page_page.ftl");
         LOGGER.info(String.format("%d pages written", written));
     }
 
@@ -89,19 +89,20 @@ public class Writer {
      * Write documents to HTML files. All documents of the list are processed and written to disk.
      *
      * @param documents The list of documents to write
-     * @param template The template to use for the HTML files
+     * @param key The key which makes the document accessible in the template
+     * @param template The template file to use for the HTML files
      * @return Returns the number of HTML files that were written
      */
-    public int writeDocuments(List<Document> documents, String template) {
+    public int writeDocuments(List<Document> documents, String key, String template) {
         int counter = 0;
         Map<String, Object> content = new HashMap<String, Object>();
 
         for (Document document : documents) {
             /* Set the document */
-            if (content.containsKey("page")) {
-                content.replace("page", document);
+            if (content.containsKey(key)) {
+                content.replace(key, document);
             } else {
-                content.put("page", document);
+                content.put(key, document);
             }
 
             /* Get the relative path of the file and change the extension to .html */
