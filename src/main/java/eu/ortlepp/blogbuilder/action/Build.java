@@ -101,6 +101,7 @@ public final class Build {
         Writer writer = new Writer(directory);
         writer.writeBlogPosts(blogposts);
         writer.writePages(pages);
+        writer.writeIndex(blogposts);
     }
 
 }

@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -105,32 +106,106 @@ public class Writer {
                 content.put(key, document);
             }
 
-            /* Get the relative path of the file and change the extension to .html */
-            String relFile = dirContent.relativize(document.getFile()).toString();
-            relFile = relFile.substring(0, relFile.lastIndexOf('.')) + ".html";
-
             /* The absolute path of the file */
-            Path file = Paths.get(dirBlog.toString(), relFile);
+            Path file = Paths.get(dirBlog.toString(), document.getPath());
 
             try {
                 /* Create directories */
                 Files.createDirectories(file.getParent());
 
                 /* Write file to disk using the Freemarker template */
-                try (java.io.Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file.toFile()), Charset.forName("UTF-8")))) {
-                    Template fmTemplate = fmConfig.getTemplate(template);
-                    fmTemplate.process(content, out);
+                if (writeFile(content, file.toFile(), template)) {
+                    counter++;
+                    LOGGER.info(String.format("Wrote %s", document.getPath()));
                 }
 
-                counter++;
-                LOGGER.info(String.format("Wrote %s", relFile));
-
-            } catch (IOException | TemplateException ex) {
-                LOGGER.severe(String.format("Writin %s failed: %s", relFile, ex.getMessage()));
+            } catch (IOException ex) {
+                LOGGER.severe(String.format("Creating directories failed: %s", ex.getMessage()));
             }
         }
 
         return counter;
+    }
+
+
+    /**
+     * Write index pages for blog posts. For each index page a limited number of blog posts is used.
+     *
+     * @param blogposts The list of blog posts
+     */
+    public void writeIndex(List<Document> blogposts) {
+        Map<String, Object> content = new HashMap<String, Object>();
+
+        int postsPerPage = 3;
+
+        /* Calculate the number of index pages */
+        int pages = blogposts.size() / postsPerPage;
+        if (blogposts.size() % postsPerPage > 0) {
+            pages++;
+        }
+
+        /* Create the filenames for pagination */
+        String[] filenames = new String[pages + 2];
+        filenames[0] = "";
+        filenames[1] = "index.html";
+        filenames[filenames.length - 1] = "";
+        for (int i = 1; i < pages; i++) {
+            filenames[i + 1] = String.format("index-%d.html", i);
+        }
+
+        /* Counter for the number of blog posts that were already added to an index page */
+        int added = 0;
+
+        /* Create all index pages */
+        for (int i = 0; i < pages; i++) {
+            List<Document> posts = new ArrayList<Document>();
+
+            /* Get blog posts for the page */
+            for (int j = added; j < (i + 1) * pages; j++) {
+                if (added < blogposts.size()) {
+                    posts.add(blogposts.get(added));
+                    added++;
+                } else {
+                    break;
+                }
+            }
+
+            /* Set the document */
+            if (content.containsKey("posts")) {
+                content.replace("posts", posts);
+                content.replace("index_newer", filenames[i]);
+                content.replace("index_older", filenames[i + 2]);
+            } else {
+                content.put("posts", posts);
+                content.put("index_newer", filenames[i]);
+                content.put("index_older", filenames[i + 2]);
+            }
+
+            /* Write file to disk using the Freemarker template */
+            if (writeFile(content, new File(dirBlog.toFile(), filenames[i + 1]), "page_index.ftl")) {
+                LOGGER.info(String.format("Wrote index page %s", filenames[i + 1]));
+            }
+        }
+    }
+
+
+    /**
+     * Writer that writes out the content of a single document to an HTML file. A template is used to write the file.
+     *
+     * @param content The content of the document
+     * @param file The name of the HTML file
+     * @param template The template to use for the HTML file
+     * @return Success flag: true = file written successfully, false = error while writing the file
+     */
+    private boolean writeFile(Map<String, Object> content, File file, String template) {
+        try (java.io.Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
+            Template fmTemplate = fmConfig.getTemplate(template);
+            fmTemplate.process(content, out);
+        } catch (IOException | TemplateException ex) {
+            LOGGER.severe(String.format("Error while writing %s", file.getName()));
+            return false;
+        }
+        return true;
     }
 
 }

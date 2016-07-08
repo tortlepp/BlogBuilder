@@ -64,6 +64,8 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
                 return new StringModel(document.getTitle());
             case "content":
                 return new StringModel(document.getContentAsHtml());
+            case "link":
+                return new StringModel(document.getPath());
             case "created":
                 return new DateModel(document.getCreated());
             case "modified":

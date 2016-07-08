@@ -37,6 +37,9 @@ public class Scanner extends SimpleFileVisitor<Path> {
     /** Date and time format to parse date and time headers of the Markdown files. */
     private final DateTimeFormatter inputFormat;
 
+    /** The directory where the Markdown files are located. Necessary to create relative paths. */
+    private Path dirContent;
+
 
     /**
      * Constructor, initializes the scanner.
@@ -55,6 +58,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
      * @return A list of all found Markdown files and their content
      */
     public List<Document> scanDirectory(Path directory) {
+        dirContent = directory;
         files.clear();
         try {
             Files.walkFileTree(directory, this);
@@ -98,7 +102,12 @@ public class Scanner extends SimpleFileVisitor<Path> {
      * @return The content of the file as Document object
      */
     private Document readFile(Path file) {
-        Document document = new Document(file);
+        /* Get the relative path of the file and change the extension to .html */
+        String htmlFile = dirContent.relativize(file).toString();
+        htmlFile = htmlFile.replaceAll("\\\\", "/");
+        htmlFile = htmlFile.substring(0, htmlFile.lastIndexOf('.')) + ".html";
+
+        Document document = new Document(file, htmlFile);
 
         try {
             /* Read the file */
