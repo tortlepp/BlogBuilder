@@ -35,9 +35,6 @@ public class Writer {
     /** The directory for processed files (= the target directory). */
     private final Path dirBlog;
 
-    /** The directory for raw files (= the source directory). */
-    private final Path dirContent;
-
     /** The configuration of the Freemarker template engine. */
     private final Configuration fmConfig;
 
@@ -49,7 +46,6 @@ public class Writer {
      */
     public Writer(Path directory) {
         this.dirBlog = Paths.get(directory.toString(), "blog");
-        this.dirContent = Paths.get(directory.toString(), "content");
 
         fmConfig = new Configuration(Configuration.VERSION_2_3_25);
         try {
