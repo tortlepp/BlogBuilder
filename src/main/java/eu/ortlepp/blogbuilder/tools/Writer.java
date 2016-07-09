@@ -198,7 +198,7 @@ public class Writer {
             Template fmTemplate = fmConfig.getTemplate(template);
             fmTemplate.process(content, out);
         } catch (IOException | TemplateException ex) {
-            LOGGER.severe(String.format("Error while writing %s", file.getName()));
+            LOGGER.severe(String.format("Error while writing %s: %s", file.getName(), ex.getMessage()));
             return false;
         }
         return true;

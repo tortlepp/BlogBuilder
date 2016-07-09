@@ -34,6 +34,12 @@ public class Document implements Comparable<Document> {
     /** The content of the document. */
     private StringBuilder content;
 
+    /** A link to the previous (earlier) blog post. */
+    private String previous;
+
+    /** A link to the next (newer) blog post. */
+    private String next;
+
     /** A Markdown processor to transform the content from Markdown to HTML. */
     private static final PegDownProcessor PROCESSOR;
 
@@ -61,6 +67,8 @@ public class Document implements Comparable<Document> {
         this.modified = LocalDateTime.MIN;
         this.blog = true;
         this.content = new StringBuilder();
+        this.previous = "";
+        this.next = "";
     }
 
 
@@ -193,6 +201,46 @@ public class Document implements Comparable<Document> {
      */
     public void addContent(String part) {
         content.append(part);
+    }
+
+
+    /**
+     * Getter for the link to the previous (earlier) blog post.
+     *
+     * @return Link to the previous blog post
+     */
+    public String getPrevious() {
+        return previous;
+    }
+
+
+    /**
+     * Setter for the link to the previous (earlier) blog post.
+     *
+     * @param previous Link to the previous blog post
+     */
+    public void setPrevious(String previous) {
+        this.previous = previous;
+    }
+
+
+    /**
+     * Getter for the link to the next (newer) blog post.
+     *
+     * @return Link to the next blog post
+     */
+    public String getNext() {
+        return next;
+    }
+
+
+    /**
+     * Setter for the link to the next (newer) blog post.
+     *
+     * @param next Link to the next blog post
+     */
+    public void setNext(String next) {
+        this.next = next;
     }
 
 

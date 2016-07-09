@@ -90,7 +90,36 @@ public final class Build {
         /* Sort the blog posts by creation date (most recent first) */
         Collections.sort(blogposts);
 
+        /* Create links to the previous and next blog post */
+        for (int i = 0; i < blogposts.size(); i++) {
+            /* Set next blog post, but the first one has no next blog post */
+            if (i != 0) {
+                blogposts.get(i).setNext(getRelaviveLink(blogposts.get(i), blogposts.get(i - 1)));
+            }
+
+            /* Set previous blog post, but the last one has no previous blog post */
+            if (i != blogposts.size() - 1) {
+                blogposts.get(i).setPrevious(getRelaviveLink(blogposts.get(i), blogposts.get(i + 1)));
+            }
+        }
+
         LOGGER.info(String.format("Scan completed, found %d blog posts and %d pages", blogposts.size(), pages.size()));
+    }
+
+
+    /**
+     * Create a link to the previous or next HTML file.
+     *
+     * @param doc1 The current document
+     * @param doc2 The previous or next document
+     * @return The link to the previous or next HTML file
+     */
+    private String getRelaviveLink(Document current, Document other) {
+        String link = current.getFile().relativize(other.getFile()).toString();
+        link = link.replaceAll("\\\\", "/");
+        link = link.substring(0, link.lastIndexOf('.')) + ".html";
+        link = link.replaceFirst("../", "");
+        return link;
     }
 
 
