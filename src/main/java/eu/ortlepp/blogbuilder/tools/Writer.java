@@ -32,8 +32,8 @@ public class Writer {
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Writer.class.getName());
 
-    /** The directory for processed files (= the target directory). */
-    private final Path dirBlog;
+    /** The target directory (where the HTML files are created). */
+    private final Path target;
 
     /** The configuration of the Freemarker template engine. */
     private final Configuration fmConfig;
@@ -42,14 +42,15 @@ public class Writer {
     /**
      * Constructor, initializes the Freemarker template engine.
      *
-     * @param directory The directory of the project
+     * @param target The target directory (where the HTML files are created)
+     * @param templates The directory which contains the templates
      */
-    public Writer(Path directory) {
-        this.dirBlog = Paths.get(directory.toString(), "blog");
+    public Writer(Path target, Path templates) {
+        this.target = target;
 
         fmConfig = new Configuration(Configuration.VERSION_2_3_25);
         try {
-            fmConfig.setDirectoryForTemplateLoading(new File(directory.toFile(), "templates"));
+            fmConfig.setDirectoryForTemplateLoading(templates.toFile());
             fmConfig.setDefaultEncoding("UTF-8");
             fmConfig.setLocale(Locale.getDefault());
             fmConfig.setObjectWrapper(new DocumentWrapper(fmConfig.getIncompatibleImprovements()));
@@ -103,7 +104,7 @@ public class Writer {
             }
 
             /* The absolute path of the file */
-            Path file = Paths.get(dirBlog.toString(), document.getPath());
+            Path file = Paths.get(target.toString(), document.getPath());
 
             try {
                 /* Create directories */
@@ -178,7 +179,7 @@ public class Writer {
             }
 
             /* Write file to disk using the Freemarker template */
-            if (writeFile(content, new File(dirBlog.toFile(), filenames[i + 1]), "page_index.ftl")) {
+            if (writeFile(content, new File(target.toFile(), filenames[i + 1]), "page_index.ftl")) {
                 LOGGER.info(String.format("Wrote index page %s", filenames[i + 1]));
             }
         }

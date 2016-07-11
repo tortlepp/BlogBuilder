@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.tools.Cleaner;
+import eu.ortlepp.blogbuilder.tools.Config;
 import eu.ortlepp.blogbuilder.tools.Scanner;
 import eu.ortlepp.blogbuilder.tools.Writer;
 
@@ -59,7 +60,7 @@ public final class Build {
      * Run the build process step by step.
      */
     private void process() {
-        Cleaner.clean(Paths.get(directory.toString(), "blog"));
+        Cleaner.clean(Paths.get(directory.toString(), Config.DIR_BLOG));
         scanDirectory();
         writeFiles();
     }
@@ -70,7 +71,7 @@ public final class Build {
      */
     private void scanDirectory() {
         /* Find all Markdown files */
-        blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), "content"));
+        blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), Config.DIR_CONTENT));
 
         /* Copy pages to pages list */
         for (Document doc : blogposts) {
@@ -127,7 +128,8 @@ public final class Build {
      * Write all blog posts and pages to HTML files.
      */
     private void writeFiles() {
-        Writer writer = new Writer(directory);
+        Writer writer = new Writer(Paths.get(directory.toString(), Config.DIR_BLOG),
+                Paths.get(directory.toString(), Config.DIR_TEMPLATES));
         writer.writeBlogPosts(blogposts);
         writer.writePages(pages);
         writer.writeIndex(blogposts);
