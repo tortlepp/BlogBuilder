@@ -38,16 +38,24 @@ public class Writer {
     /** The configuration of the Freemarker template engine. */
     private final Configuration fmConfig;
 
+    /** Static data / information from the configuration file. */
+    private final Map<String, String> blogInfo;
+
+    /** Get access to configuration read from the properties file. */
+    private final Config config;
+
 
     /**
-     * Constructor, initializes the Freemarker template engine.
+     * Constructor, initializes the Freemarker template engine and loads the static data.
      *
      * @param target The target directory (where the HTML files are created)
      * @param templates The directory which contains the templates
      */
     public Writer(Path target, Path templates) {
         this.target = target;
+        config = Config.getInstance();
 
+        /* Initialize Freemarker */
         fmConfig = new Configuration(Configuration.VERSION_2_3_25);
         try {
             fmConfig.setDirectoryForTemplateLoading(templates.toFile());
@@ -58,6 +66,11 @@ public class Writer {
             LOGGER.severe("Initializing Freemarker failed!");
             throw new RuntimeException(ex);
         }
+
+        /* Load static data from configuration */
+        blogInfo = new HashMap<String, String>();
+        blogInfo.put("title", config.getTitle());
+        blogInfo.put("author", config.getAuthor());
     }
 
 
@@ -94,6 +107,7 @@ public class Writer {
     public int writeDocuments(List<Document> documents, String key, String template) {
         int counter = 0;
         Map<String, Object> content = new HashMap<String, Object>();
+        content.put("blog", blogInfo);
 
         for (Document document : documents) {
             /* Set the document */
@@ -132,8 +146,9 @@ public class Writer {
      */
     public void writeIndex(List<Document> blogposts) {
         Map<String, Object> content = new HashMap<String, Object>();
+        content.put("blog", blogInfo);
 
-        int postsPerPage = 3;
+        int postsPerPage = config.getIndexPosts();
 
         /* Calculate the number of index pages */
         int pages = blogposts.size() / postsPerPage;
@@ -144,10 +159,10 @@ public class Writer {
         /* Create the filenames for pagination */
         String[] filenames = new String[pages + 2];
         filenames[0] = "";
-        filenames[1] = "index.html";
+        filenames[1] = String.format("%s.html", config.getIndexFile());
         filenames[filenames.length - 1] = "";
         for (int i = 1; i < pages; i++) {
-            filenames[i + 1] = String.format("index-%d.html", i);
+            filenames[i + 1] = String.format("%s-%d.html", config.getIndexFile(), i);
         }
 
         /* Counter for the number of blog posts that were already added to an index page */

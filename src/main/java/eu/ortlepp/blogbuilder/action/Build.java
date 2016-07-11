@@ -60,6 +60,7 @@ public final class Build {
      * Run the build process step by step.
      */
     private void process() {
+        Config.getInstance().loadConfig(directory.toFile());
         Cleaner.clean(Paths.get(directory.toString(), Config.DIR_BLOG));
         scanDirectory();
         writeFiles();

@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Index</title>
+<title>${blog.title} by ${blog.author}</title>
 </head>
 <body>
 
