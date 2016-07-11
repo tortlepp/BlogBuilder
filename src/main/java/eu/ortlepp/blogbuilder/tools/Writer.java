@@ -173,7 +173,7 @@ public class Writer {
             List<Document> posts = new ArrayList<Document>();
 
             /* Get blog posts for the page */
-            for (int j = added; j < (i + 1) * pages; j++) {
+            for (int j = added; j < (i + 1) * postsPerPage; j++) {
                 if (added < blogposts.size()) {
                     posts.add(blogposts.get(added));
                     added++;
