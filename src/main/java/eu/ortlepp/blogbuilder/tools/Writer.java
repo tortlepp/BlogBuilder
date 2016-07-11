@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -60,7 +59,7 @@ public class Writer {
         try {
             fmConfig.setDirectoryForTemplateLoading(templates.toFile());
             fmConfig.setDefaultEncoding("UTF-8");
-            fmConfig.setLocale(Locale.getDefault());
+            fmConfig.setLocale(config.getLocale());
             fmConfig.setObjectWrapper(new DocumentWrapper(fmConfig.getIncompatibleImprovements()));
         } catch (IOException ex) {
             LOGGER.severe("Initializing Freemarker failed!");
@@ -71,6 +70,7 @@ public class Writer {
         blogInfo = new HashMap<String, String>();
         blogInfo.put("title", config.getTitle());
         blogInfo.put("author", config.getAuthor());
+        blogInfo.put("language", config.getLocale().getLanguage());
     }
 
 

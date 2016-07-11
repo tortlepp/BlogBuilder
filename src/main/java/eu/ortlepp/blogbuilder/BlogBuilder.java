@@ -64,7 +64,7 @@ public final class BlogBuilder {
         Path path = Paths.get(directory);
 
         /* Initialization */
-        if (action.equalsIgnoreCase("-i")) {
+        if (action.equalsIgnoreCase("--init")) {
             LOGGER.info(String.format("Starting initialization for %s", path.getFileName()));
 
             if (Files.exists(path)) {
@@ -75,7 +75,7 @@ public final class BlogBuilder {
         }
 
         /* Build */
-        else if (action.equalsIgnoreCase("-b")) {
+        else if (action.equalsIgnoreCase("--build")) {
             LOGGER.info(String.format("Starting build process for %s", path.getFileName()));
 
             if (Files.exists(path) && Files.isDirectory(path)) {
@@ -98,8 +98,8 @@ public final class BlogBuilder {
     private static void printUsageInfo() {
         System.out.printf("BlogBuilder %s%s%s", VERSION, System.lineSeparator(), System.lineSeparator());
         System.out.println("Usage:");
-        System.out.println(" -i <DIRECTORY>  - Initialize a new project in <DIRECTORY>");
-        System.out.println(" -b <DIRECTORY>  - Build the project in <DIRECTORY>");
+        System.out.println(" -init <DIRECTORY>   - Initialize a new project in <DIRECTORY>");
+        System.out.println(" -build <DIRECTORY>  - Build the project in <DIRECTORY>");
     }
 
 }

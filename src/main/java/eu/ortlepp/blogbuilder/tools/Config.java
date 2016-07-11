@@ -3,6 +3,7 @@ package eu.ortlepp.blogbuilder.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -52,6 +53,9 @@ public final class Config {
     /** The number of blog posts on each index page. */
     private int indexPosts;
 
+    /** The locale to use (for number and date formats). */
+    private Locale locale;
+
 
     /**
      * Constructor, initialize all configuration values with their defaults.
@@ -61,6 +65,7 @@ public final class Config {
         author = DEFAULT_AUTHOR;
         indexFile = DEFAULT_INDEX_FILE;
         indexPosts = Integer.parseInt(DEFAULT_INDEX_POSTS);
+        locale = Locale.getDefault();
     }
 
 
@@ -81,7 +86,18 @@ public final class Config {
             title = properties.getProperty("blog.title", DEFAULT_TITLE);
             author = properties.getProperty("blog.author", DEFAULT_AUTHOR);
             indexFile = properties.getProperty("index.filename", DEFAULT_INDEX_FILE);
-            indexPosts = Integer.parseInt(properties.getProperty("index.posts", DEFAULT_INDEX_POSTS));
+
+            try {
+                indexPosts = Integer.parseInt(properties.getProperty("index.posts", DEFAULT_INDEX_POSTS));
+            } catch (NumberFormatException ex) {
+                Logger.getLogger(Config.class.getName()).warning(String.format("Parsing index.posts failed: %s", ex.getMessage()));
+            }
+
+            Locale localeTemp = Locale.forLanguageTag(properties.getProperty("blog.locale", ""));
+            if (localeTemp.getLanguage().isEmpty() || localeTemp.getCountry().isEmpty()) {
+                localeTemp = Locale.getDefault();
+            }
+            locale = localeTemp;
 
             Logger.getLogger(Config.class.getName()).info(String.format("Read configuration from %s", confFile));
         } catch (IOException ex) {
@@ -141,6 +157,16 @@ public final class Config {
      */
     public int getIndexPosts() {
         return indexPosts;
+    }
+
+
+    /**
+     * Getter for the locale to use (for number and date formats).
+     *
+     * @return The locale to use
+     */
+    public Locale getLocale() {
+        return locale;
     }
 
 }
