@@ -107,7 +107,16 @@ public class Scanner extends SimpleFileVisitor<Path> {
         htmlFile = htmlFile.replaceAll("\\\\", "/");
         htmlFile = htmlFile.substring(0, htmlFile.lastIndexOf('.')) + ".html";
 
-        Document document = new Document(file, htmlFile);
+        /* Build the relative path to the base directory */
+        String toBaseDir = file.relativize(dirContent).toString();
+        toBaseDir = toBaseDir.replaceAll("\\\\", "/");
+        if (toBaseDir.equals("..")) {
+            toBaseDir = "";
+        } else {
+            toBaseDir = toBaseDir.replaceFirst("../", "") + "/";
+        }
+
+        Document document = new Document(file, htmlFile, toBaseDir);
 
         try {
             /* Read the file */

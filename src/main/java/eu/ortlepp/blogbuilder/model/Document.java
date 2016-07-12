@@ -19,6 +19,9 @@ public class Document implements Comparable<Document> {
     /** The relative path of the HTML file. */
     private final String path;
 
+    /** The relative path from the document to the base dir. */
+    private final String toBaseDir;
+
     /** The title of the document. */
     private String title;
 
@@ -58,10 +61,12 @@ public class Document implements Comparable<Document> {
      *
      * @param file Name and path of the file
      * @param path The relative path of the HTML file
+     * @param The relative path from the document to the base dir
      */
-    public Document(Path file, String path) {
+    public Document(Path file, String path, String toBaseDir) {
         this.file = file;
         this.path = path;
+        this.toBaseDir = toBaseDir;
         this.title = "";
         this.created = LocalDateTime.MIN;
         this.modified = LocalDateTime.MIN;
@@ -89,6 +94,16 @@ public class Document implements Comparable<Document> {
      */
     public String getPath() {
         return path;
+    }
+
+
+    /**
+     * Getter for the relative path from the document to the base dir.
+     *
+     * @return Relative path from the document to the base dir
+     */
+    public String getToBaseDir() {
+        return toBaseDir;
     }
 
 

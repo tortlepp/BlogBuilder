@@ -31,6 +31,9 @@ public class Writer {
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Writer.class.getName());
 
+    /** The key for the base directory in the templates. */
+    private static final String BASEDIR_KEY = "basedir";
+
     /** The target directory (where the HTML files are created). */
     private final Path target;
 
@@ -113,8 +116,10 @@ public class Writer {
             /* Set the document */
             if (content.containsKey(key)) {
                 content.replace(key, document);
+                content.replace(BASEDIR_KEY, document.getToBaseDir());
             } else {
                 content.put(key, document);
+                content.put(BASEDIR_KEY, document.getToBaseDir());
             }
 
             /* The absolute path of the file */
@@ -147,6 +152,7 @@ public class Writer {
     public void writeIndex(List<Document> blogposts) {
         Map<String, Object> content = new HashMap<String, Object>();
         content.put("blog", blogInfo);
+        content.put(BASEDIR_KEY, "");
         int counter = 0;
 
         int postsPerPage = config.getIndexPosts();
