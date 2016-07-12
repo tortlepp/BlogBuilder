@@ -1,0 +1,25 @@
+header {
+ border-bottom: 1px solid #000;
+ text-align: center;
+}
+header h1 a {
+ text-decoration: none;
+}
+header ul {
+ list-style-type: none;
+ padding: 0;
+}
+header ul li {
+ display: inline;
+ margin: 0 30px;
+}
+footer {
+ border-top: 1px solid #000;
+ text-align: center;
+}
+p#pubdate {
+ font-style: italic;
+}
+p#nav {
+ text-align: center;
+}

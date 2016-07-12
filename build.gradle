@@ -11,7 +11,8 @@ repositories {
 
 // Dependencies for this project
 dependencies {
-    //TODO ...
+    compile 'org.freemarker:freemarker:2.3.25-incubating'
+    compile 'org.pegdown:pegdown:1.6.0'
 }
 
 // Configure the generated JAR file
