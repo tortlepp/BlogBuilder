@@ -16,7 +16,7 @@ import eu.ortlepp.blogbuilder.tools.Scanner;
 import eu.ortlepp.blogbuilder.tools.Writer;
 
 /**
- * Action: Build a project.
+ * Action: Build an existing project.
  *
  * @author Thorsten Ortlepp
  */

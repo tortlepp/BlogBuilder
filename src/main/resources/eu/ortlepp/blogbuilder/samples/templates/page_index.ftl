@@ -12,7 +12,8 @@
   <#list posts as post>
    <article>
     <h1><a href="${post.link}">${post.title}</a></h1>
-    ${post.content}
+    ${post.content?keep_before("</p>")} [...]</p>
+    <p><a href="${post.link}">Continue Reading</a></p>
    </article>
   </#list>
 

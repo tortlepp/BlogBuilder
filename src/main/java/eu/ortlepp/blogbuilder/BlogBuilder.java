@@ -8,6 +8,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import eu.ortlepp.blogbuilder.action.Build;
+import eu.ortlepp.blogbuilder.action.Initialize;
 
 /**
  * This is the main class for BlogBuilder. It contains the main() method which starts the
@@ -18,7 +19,7 @@ import eu.ortlepp.blogbuilder.action.Build;
 public final class BlogBuilder {
 
     /** The current version of the application. */
-    private static final String VERSION = "0.1";
+    private static final String VERSION = "0.3";
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(BlogBuilder.class.getName());
@@ -70,7 +71,7 @@ public final class BlogBuilder {
             if (Files.exists(path)) {
                 LOGGER.severe(String.format("Directory %s already exists, initialization aborted", path.getFileName()));
             } else {
-                //TODO INIT ...
+                Initialize.initialize(path);
             }
         }
 
