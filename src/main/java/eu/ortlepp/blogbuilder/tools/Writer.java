@@ -147,6 +147,7 @@ public class Writer {
     public void writeIndex(List<Document> blogposts) {
         Map<String, Object> content = new HashMap<String, Object>();
         content.put("blog", blogInfo);
+        int counter = 0;
 
         int postsPerPage = config.getIndexPosts();
 
@@ -195,9 +196,12 @@ public class Writer {
 
             /* Write file to disk using the Freemarker template */
             if (writeFile(content, new File(target.toFile(), filenames[i + 1]), "page_index.ftl")) {
+                counter++;
                 LOGGER.info(String.format("Wrote index page %s", filenames[i + 1]));
             }
         }
+
+        LOGGER.info(String.format("%d index pages written", counter));
     }
 
 

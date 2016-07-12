@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.tools.Cleaner;
 import eu.ortlepp.blogbuilder.tools.Config;
+import eu.ortlepp.blogbuilder.tools.ResourceCopy;
 import eu.ortlepp.blogbuilder.tools.Scanner;
 import eu.ortlepp.blogbuilder.tools.Writer;
 
@@ -64,6 +65,7 @@ public final class Build {
         Cleaner.clean(Paths.get(directory.toString(), Config.DIR_BLOG));
         scanDirectory();
         writeFiles();
+        ResourceCopy.copy(directory);
     }
 
 
