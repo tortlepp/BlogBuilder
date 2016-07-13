@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.tools.Cleaner;
 import eu.ortlepp.blogbuilder.tools.Config;
+import eu.ortlepp.blogbuilder.tools.FeedCreator;
 import eu.ortlepp.blogbuilder.tools.ResourceCopy;
 import eu.ortlepp.blogbuilder.tools.Scanner;
 import eu.ortlepp.blogbuilder.tools.Writer;
@@ -66,6 +67,7 @@ public final class Build {
         scanDirectory();
         writeFiles();
         ResourceCopy.copy(directory);
+        new FeedCreator(blogposts, directory.toString()).createFeed();
     }
 
 
