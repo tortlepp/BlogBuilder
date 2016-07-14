@@ -126,7 +126,7 @@ public class FeedCreator extends AbstractXmlCreator {
                 entry.appendChild(link);
 
                 /* <content> */
-                Element content = createElement("content", document.getContentAsHtml());
+                Element content = createElement("content", Tools.makeLinksAbsolute(document.getContentAsHtml()));
                 content.setAttributeNode(createAttribute("type", "html"));
                 entry.appendChild(content);
 

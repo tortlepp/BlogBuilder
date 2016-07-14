@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.model.freemarker.DocumentAdapter;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -175,6 +176,9 @@ public class Writer {
         /* Counter for the number of blog posts that were already added to an index page */
         int added = 0;
 
+        /* Leave relative links in content unchanged when writing the files */
+        DocumentAdapter.setFixContenLinks(false);
+
         /* Create all index pages */
         for (int i = 0; i < pages; i++) {
             List<Document> posts = new ArrayList<Document>();
@@ -206,6 +210,9 @@ public class Writer {
                 LOGGER.info(String.format("Wrote index page %s", filenames[i + 1]));
             }
         }
+
+        /* Reset to default behavior */
+        DocumentAdapter.setFixContenLinks(true);
 
         LOGGER.info(String.format("%d index pages written", counter));
     }
