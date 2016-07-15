@@ -50,6 +50,9 @@ public final class Config {
     /** The default value for the base URL of the blog. Used if no value is set in the configuration file. */
     private static final String DEFAULT_BASEURL = "http://blog.example.com";
 
+    /** The default value for the filename of the sitemap. Used if no value is set in the configuration file. */
+    private static final String DEFAULT_SITEMAP_FILE = "sitemap.xml";
+
     /** The title of the blog. */
     private String title;
 
@@ -74,6 +77,9 @@ public final class Config {
     /** The locale to use (for number and date formats). */
     private Locale locale;
 
+    /** The filename of the sitemap. */
+    private String sitemapFile;
+
 
     /**
      * Constructor, initialize all configuration values with their defaults.
@@ -87,6 +93,7 @@ public final class Config {
         feedPosts = Integer.parseInt(DEFAULT_FEED_POSTS);
         baseurl = DEFAULT_BASEURL;
         locale = Locale.getDefault();
+        sitemapFile = DEFAULT_SITEMAP_FILE;
     }
 
 
@@ -109,6 +116,7 @@ public final class Config {
             indexFile = properties.getProperty("index.filename", DEFAULT_INDEX_FILE);
             feedFile = properties.getProperty("feed.filename", DEFAULT_FEED_FILE);
             baseurl = properties.getProperty("blog.baseurl", DEFAULT_BASEURL);
+            sitemapFile = properties.getProperty("sitemap.filename", DEFAULT_SITEMAP_FILE);
 
             try {
                 indexPosts = Integer.parseInt(properties.getProperty("index.posts", DEFAULT_INDEX_POSTS));
@@ -226,6 +234,16 @@ public final class Config {
      */
     public Locale getLocale() {
         return locale;
+    }
+
+
+    /**
+     * Getter for the filename of the sitemap.
+     *
+     * @return The filename of the sitemap
+     */
+    public String getSitemapFile() {
+        return sitemapFile;
     }
 
 }

@@ -14,6 +14,7 @@ import eu.ortlepp.blogbuilder.tools.Config;
 import eu.ortlepp.blogbuilder.tools.FeedCreator;
 import eu.ortlepp.blogbuilder.tools.ResourceCopy;
 import eu.ortlepp.blogbuilder.tools.Scanner;
+import eu.ortlepp.blogbuilder.tools.SitemapCreator;
 import eu.ortlepp.blogbuilder.tools.Writer;
 
 /**
@@ -68,6 +69,7 @@ public final class Build {
         writeFiles();
         ResourceCopy.copy(directory);
         new FeedCreator(blogposts, directory.toString()).createFeed();
+        new SitemapCreator(directory.toString()).createSitemap(blogposts, pages);
     }
 
 

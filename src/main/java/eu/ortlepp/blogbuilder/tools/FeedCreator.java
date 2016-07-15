@@ -37,8 +37,8 @@ public class FeedCreator extends AbstractXmlCreator {
         super();
         initRootElement();
         this.blogposts = blogposts;
-        this.feed = Paths.get(directory, Config.DIR_BLOG, Config.getInstance().getFeedFile()).toFile();
         this.config = Config.getInstance();
+        this.feed = Paths.get(directory, Config.DIR_BLOG, config.getFeedFile()).toFile();
     }
 
 
