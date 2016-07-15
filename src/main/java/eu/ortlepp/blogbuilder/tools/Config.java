@@ -41,6 +41,18 @@ public final class Config {
     /** The default value for the number of blog posts on each index page. Used if no value is set in the configuration file. */
     private static final String DEFAULT_INDEX_POSTS = "3";
 
+    /** The default value for the filename of the feed. Used if no value is set in the configuration file. */
+    private static final String DEFAULT_FEED_FILE = "feed.xml";
+
+    /** The default value for the number of blog posts in the feed. Used if no value is set in the configuration file. */
+    private static final String DEFAULT_FEED_POSTS = "3";
+
+    /** The default value for the base URL of the blog. Used if no value is set in the configuration file. */
+    private static final String DEFAULT_BASEURL = "http://blog.example.com";
+
+    /** The default value for the filename of the sitemap. Used if no value is set in the configuration file. */
+    private static final String DEFAULT_SITEMAP_FILE = "sitemap.xml";
+
     /** The title of the blog. */
     private String title;
 
@@ -53,8 +65,20 @@ public final class Config {
     /** The number of blog posts on each index page. */
     private int indexPosts;
 
+    /** The filename of the feed. */
+    private String feedFile;
+
+    /** The number of blog posts in the feed. */
+    private int feedPosts;
+
+    /** The base URL of the blog. */
+    private String baseurl;
+
     /** The locale to use (for number and date formats). */
     private Locale locale;
+
+    /** The filename of the sitemap. */
+    private String sitemapFile;
 
 
     /**
@@ -65,7 +89,11 @@ public final class Config {
         author = DEFAULT_AUTHOR;
         indexFile = DEFAULT_INDEX_FILE;
         indexPosts = Integer.parseInt(DEFAULT_INDEX_POSTS);
+        feedFile = DEFAULT_FEED_FILE;
+        feedPosts = Integer.parseInt(DEFAULT_FEED_POSTS);
+        baseurl = DEFAULT_BASEURL;
         locale = Locale.getDefault();
+        sitemapFile = DEFAULT_SITEMAP_FILE;
     }
 
 
@@ -86,11 +114,20 @@ public final class Config {
             title = properties.getProperty("blog.title", DEFAULT_TITLE);
             author = properties.getProperty("blog.author", DEFAULT_AUTHOR);
             indexFile = properties.getProperty("index.filename", DEFAULT_INDEX_FILE);
+            feedFile = properties.getProperty("feed.filename", DEFAULT_FEED_FILE);
+            baseurl = properties.getProperty("blog.baseurl", DEFAULT_BASEURL);
+            sitemapFile = properties.getProperty("sitemap.filename", DEFAULT_SITEMAP_FILE);
 
             try {
                 indexPosts = Integer.parseInt(properties.getProperty("index.posts", DEFAULT_INDEX_POSTS));
             } catch (NumberFormatException ex) {
                 Logger.getLogger(Config.class.getName()).warning(String.format("Parsing index.posts failed: %s", ex.getMessage()));
+            }
+
+            try {
+                feedPosts = Integer.parseInt(properties.getProperty("feed.posts", DEFAULT_FEED_POSTS));
+            } catch (NumberFormatException ex) {
+                Logger.getLogger(Config.class.getName()).warning(String.format("Parsing feed.posts failed: %s", ex.getMessage()));
             }
 
             Locale localeTemp = Locale.forLanguageTag(properties.getProperty("blog.locale", ""));
@@ -161,12 +198,52 @@ public final class Config {
 
 
     /**
+     * Getter for the filename of the feed.
+     *
+     * @return The filename of the feed
+     */
+    public String getFeedFile() {
+        return feedFile;
+    }
+
+
+    /**
+     * Getter for the number of blog posts in the feed.
+     *
+     * @return The number of blog posts in the feed
+     */
+    public int getFeedPosts() {
+        return feedPosts;
+    }
+
+
+    /**
+     * Getter for the base URL of the blog.
+     *
+     * @return The base URL of the blog
+     */
+    public String getBaseUrl() {
+        return baseurl;
+    }
+
+
+    /**
      * Getter for the locale to use (for number and date formats).
      *
      * @return The locale to use
      */
     public Locale getLocale() {
         return locale;
+    }
+
+
+    /**
+     * Getter for the filename of the sitemap.
+     *
+     * @return The filename of the sitemap
+     */
+    public String getSitemapFile() {
+        return sitemapFile;
     }
 
 }

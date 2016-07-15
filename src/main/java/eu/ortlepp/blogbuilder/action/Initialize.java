@@ -76,6 +76,7 @@ public class Initialize {
 
         Files.createDirectory(Paths.get(dirStr, Config.DIR_CONTENT, "2015"));
         Files.createDirectory(Paths.get(dirStr, Config.DIR_CONTENT, "2016"));
+        Files.createDirectory(Paths.get(dirStr, Config.DIR_RESOURCES, "images"));
         LOGGER.info("Created subdirectories");
     }
 
@@ -101,6 +102,7 @@ public class Initialize {
         Files.copy(getResourceStream("content/veggie_ipsum.md"), Paths.get(dirStr, Config.DIR_CONTENT, "2016", "veggie_ipsum.md"));
         LOGGER.info("Created sample Markdown files");
 
+        Files.copy(getResourceStream("resources/image.jpg"), Paths.get(dirStr, Config.DIR_RESOURCES, "images", "image.jpg"));
         Files.copy(getResourceStream("resources/style.css"), Paths.get(dirStr, Config.DIR_RESOURCES, "style.css"));
         LOGGER.info("Created sample resource files");
 

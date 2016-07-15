@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.tools.Tools;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateDateModel;
@@ -24,6 +25,9 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
 
     /** The Document data object. */
     private final Document document;
+
+    /** Flag for fixing relative links in the content of a document; true = fix links (default behavior), false = leave links unchanged. */
+    private static boolean fixContentLinks = true;
 
 
     /**
@@ -63,7 +67,11 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
             case "title":
                 return new StringModel(document.getTitle());
             case "content":
-                return new StringModel(document.getContentAsHtml());
+                if (fixContentLinks) {
+                    return new StringModel(Tools.makeLinksRelative(document.getContentAsHtml(), document.getToBaseDir()));
+                } else {
+                    return new StringModel(document.getContentAsHtml());
+                }
             case "link":
                 return new StringModel(document.getPath());
             case "previous":
@@ -88,6 +96,16 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+
+    /**
+     * Setter for the flag for fixing relative links in the content of a document.
+     *
+     * @param fix The value for the flag; true = fix links, false = leave links unchanged
+     */
+    public static void setFixContenLinks(boolean fix) {
+        fixContentLinks = fix;
     }
 
 
@@ -128,7 +146,11 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
     }
 
 
-
+    /**
+     * A model to handle date and time values from the Document data object.
+     *
+     * @author Thorsten Ortlepp
+     */
     private class DateModel implements TemplateDateModel {
 
         /** The date and time value. */
