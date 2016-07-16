@@ -9,6 +9,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,6 +155,23 @@ public class Scanner extends SimpleFileVisitor<Path> {
                 else {
                     document.addContent(line + System.lineSeparator());
                 }
+            }
+
+            /* Create the short URL (for blog posts only) */
+            if (document.isBlog() && Config.getInstance().isUrlShortener()) {
+                /* Base URL for shortening */
+                String baseurl = Config.getInstance().getBaseUrl();
+                if (!baseurl.endsWith("/")) {
+                    baseurl += "/go/";
+                }else {
+                    baseurl += "go/";
+                }
+
+                /* ID = timestamp of the creation date without trailing zeros */
+                String id = String.valueOf(document.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+                id = id.replaceAll("0+$", "");
+
+                document.setShortlink(baseurl + id);
             }
 
         } catch (IOException ex) {
