@@ -43,6 +43,9 @@ public class Document implements Comparable<Document> {
     /** A link to the next (newer) blog post. */
     private String next;
 
+    /** A shortlink to the document (its HTML page). */
+    private String shortlink;
+
     /** A Markdown processor to transform the content from Markdown to HTML. */
     private static final PegDownProcessor PROCESSOR;
 
@@ -74,6 +77,7 @@ public class Document implements Comparable<Document> {
         this.content = new StringBuilder();
         this.previous = "";
         this.next = "";
+        this.shortlink = "";
     }
 
 
@@ -256,6 +260,26 @@ public class Document implements Comparable<Document> {
      */
     public void setNext(String next) {
         this.next = next;
+    }
+
+
+    /**
+     * Getter for the shortlink of the document.
+     *
+     * @return Shortlink of the document
+     */
+    public String getShortlink() {
+        return shortlink;
+    }
+
+
+    /**
+     * Setter for the shortlink of the document.
+     *
+     * @param shortlink Shortlink of the document
+     */
+    public void setShortlink(String shortlink) {
+        this.shortlink = shortlink;
     }
 
 
