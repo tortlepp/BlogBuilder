@@ -1,5 +1,6 @@
 ;;title=Cupcake Ipsum (Part III)
 ;;created=2016-07-10 22:03
+;;category=Cupcake, food
 
 Jelly ice cream gummies cheesecake. Lollipop toffee marshmallow brownie sesame snaps oat cake chocolate bar. Carrot cake chupa chups icing jelly-o muffin tiramisu cake jelly beans. Jujubes chupa chups pie. Gingerbread wafer cookie danish apple pie tiramisu biscuit. Brownie liquorice biscuit pastry chocolate croissant tootsie roll. Chocolate cake apple pie jelly-o. Liquorice sugar plum cotton candy caramels dragée fruitcake. Cotton candy cake tiramisu gummi bears topping macaroon. Jelly beans halvah oat cake dragée lemon drops tootsie roll sesame snaps cake. Tart biscuit chocolate bar carrot cake tiramisu oat cake chocolate bar. Liquorice gummies danish soufflé caramels sugar plum.
 

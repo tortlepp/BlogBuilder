@@ -3,15 +3,20 @@ package eu.ortlepp.blogbuilder.model.freemarker;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
+import eu.ortlepp.blogbuilder.model.Category;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.tools.Tools;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleCollection;
+import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.WrappingTemplateModel;
 
@@ -26,6 +31,9 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
     /** The Document data object. */
     private final Document document;
 
+    /** The wrapper for the adapter. */
+    private final ObjectWrapper wrapper;
+
     /** Flag for fixing relative links in the content of a document; true = fix links (default behavior), false = leave links unchanged. */
     private static boolean fixContentLinks = true;
 
@@ -39,6 +47,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
     public DocumentAdapter(Document document, ObjectWrapper wrapper) {
         super(wrapper);
         this.document = document;
+        this.wrapper = wrapper;
     }
 
 
@@ -84,6 +93,8 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
                 return new DateModel(document.getCreated());
             case "modified":
                 return new DateModel(document.getModified());
+            case "categories":
+                return new CategoryListModel(document.getCategories());
             default:
                 return null;
         }
@@ -191,5 +202,35 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
     }
 
 
+    /**
+     * A model to handle the category list from the Document data object.
+     *
+     * @author Thorsten Ortlepp
+     */
+    private class CategoryListModel implements TemplateCollectionModel {
+
+        /** The category list. */
+        private List<Category> categories;
+
+        /**
+         * Constructor, initialize the category list.
+         *
+         * @param categories The category list
+         */
+        public CategoryListModel(List<Category> categories) {
+            this.categories = categories;
+        }
+
+        /**
+         * Returns the iterator of the list.
+         *
+         * @return The iterator of the list
+         * @throws TemplateModelException Error while returning the iterator
+         */
+        @Override
+        public TemplateModelIterator iterator() throws TemplateModelException {
+            return new SimpleCollection(categories, wrapper).iterator();
+        }
+    }
 
 }

@@ -11,7 +11,12 @@
 
   <article>
    <h1>${post.title}</h1>
-   <p id="pubdate">Published ${post.created?datetime} by ${blog.author}</p>
+   <p id="pubdate">Published ${post.created?datetime} by ${blog.author}<br>
+    Categories:&nbsp;
+    <#list post.categories as cat>
+     <a href="${cat.relativePath}">${cat.name}</a>&nbsp;&nbsp;
+    </#list>
+   </p>
    ${post.content}
   </article>
 

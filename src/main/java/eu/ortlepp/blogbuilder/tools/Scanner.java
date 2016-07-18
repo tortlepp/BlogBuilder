@@ -145,6 +145,12 @@ public class Scanner extends SimpleFileVisitor<Path> {
                         case "noblog":
                             document.setNoBlog();
                             break;
+                        case "category":
+                            String[] categories = keyvalue[1].split(",");
+                            for (String category : categories) {
+                                document.addCategory(category);
+                            }
+                            break;
                         default:
                             LOGGER.warning(String.format("Unknown header %s in %s", keyvalue[0], file.getFileName().toString()));
                             break;

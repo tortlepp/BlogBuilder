@@ -2,6 +2,8 @@ package eu.ortlepp.blogbuilder.model;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.pegdown.PegDownProcessor;
 
@@ -46,6 +48,9 @@ public class Document implements Comparable<Document> {
     /** A shortlink to the document (its HTML page). */
     private String shortlink;
 
+    /** A list that contains the categories of the document. */
+    private final List<Category> categories;
+
     /** A Markdown processor to transform the content from Markdown to HTML. */
     private static final PegDownProcessor PROCESSOR;
 
@@ -78,6 +83,7 @@ public class Document implements Comparable<Document> {
         this.previous = "";
         this.next = "";
         this.shortlink = "";
+        this.categories = new ArrayList<Category>();
     }
 
 
@@ -280,6 +286,29 @@ public class Document implements Comparable<Document> {
      */
     public void setShortlink(String shortlink) {
         this.shortlink = shortlink;
+    }
+
+
+    /**
+     * Getter for the list that contains the categories of the document.
+     *
+     * @return The list of categories
+     */
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+
+    /**
+     * Adds a new category to the list of categories of the document. The new category is only added
+     * if the list does not contain the category so far.
+     *
+     * @param A new category of the document
+     */
+    public void addCategory(String category) {
+        if (!categories.contains(category)) {
+            categories.add(new Category(category, toBaseDir));
+        }
     }
 
 
