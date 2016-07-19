@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.model;
 
+import java.util.Locale;
+
 import eu.ortlepp.blogbuilder.tools.Config;
 
 /**
@@ -12,13 +14,16 @@ import eu.ortlepp.blogbuilder.tools.Config;
 public class Category {
 
     /** The name of the category. */
-    private String name;
+    private final String name;
 
     /** The path / filename of the category page. */
-    private String path;
+    private final String path;
 
     /** The relative path from the document to the category page. */
-    private String relativePath;
+    private final String relativePath;
+
+    /** The locale of the content / the name of the category. Used for string transformations. */
+    private final Locale locale;
 
 
     /**
@@ -32,8 +37,9 @@ public class Category {
         Config config = Config.getInstance();
         String tmpName = name.replaceAll(" ", "");
 
+        this.locale = config.getLocale();
         this.name = tmpName;
-        this.path = "category_" + tmpName.toLowerCase(config.getLocale()) + ".html";
+        this.path = String.format("%s%s.html", config.getCategoryFile(), tmpName.toLowerCase(config.getLocale()));
         this.relativePath = toBaseDir + this.path;
     }
 
@@ -45,6 +51,18 @@ public class Category {
      */
     public String getName() {
         return name;
+    }
+
+
+    /**
+     * Getter for the name of the category. The name is formatted: The first letter of the name is
+     * capitalized while all other letters are transformed to lower case.
+     *
+     * @return The formatted name of the category
+     */
+    public String getNameFormatted() {
+        String tmpName = name.toLowerCase(Config.getInstance().getLocale());
+        return tmpName.substring(0, 1).toUpperCase(locale) + tmpName.substring(1);
     }
 
 

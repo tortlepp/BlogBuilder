@@ -109,6 +109,7 @@ public class Initialize {
         Files.copy(getResourceStream("templates/include_footer.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "include_footer.ftl"));
         Files.copy(getResourceStream("templates/include_header.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "include_header.ftl"));
         Files.copy(getResourceStream("templates/page_blogpost.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "page_blogpost.ftl"));
+        Files.copy(getResourceStream("templates/page_category.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "page_category.ftl"));
         Files.copy(getResourceStream("templates/page_index.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "page_index.ftl"));
         Files.copy(getResourceStream("templates/page_page.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "page_page.ftl"));
         LOGGER.info("Created Freemarker templates");
