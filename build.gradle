@@ -1,19 +1,26 @@
 apply plugin: 'java'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+
 
 // Use Java 8
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
 
 // Repository which contains the external dependencies
 repositories {
     jcenter()
 }
 
+
 // Dependencies for this project
 dependencies {
     compile 'org.freemarker:freemarker:2.3.25-incubating'
     compile 'org.pegdown:pegdown:1.6.0'
 }
+
 
 // Configure the generated JAR file
 jar {
@@ -24,4 +31,35 @@ jar {
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+
+// Configure FindBugs
+    findbugs {
+    ignoreFailures = true
+    toolVersion = "3.0.1"
+    effort = "max"
+    reportLevel = "low"
+}
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+
+// Configure PMD
+pmd {
+  ignoreFailures = true
+  toolVersion = "5.5.0"
+  ruleSets = ["java-basic", "java-braces", "java-codesize", "java-design", "java-empty", "java-imports", "java-logging-java", "java-naming", "java-optimizations", "java-strings", "java-sunsecure", "java-typeresolution", "java-unnecessary", "java-unusedcode"]
+}
+
+
+// Configure Checkstyle
+checkstyle {
+  ignoreFailures = true
+  toolVersion = "7.0"
+  configFile = new File(rootDir, "contrib/checkstyle_google.xml")
 }
