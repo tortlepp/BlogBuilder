@@ -1,5 +1,6 @@
 ;;title=Cupcake Ipsum (Part II)
 ;;created=2016-07-09 8:19
+;;category=Cupcake, food
 
 Jelly croissant pudding chupa chups ice cream liquorice donut sesame snaps. Cupcake topping jujubes sweet cake jelly candy soufflé. Sweet roll biscuit ice cream candy canes. Sweet roll macaroon pastry gummi bears sugar plum jujubes gummies donut. Chupa chups chocolate cake marshmallow biscuit pudding powder bear claw. Jelly sweet roll danish. Dessert jelly biscuit jelly beans marzipan brownie wafer jelly fruitcake. Lollipop [ice cream](2016/cupcake_ipsum_part_1.html) marzipan. Dragée danish dessert brownie sweet. Pudding donut cupcake marzipan muffin. Biscuit donut danish topping marshmallow jelly bear claw. Caramels tiramisu cupcake donut oat cake dragée. Jelly-o chocolate cake sweet roll cheesecake biscuit cake apple pie liquorice. Candy canes pastry carrot cake.
 

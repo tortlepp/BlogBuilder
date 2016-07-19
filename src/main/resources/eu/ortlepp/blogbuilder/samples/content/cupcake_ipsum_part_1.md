@@ -1,5 +1,6 @@
 ;;title=Cupcake Ipsum (Part I)
 ;;created=2016-07-08 18:49
+;;category=Cupcake, food
 
 Pie biscuit jujubes icing. Gummies cheesecake candy canes apple pie icing jelly. Cheesecake biscuit caramels chocolate apple pie. Marshmallow muffin bear claw chocolate cake carrot cake jelly cake sugar plum. Icing dragée toffee lemon drops jujubes icing. Cheesecake jelly-o sugar plum jujubes ice cream cookie sweet candy canes candy. Gummies apple pie ice cream cake. Pudding gummies jelly cheesecake jujubes. Cookie cookie macaroon. Jujubes gummi bears cake toffee pastry liquorice caramels. Jelly-o pie cake. Marzipan cake caramels marzipan pudding cookie icing chocolate cake. Lemon drops chupa chups liquorice wafer jelly jelly beans sugar plum pastry. Chocolate cake ice cream cake lemon drops.
 

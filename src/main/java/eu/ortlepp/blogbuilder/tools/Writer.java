@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import eu.ortlepp.blogbuilder.model.Category;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentAdapter;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
@@ -215,6 +217,57 @@ public class Writer {
         DocumentAdapter.setFixContenLinks(true);
 
         LOGGER.info(String.format("%d index pages written", counter));
+    }
+
+
+    /**
+     * Write pages for categories. For each category page contains all blog posts of a category.
+     *
+     * @param blogposts The list of blog posts
+     */
+    public void writeCategoryPages(List<Document> blogposts) {
+        Map<String, List<Document>> categories = new HashMap<String, List<Document>>();
+
+        /* Build category index */
+        for (Document blogpost : blogposts) {
+            for (Category category : blogpost.getCategories()) {
+                categories.putIfAbsent(category.getNameFormatted(), new ArrayList<Document>());
+                categories.get(category.getNameFormatted()).add(blogpost);
+            }
+        }
+
+        /* Write category pages */
+        Map<String, Object> content = new HashMap<String, Object>();
+        content.put("blog", blogInfo);
+        content.put(BASEDIR_KEY, "");
+        int counter = 0;
+
+        /* Leave relative links in content unchanged when writing the files */
+        DocumentAdapter.setFixContenLinks(false);
+
+        for (Entry<String, List<Document>> entry : categories.entrySet()) {
+            String filename = String.format("%s%s.html", config.getCategoryFile(), entry.getKey().toLowerCase(config.getLocale()));
+
+            /* Set the document */
+            if (content.containsKey("posts")) {
+                content.replace("posts", entry.getValue());
+                content.replace("category", entry.getKey());
+            } else {
+                content.put("posts", entry.getValue());
+                content.put("category", entry.getKey());
+            }
+
+            /* Write file to disk using the Freemarker template */
+            if (writeFile(content, new File(target.toFile(), filename), "page_category.ftl")) {
+                counter++;
+                LOGGER.info(String.format("Wrote category page %s for category %s", filename, entry.getKey()));
+            }
+        }
+
+        /* Reset to default behavior */
+        DocumentAdapter.setFixContenLinks(true);
+
+        LOGGER.info(String.format("%d category pages written", counter));
     }
 
 

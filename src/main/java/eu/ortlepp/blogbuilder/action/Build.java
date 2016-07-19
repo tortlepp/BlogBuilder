@@ -142,7 +142,7 @@ public final class Build {
 
 
     /**
-     * Write all blog posts and pages to HTML files.
+     * Write all blog posts, pages and special pages to HTML files.
      */
     private void writeFiles() {
         Writer writer = new Writer(Paths.get(directory.toString(), Config.DIR_BLOG),
@@ -150,6 +150,7 @@ public final class Build {
         writer.writeBlogPosts(blogposts);
         writer.writePages(pages);
         writer.writeIndex(blogposts);
+        writer.writeCategoryPages(blogposts);
     }
 
 

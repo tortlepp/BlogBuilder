@@ -47,6 +47,9 @@ public final class Config {
     /** The default value for the number of blog posts in the feed. Used if no value is set in the configuration file. */
     private static final String DEFAULT_FEED_POSTS = "3";
 
+    /** The default value for the filename of the category pages. Used if no value is set in the configuration file. */
+    private static final String DEFAULT_CATEGORY_FILE = "category_";
+
     /** The default value for the base URL of the blog. Used if no value is set in the configuration file. */
     private static final String DEFAULT_BASEURL = "http://blog.example.com";
 
@@ -70,6 +73,9 @@ public final class Config {
 
     /** The filename of the feed. */
     private String feedFile;
+
+    /** The filename of the category pages. */
+    private String categoryFile;
 
     /** The number of blog posts in the feed. */
     private int feedPosts;
@@ -97,6 +103,7 @@ public final class Config {
         indexPosts = Integer.parseInt(DEFAULT_INDEX_POSTS);
         feedFile = DEFAULT_FEED_FILE;
         feedPosts = Integer.parseInt(DEFAULT_FEED_POSTS);
+        categoryFile = DEFAULT_CATEGORY_FILE;
         baseurl = DEFAULT_BASEURL;
         locale = Locale.getDefault();
         sitemapFile = DEFAULT_SITEMAP_FILE;
@@ -122,6 +129,7 @@ public final class Config {
             author = properties.getProperty("blog.author", DEFAULT_AUTHOR);
             indexFile = properties.getProperty("index.filename", DEFAULT_INDEX_FILE);
             feedFile = properties.getProperty("feed.filename", DEFAULT_FEED_FILE);
+            categoryFile = properties.getProperty("category.filename", DEFAULT_CATEGORY_FILE);
             baseurl = properties.getProperty("blog.baseurl", DEFAULT_BASEURL);
             sitemapFile = properties.getProperty("sitemap.filename", DEFAULT_SITEMAP_FILE);
             urlShortener = Boolean.parseBoolean(properties.getProperty("create.urlshortener", DEFAULT_URLSHORTENER));
@@ -222,6 +230,16 @@ public final class Config {
      */
     public int getFeedPosts() {
         return feedPosts;
+    }
+
+
+    /**
+     * Getter for the filename of the category pages.
+     *
+     * @return The filename of the category pages
+     */
+    public String getCategoryFile() {
+        return categoryFile;
     }
 
 

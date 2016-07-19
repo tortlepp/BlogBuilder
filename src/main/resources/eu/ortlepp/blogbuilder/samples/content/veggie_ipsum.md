@@ -1,5 +1,6 @@
 ;;title=Veggie ipsum
 ;;created=2016-07-01 8:33
+;;category=Vegetables,Food
 
 Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.
 
