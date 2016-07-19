@@ -19,7 +19,7 @@ import eu.ortlepp.blogbuilder.action.Initialize;
 public final class BlogBuilder {
 
     /** The current version of the application. */
-    private static final String VERSION = "0.3";
+    private static final String VERSION = "0.5";
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(BlogBuilder.class.getName());
