@@ -132,7 +132,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
      *
      * @author Thorsten Ortlepp
      */
-    private class StringModel implements TemplateScalarModel {
+    private static class StringModel implements TemplateScalarModel {
 
         /** The string value. */
         private final String string;
@@ -164,7 +164,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
      *
      * @author Thorsten Ortlepp
      */
-    private class DateModel implements TemplateDateModel {
+    private static class DateModel implements TemplateDateModel {
 
         /** The date and time value. */
         private final Date date;

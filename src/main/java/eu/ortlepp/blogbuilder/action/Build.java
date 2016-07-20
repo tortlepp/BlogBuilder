@@ -175,7 +175,7 @@ public final class Build {
         }
 
         /* Open template file, fill it with the generated code and write it to a file */
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("eu/ortlepp/blogbuilder/contrib/goto.php")));) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("eu/ortlepp/blogbuilder/contrib/goto.php"), StandardCharsets.UTF_8))) {
 
             /* Read template file */
             StringBuilder phpfile = new StringBuilder();
@@ -193,7 +193,7 @@ public final class Build {
 
             LOGGER.info("URL shortener goto.php created");
         } catch (IOException ex) {
-            LOGGER.severe(String.format("Error while creating URL shortener: ", ex.getMessage()));
+            LOGGER.severe(String.format("Error while creating URL shortener: %s", ex.getMessage()));
         }
     }
 

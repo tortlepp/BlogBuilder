@@ -88,7 +88,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
 
             if (document.isValidDocument()) {
                 files.add(document);
-                LOGGER.info(String.format("Found %s (%s)", file.getFileName().toString(), document.getTitle()));
+                LOGGER.info(String.format("Found %s (%s)", Tools.getFilenameFromPath(file), document.getTitle()));
             }
         }
 
@@ -152,7 +152,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
                             }
                             break;
                         default:
-                            LOGGER.warning(String.format("Unknown header %s in %s", keyvalue[0], file.getFileName().toString()));
+                            LOGGER.warning(String.format("Unknown header %s in %s", keyvalue[0], Tools.getFilenameFromPath(file)));
                             break;
                     }
                 }
@@ -181,7 +181,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
             }
 
         } catch (IOException ex) {
-            LOGGER.severe(String.format("Reading %s failed: %s", file.getFileName().toString(), ex.getMessage()));
+            LOGGER.severe(String.format("Reading %s failed: %s", Tools.getFilenameFromPath(file), ex.getMessage()));
         }
 
         return document;

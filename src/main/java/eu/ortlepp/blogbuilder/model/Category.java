@@ -104,4 +104,28 @@ public class Category {
         return false;
     }
 
+
+    /**
+     * Custom implementation of hashCode().
+     *
+     * @return The calculated hash code
+     */
+    @Override
+    public int hashCode() {
+        /* Get hash values */
+        int[] hashes = new int[4];
+        hashes[0] = name.hashCode();
+        hashes[1] = path.hashCode();
+        hashes[2] = relativePath.hashCode();
+        hashes[3] = locale.hashCode();
+
+        /* Calculate hash value (13 is a randomly chosen prime number) */
+        int result = 0;
+        for (int hash : hashes) {
+            result = 13 * result + hash;
+        }
+
+        return result;
+    }
+
 }

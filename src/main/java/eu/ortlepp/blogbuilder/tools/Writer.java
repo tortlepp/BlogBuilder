@@ -129,13 +129,20 @@ public class Writer {
             Path file = Paths.get(target.toString(), document.getPath());
 
             try {
-                /* Create directories */
-                Files.createDirectories(file.getParent());
+                /* Get the parent directory (will be null if file has no parent directory) */
+                Path parent = file.getParent();
 
-                /* Write file to disk using the Freemarker template */
-                if (writeFile(content, file.toFile(), template)) {
-                    counter++;
-                    LOGGER.info(String.format("Wrote %s", document.getPath()));
+                if (parent == null) {
+                    LOGGER.warning(String.format("%s has no parent directory, creating directories failed", file.toString()));
+                } else {
+                    /* Create directories */
+                    Files.createDirectories(parent);
+
+                    /* Write file to disk using the Freemarker template */
+                    if (writeFile(content, file.toFile(), template)) {
+                        counter++;
+                        LOGGER.info(String.format("Wrote %s", document.getPath()));
+                    }
                 }
 
             } catch (IOException ex) {

@@ -63,12 +63,20 @@ public class ResourceCopy extends SimpleFileVisitor<Path> {
 
         /* Create folders and copy file */
         if (Files.exists(temp)) {
-            LOGGER.warning(String.format("Resource file %s already exists, file not copied", temp.getFileName().toString()));
+            LOGGER.warning(String.format("Resource file %s already exists, file not copied", Tools.getFilenameFromPath(temp)));
         } else {
-            Files.createDirectories(temp.getParent());
-            Files.copy(file, temp);
-            counter++;
-            LOGGER.info(String.format("Resource file %s copied", temp.getFileName().toString()));
+
+            /* Check parent because it could be null when the path does not contain a parent */
+            /* But usually this should never happen */
+            Path tmpParent = temp.getParent();
+            if (tmpParent == null) {
+                LOGGER.warning(String.format("Creating path for %s failed, parent directory is unknown", Tools.getFilenameFromPath(temp)));
+            } else {
+                Files.createDirectories(tmpParent);
+                Files.copy(file, temp);
+                counter++;
+                LOGGER.info(String.format("Resource file %s copied", Tools.getFilenameFromPath(temp)));
+            }
         }
 
         return FileVisitResult.CONTINUE;

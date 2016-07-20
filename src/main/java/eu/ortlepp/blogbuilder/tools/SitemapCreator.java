@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 
@@ -14,6 +15,9 @@ import org.w3c.dom.Element;
  * @author Thorsten Ortlepp
  */
 public class SitemapCreator extends AbstractXmlCreator {
+
+    /** A logger to write out messages to the user. */
+    private static final Logger LOGGER = Logger.getLogger(SitemapCreator.class.getName());
 
     /** Get access to configuration read from the properties file. */
     private final Config config;
@@ -69,10 +73,18 @@ public class SitemapCreator extends AbstractXmlCreator {
         addDocuments(blogposts);
         addDocuments(pages);
 
+        /* Get a list of all files (will be null if directory is not a directory) */
+        /* But usually this should never happen */
+        String[] files = new File(directory).list();
+
         /* Add all index files to the sitemap */
-        for (String file : new File(directory).list()) {
-            if (file.matches(config.getIndexFile() + "(-\\d+)*" + "\\.html")) {
-                addUrl(baseurl + file, LocalDateTime.now());
+        if (files == null) {
+            LOGGER.warning(String.format("%s is not a directory", directory));
+        } else {
+            for (String file : files) {
+                if (file.matches(config.getIndexFile() + "(-\\d+)*" + "\\.html")) {
+                    addUrl(baseurl + file, LocalDateTime.now());
+                }
             }
         }
 

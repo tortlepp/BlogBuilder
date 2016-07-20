@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.model;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -306,8 +308,10 @@ public class Document implements Comparable<Document> {
      * @param A new category of the document
      */
     public void addCategory(String category) {
-        if (!categories.contains(category)) {
-            categories.add(new Category(category, toBaseDir));
+        Category temp = new Category(category, toBaseDir);
+
+        if (!categories.contains(temp)) {
+            categories.add(temp);
         }
     }
 
@@ -339,6 +343,59 @@ public class Document implements Comparable<Document> {
             return -1;
         }
          return 0;
+    }
+
+
+    /**
+     * Custom implementation of equals(). Two documents are equal if their original files are the same.
+     *
+     * @param object The other document to compare to this document
+     * @return The result of the comparison; true = the documents (their original files) are equal,
+     *  false = the documents (their original files) are not equal or the other object is not a document
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Document) {
+            Document document = (Document) object;
+            try {
+                return Files.isSameFile(document.getFile(), getFile());
+            } catch (IOException ex) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Custom implementation of hashCode().
+     *
+     * @return The calculated hash code
+     */
+    @Override
+    public int hashCode() {
+        /* Get hash values */
+        int[] hashes = new int[12];
+        hashes[0] = file.hashCode();
+        hashes[1] = path.hashCode();
+        hashes[2] = toBaseDir.hashCode();
+        hashes[3] = title.hashCode();
+        hashes[4] = created.hashCode();
+        hashes[5] = modified.hashCode();
+        hashes[6] = blog ? 1 : 0;
+        hashes[7] = content.hashCode();
+        hashes[8] = previous.hashCode();
+        hashes[9] = next.hashCode();
+        hashes[10] = shortlink.hashCode();
+        hashes[11] = categories.hashCode();
+
+        /* Calculate hash value (7 is a randomly chosen prime number) */
+        int result = 0;
+        for (int hash : hashes) {
+            result = 7 * result + hash;
+        }
+
+        return result;
     }
 
 }

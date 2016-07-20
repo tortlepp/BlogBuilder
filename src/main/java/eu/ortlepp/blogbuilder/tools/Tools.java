@@ -1,5 +1,6 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,6 +70,22 @@ public final class Tools {
 
         matcher.appendTail(strBuffer);
         return strBuffer.toString();
+    }
+
+
+    /**
+     * Extract the filename from a path.
+     *
+     * @param path The complete path
+     * @return The extracted filename
+     */
+    public static String getFilenameFromPath(Path path) {
+        Path tmpFilename = path.getFileName();
+        String filename = "unknown";
+        if (tmpFilename != null) {
+            filename = tmpFilename.toString();
+        }
+        return filename;
     }
 
 
