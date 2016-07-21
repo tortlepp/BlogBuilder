@@ -17,8 +17,8 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import eu.ortlepp.blogbuilder.model.Category;
+import eu.ortlepp.blogbuilder.model.InnerDocument;
 import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.model.freemarker.DocumentAdapter;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -185,11 +185,8 @@ public class Writer {
         /* Counter for the number of blog posts that were already added to an index page */
         int added = 0;
 
-        /* Leave relative links in content unchanged when writing the files */
-        DocumentAdapter.setFixContenLinks(false);
-
         /* A list for all blog posts of an index page */
-        final List<Document> posts = new ArrayList<Document>();
+        final List<InnerDocument> posts = new ArrayList<InnerDocument>();
 
         /* Create all index pages */
         for (int i = 0; i < pages; i++) {
@@ -198,7 +195,7 @@ public class Writer {
             /* Get blog posts for the page */
             for (int j = added; j < (i + 1) * postsPerPage; j++) {
                 if (added < blogposts.size()) {
-                    posts.add(blogposts.get(added));
+                    posts.add(new InnerDocument(blogposts.get(added)));
                     added++;
                 } else {
                     break;
@@ -223,9 +220,6 @@ public class Writer {
             }
         }
 
-        /* Reset to default behavior */
-        DocumentAdapter.setFixContenLinks(true);
-
         LOGGER.info(String.format("%d index pages written", counter));
     }
 
@@ -236,13 +230,13 @@ public class Writer {
      * @param blogposts The list of blog posts
      */
     public void writeCategoryPages(final List<Document> blogposts) {
-        final Map<String, List<Document>> categories = new HashMap<String, List<Document>>();
+        final Map<String, List<InnerDocument>> categories = new HashMap<String, List<InnerDocument>>();
 
         /* Build category index */
         for (final Document blogpost : blogposts) {
             for (final Category category : blogpost.getCategories()) {
-                categories.putIfAbsent(category.getNameFormatted(), new ArrayList<Document>());
-                categories.get(category.getNameFormatted()).add(blogpost);
+                categories.putIfAbsent(category.getNameFormatted(), new ArrayList<InnerDocument>());
+                categories.get(category.getNameFormatted()).add(new InnerDocument(blogpost));
             }
         }
 
@@ -252,10 +246,7 @@ public class Writer {
         content.put(BASEDIR_KEY, "");
         int counter = 0;
 
-        /* Leave relative links in content unchanged when writing the files */
-        DocumentAdapter.setFixContenLinks(false);
-
-        for (final Entry<String, List<Document>> entry : categories.entrySet()) {
+        for (final Entry<String, List<InnerDocument>> entry : categories.entrySet()) {
             final String filename = String.format("%s%s.html", config.getCategoryFile(), entry.getKey().toLowerCase(config.getLocale()));
 
             /* Set the document */
@@ -273,9 +264,6 @@ public class Writer {
                 LOGGER.info(String.format("Wrote category page %s for category %s", filename, entry.getKey()));
             }
         }
-
-        /* Reset to default behavior */
-        DocumentAdapter.setFixContenLinks(true);
 
         LOGGER.info(String.format("%d category pages written", counter));
     }

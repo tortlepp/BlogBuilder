@@ -14,16 +14,37 @@ import java.util.logging.Logger;
  *
  * @author Thorsten Ortlepp
  */
-public class ResourceCopy extends SimpleFileVisitor<Path> {
+public final class ResourceCopy extends SimpleFileVisitor<Path> {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(ResourceCopy.class.getName());
 
     /** The target directory for the built blog. */
-    private static Path target;
+    private final Path target;
 
     /** A counter for all successfully copied files. */
-    private static int counter;
+    private int counter;
+
+
+    /**
+     * Create an instance of ResourceCopy an run the copy process.
+     *
+     * @param directory The project directory which contains the resources an the target directory
+     */
+    public static void copy(final Path directory) {
+        new ResourceCopy(directory).process(directory);
+    }
+
+
+    /**
+     * Constructor, initializes the copy process.
+     *
+     * @param directory The project directory which contains the resources an the target directory
+     */
+    private ResourceCopy(final Path directory) {
+        target = Paths.get(directory.toString(), Config.DIR_BLOG);
+        counter = 0;
+    }
 
 
     /**
@@ -33,11 +54,9 @@ public class ResourceCopy extends SimpleFileVisitor<Path> {
      *
      * @param directory The project directory which contains the resources an the target directory
      */
-    public static void copy(final Path directory) {
-        target = Paths.get(directory.toString(), Config.DIR_BLOG);
-        counter = 0;
+    private void process(final Path directory) {
         try {
-            Files.walkFileTree(Paths.get(directory.toString(), Config.DIR_RESOURCES), new ResourceCopy());
+            Files.walkFileTree(Paths.get(directory.toString(), Config.DIR_RESOURCES), this);
             LOGGER.info(String.format("%d resource files copied", counter));
         } catch (IOException ex) {
             LOGGER.severe(String.format("Error while copying: %s", ex.getMessage()));

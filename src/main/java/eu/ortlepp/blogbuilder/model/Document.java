@@ -195,6 +195,16 @@ public class Document implements Comparable<Document> {
 
 
     /**
+     * Setter for the document type (blog post or simple page).
+     *
+     * @param blog Document type; true = blog post, false = simple page
+     */
+    protected void setBlog(final boolean blog) {
+        this.blog = blog;
+    }
+
+
+    /**
      * Setter for the document type - changes the document type to simple page.
      */
     public void setNoBlog() {
@@ -299,6 +309,16 @@ public class Document implements Comparable<Document> {
      */
     public List<Category> getCategories() {
         return categories;
+    }
+
+
+    /**
+     * Setter for the list that contains the categories of the document.
+     *
+     * @param categories The list of categories to set
+     */
+    protected void setCategories(final List<Category> categories) {
+        categories.forEach(this.categories::add);
     }
 
 

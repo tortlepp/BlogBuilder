@@ -18,13 +18,10 @@ import freemarker.template.WrappingTemplateModel;
 public class DocumentAdapter extends WrappingTemplateModel implements AdapterTemplateModel, TemplateHashModel {
 
     /** The Document data object. */
-    private final Document document;
+    protected final Document document;
 
     /** The wrapper for the adapter. */
     private final ObjectWrapper wrapper;
-
-    /** Flag for fixing relative links in the content of a document; true = fix links (default behavior), false = leave links unchanged. */
-    private static boolean fixContentLinks = true;
 
 
     /**
@@ -65,11 +62,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
             case "title":
                 return new StringModel(document.getTitle());
             case "content":
-                if (fixContentLinks) {
-                    return new StringModel(Tools.makeLinksRelative(document.getContentAsHtml(), document.getToBaseDir()));
-                } else {
-                    return new StringModel(document.getContentAsHtml());
-                }
+                return new StringModel(getPreparedContent());
             case "link":
                 return new StringModel(document.getPath());
             case "previous":
@@ -91,6 +84,16 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
 
 
     /**
+     * Prepare the content for the output: Get the HTML and create relative links with full paths.
+     *
+     * @return The prepared content
+     */
+    protected String getPreparedContent() {
+        return Tools.makeLinksRelative(document.getContentAsHtml(), document.getToBaseDir());
+    }
+
+
+    /**
      * Check if the adapter is empty. Always returns false because the adapter is never empty.
      *
      * @return Always false (the adapter is never empty)
@@ -98,16 +101,6 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
     @Override
     public boolean isEmpty() {
         return false;
-    }
-
-
-    /**
-     * Setter for the flag for fixing relative links in the content of a document.
-     *
-     * @param fix The value for the flag; true = fix links, false = leave links unchanged
-     */
-    public static void setFixContenLinks(final boolean fix) {
-        fixContentLinks = fix;
     }
 
 }
