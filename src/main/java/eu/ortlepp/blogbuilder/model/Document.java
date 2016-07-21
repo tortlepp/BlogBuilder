@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.pegdown.PegDownProcessor;
 
@@ -368,34 +369,13 @@ public class Document implements Comparable<Document> {
 
 
     /**
-     * Custom implementation of hashCode().
+     * Custom implementation of hashCode(), uses Objects.hash().
      *
      * @return The calculated hash code
      */
     @Override
     public int hashCode() {
-        /* Get hash values */
-        int[] hashes = new int[12];
-        hashes[0] = file.hashCode();
-        hashes[1] = path.hashCode();
-        hashes[2] = toBaseDir.hashCode();
-        hashes[3] = title.hashCode();
-        hashes[4] = created.hashCode();
-        hashes[5] = modified.hashCode();
-        hashes[6] = blog ? 1 : 0;
-        hashes[7] = content.hashCode();
-        hashes[8] = previous.hashCode();
-        hashes[9] = next.hashCode();
-        hashes[10] = shortlink.hashCode();
-        hashes[11] = categories.hashCode();
-
-        /* Calculate hash value (7 is a randomly chosen prime number) */
-        int result = 0;
-        for (final int hash : hashes) {
-            result = 7 * result + hash;
-        }
-
-        return result;
+        return Objects.hash(file, path, toBaseDir, title, created, modified, blog, content, previous, next, shortlink, categories);
     }
 
 }

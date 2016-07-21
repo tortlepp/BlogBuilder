@@ -10,8 +10,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import eu.ortlepp.blogbuilder.model.Document;
@@ -90,20 +90,15 @@ public final class Build {
         /* Find all Markdown files */
         blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), Config.DIR_CONTENT));
 
-        /* Copy pages to pages list */
-        for (final Document doc : blogposts) {
-            if (!doc.isBlog()) {
-                pages.add(doc);
+        /* Copy pages to pages list and remove them from blog post list */
+        final Iterator<Document> iterator = blogposts.iterator();
+        while (iterator.hasNext()) {
+            final Document document = iterator.next();
+            if (!document.isBlog()) {
+                pages.add(document);
+                iterator.remove();
             }
         }
-
-        /* Remove simple pages from blog post list */
-        blogposts.removeIf(new Predicate<Document>() {
-            @Override
-            public boolean test(final Document document) {
-                return !document.isBlog();
-            }
-        });
 
         /* Sort the blog posts by creation date (most recent first) */
         Collections.sort(blogposts);
