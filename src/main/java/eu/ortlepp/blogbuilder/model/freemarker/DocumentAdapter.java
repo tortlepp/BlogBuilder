@@ -1,23 +1,12 @@
 package eu.ortlepp.blogbuilder.model.freemarker;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-
-import eu.ortlepp.blogbuilder.model.Category;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.tools.Tools;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleCollection;
-import freemarker.template.TemplateCollectionModel;
-import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateModelIterator;
-import freemarker.template.TemplateScalarModel;
 import freemarker.template.WrappingTemplateModel;
 
 /**
@@ -44,7 +33,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
      * @param document The Document data object
      * @param wrapper The wrapper for the adapter
      */
-    public DocumentAdapter(Document document, ObjectWrapper wrapper) {
+    public DocumentAdapter(final Document document, final ObjectWrapper wrapper) {
         super(wrapper);
         this.document = document;
         this.wrapper = wrapper;
@@ -58,7 +47,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
      * @return The Document data object
      */
     @Override
-    public Object getAdaptedObject(Class hint) {
+    public Object getAdaptedObject(final Class hint) {
         return document;
     }
 
@@ -71,7 +60,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
      * @throws TemplateModelException Error while creating the suitable TemplateModel
      */
     @Override
-    public TemplateModel get(String key) throws TemplateModelException {
+    public TemplateModel get(final String key) throws TemplateModelException {
         switch (key) {
             case "title":
                 return new StringModel(document.getTitle());
@@ -94,7 +83,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
             case "modified":
                 return new DateModel(document.getModified());
             case "categories":
-                return new CategoryListModel(document.getCategories());
+                return new CategoryListModel(document.getCategories(), wrapper);
             default:
                 return null;
         }
@@ -117,120 +106,8 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
      *
      * @param fix The value for the flag; true = fix links, false = leave links unchanged
      */
-    public static void setFixContenLinks(boolean fix) {
+    public static void setFixContenLinks(final boolean fix) {
         fixContentLinks = fix;
-    }
-
-
-
-    //////////  Inner classes  \\\\\\\\\\
-
-
-
-    /**
-     * A model to handle string values from the Document data object.
-     *
-     * @author Thorsten Ortlepp
-     */
-    private static class StringModel implements TemplateScalarModel {
-
-        /** The string value. */
-        private final String string;
-
-        /**
-         * Constructor, initialize the string value.
-         *
-         * @param string The string value
-         */
-        public StringModel(String string) {
-            this.string = string;
-        }
-
-        /**
-         * Returns the string value.
-         *
-         * @return The string value
-         * @throws TemplateModelException Error while returning the string value
-         */
-        @Override
-        public String getAsString() throws TemplateModelException {
-            return string;
-        }
-    }
-
-
-    /**
-     * A model to handle date and time values from the Document data object.
-     *
-     * @author Thorsten Ortlepp
-     */
-    private static class DateModel implements TemplateDateModel {
-
-        /** The date and time value. */
-        private final Date date;
-
-        /**
-         * Constructor, initialize the date and time value by converting the LocalDateTime to Date.
-         * The conversion is necessary because Freemarker does not support LocalDateTime so far.
-         *
-         * @param datetime The date and time value
-         */
-        public DateModel(LocalDateTime datetime) {
-            this.date = Date.from(datetime.atZone(ZoneId.systemDefault()).toInstant());
-        }
-
-        /**
-         * Returns the date and time value.
-         *
-         * @return The date and time value
-         * @throws TemplateModelException Error while returning the date and time value
-         */
-        @Override
-        public Date getAsDate() throws TemplateModelException {
-            return date;
-        }
-
-        /**
-         * Returns the type of date. The type is always "date and time".
-         *
-         * @return Returns always "date and time"
-         */
-        @Override
-        public int getDateType() {
-            return TemplateDateModel.DATETIME;
-        }
-    }
-
-
-    /**
-     * A model to handle the category list from the Document data object.
-     *
-     * @author Thorsten Ortlepp
-     */
-    private class CategoryListModel implements TemplateCollectionModel {
-
-        /** The category list. */
-        private List<Category> categories;
-
-        /**
-         * Constructor, initialize the category list.
-         *
-         * @param categories The category list
-         */
-        public CategoryListModel(List<Category> categories) {
-            this.categories = categories;
-        }
-
-        /**
-         * Returns the iterator of the list.
-         *
-         * @return The iterator of the list
-         * @throws TemplateModelException Error while returning the iterator
-         */
-        @Override
-        public TemplateModelIterator iterator() throws TemplateModelException {
-            return new SimpleCollection(categories, wrapper).iterator();
-        }
     }
 
 }

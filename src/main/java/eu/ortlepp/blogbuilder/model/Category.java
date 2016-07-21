@@ -33,9 +33,9 @@ public class Category {
      * @param name The name of the category
      * @param toBaseDir The relative path from the parent object (a document / blog post) to the blog base directory
      */
-    public Category(String name, String toBaseDir) {
-        Config config = Config.getInstance();
-        String tmpName = name.replaceAll(" ", "");
+    public Category(final String name, final String toBaseDir) {
+        final Config config = Config.getInstance();
+        final String tmpName = name.replaceAll(" ", "");
 
         this.locale = config.getLocale();
         this.name = tmpName;
@@ -61,7 +61,7 @@ public class Category {
      * @return The formatted name of the category
      */
     public String getNameFormatted() {
-        String tmpName = name.toLowerCase(Config.getInstance().getLocale());
+        final String tmpName = name.toLowerCase(Config.getInstance().getLocale());
         return tmpName.substring(0, 1).toUpperCase(locale) + tmpName.substring(1);
     }
 
@@ -94,9 +94,9 @@ public class Category {
      *  false = the categories (their names) are not equal or the other object is not a category
      */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof Category) {
-            Category category = (Category) object;
+            final Category category = (Category) object;
             if (category.getName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -121,7 +121,7 @@ public class Category {
 
         /* Calculate hash value (13 is a randomly chosen prime number) */
         int result = 0;
-        for (int hash : hashes) {
+        for (final int hash : hashes) {
             result = 13 * result + hash;
         }
 

@@ -33,7 +33,7 @@ public class ResourceCopy extends SimpleFileVisitor<Path> {
      *
      * @param directory The project directory which contains the resources an the target directory
      */
-    public static void copy(Path directory) {
+    public static void copy(final Path directory) {
         target = Paths.get(directory.toString(), Config.DIR_BLOG);
         counter = 0;
         try {
@@ -55,7 +55,7 @@ public class ResourceCopy extends SimpleFileVisitor<Path> {
      * @throws IOException Error while deleting the file
      */
     @Override
-    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+    public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
         /* Create full target path */
         Path temp = target.relativize(file);
         temp = temp.subpath(2, temp.getNameCount());
@@ -68,7 +68,7 @@ public class ResourceCopy extends SimpleFileVisitor<Path> {
 
             /* Check parent because it could be null when the path does not contain a parent */
             /* But usually this should never happen */
-            Path tmpParent = temp.getParent();
+            final Path tmpParent = temp.getParent();
             if (tmpParent == null) {
                 LOGGER.warning(String.format("Creating path for %s failed, parent directory is unknown", Tools.getFilenameFromPath(temp)));
             } else {

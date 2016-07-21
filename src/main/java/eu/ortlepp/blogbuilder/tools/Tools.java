@@ -20,7 +20,7 @@ public final class Tools {
      * @param relative The relative path to add to the links
      * @return The content with changed links
      */
-    public static String makeLinksRelative(String content, String relative) {
+    public static String makeLinksRelative(final String content, final String relative) {
         String replaced = replaceLinks(content, relative, "href");
         replaced = replaceLinks(replaced, relative, "src");
         return replaced;
@@ -34,7 +34,7 @@ public final class Tools {
      * @param content The (HTML) text in which the links should be changed
      * @return The content with changed links
      */
-    public static String makeLinksAbsolute(String content) {
+    public static String makeLinksAbsolute(final String content) {
         String baseurl = Config.getInstance().getBaseUrl();
         if (!baseurl.endsWith("/")) {
             baseurl += "/";
@@ -54,9 +54,9 @@ public final class Tools {
      * @param attribute The attribute whose links are changed
      * @return The content with changed links
      */
-    private static String replaceLinks(String content, String prefix, String attribute) {
-        Matcher matcher = Pattern.compile(attribute + "=\".*?\"").matcher(content);
-        StringBuffer strBuffer = new StringBuffer(content.length());
+    private static String replaceLinks(final String content, final String prefix, final String attribute) {
+        final Matcher matcher = Pattern.compile(attribute + "=\".*?\"").matcher(content);
+        final StringBuffer strBuffer = new StringBuffer(content.length());
 
         while (matcher.find()) {
             String found = matcher.group();
@@ -79,8 +79,8 @@ public final class Tools {
      * @param path The complete path
      * @return The extracted filename
      */
-    public static String getFilenameFromPath(Path path) {
-        Path tmpFilename = path.getFileName();
+    public static String getFilenameFromPath(final Path path) {
+        final Path tmpFilename = path.getFileName();
         String filename = "unknown";
         if (tmpFilename != null) {
             filename = tmpFilename.toString();

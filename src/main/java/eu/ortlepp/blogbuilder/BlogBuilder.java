@@ -33,7 +33,7 @@ public final class BlogBuilder {
      *  argument ist path to the project directory
      *
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         if (args.length >= 2) {
             new BlogBuilder().run(args[0], args[1]);
         } else {
@@ -61,8 +61,8 @@ public final class BlogBuilder {
      * @param action The action to do (first command line argument)
      * @param directory The directory / project (second command line argument)
      */
-    private void run(String action, String directory) {
-        Path path = Paths.get(directory);
+    private void run(final String action, final String directory) {
+        final Path path = Paths.get(directory);
 
         /* Initialization */
         if (action.equalsIgnoreCase("--init")) {

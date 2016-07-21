@@ -40,7 +40,7 @@ public final class Build {
     private List<Document> blogposts;
 
     /** The list which contains all simple pages. */
-    private List<Document> pages;
+    private final List<Document> pages;
 
 
     /**
@@ -48,7 +48,7 @@ public final class Build {
      *
      * @param directory Directory of the project to build
      */
-    public static void build(Path directory) {
+    public static void build(final Path directory) {
         new Build(directory).process();
     }
 
@@ -58,7 +58,7 @@ public final class Build {
      *
      * @param directory
      */
-    private Build(Path directory) {
+    private Build(final Path directory) {
         this.directory = directory;
         blogposts = new ArrayList<Document>();
         pages = new ArrayList<Document>();
@@ -91,7 +91,7 @@ public final class Build {
         blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), Config.DIR_CONTENT));
 
         /* Copy pages to pages list */
-        for (Document doc : blogposts) {
+        for (final Document doc : blogposts) {
             if (!doc.isBlog()) {
                 pages.add(doc);
             }
@@ -100,7 +100,7 @@ public final class Build {
         /* Remove simple pages from blog post list */
         blogposts.removeIf(new Predicate<Document>() {
             @Override
-            public boolean test(Document document) {
+            public boolean test(final Document document) {
                 return !document.isBlog();
             }
         });
@@ -132,7 +132,7 @@ public final class Build {
      * @param doc2 The previous or next document
      * @return The link to the previous or next HTML file
      */
-    private String getRelaviveLink(Document current, Document other) {
+    private String getRelaviveLink(final Document current, final Document other) {
         String link = current.getFile().relativize(other.getFile()).toString();
         link = link.replaceAll("\\\\", "/");
         link = link.substring(0, link.lastIndexOf('.')) + ".html";
@@ -145,7 +145,7 @@ public final class Build {
      * Write all blog posts, pages and special pages to HTML files.
      */
     private void writeFiles() {
-        Writer writer = new Writer(Paths.get(directory.toString(), Config.DIR_BLOG),
+        final Writer writer = new Writer(Paths.get(directory.toString(), Config.DIR_BLOG),
                 Paths.get(directory.toString(), Config.DIR_TEMPLATES));
         writer.writeBlogPosts(blogposts);
         writer.writePages(pages);
@@ -165,12 +165,12 @@ public final class Build {
         }
 
         /* Renerate redirect code for PHP */
-        StringBuilder urls = new StringBuilder();
-        for (Document document : blogposts) {
-            String id = document.getShortlink().substring(document.getShortlink().lastIndexOf('/') + 1);
+        final StringBuilder urls = new StringBuilder();
+        for (final Document document : blogposts) {
+            final String postId = document.getShortlink().substring(document.getShortlink().lastIndexOf('/') + 1);
 
             /* Created string: case "ID": redirect("URL"); */
-            urls.append("case \"").append(id).append("\": redirect(\"").append(baseurl)
+            urls.append("case \"").append(postId).append("\": redirect(\"").append(baseurl)
                 .append(document.getPath()).append("\");").append(System.lineSeparator());
         }
 
@@ -178,17 +178,17 @@ public final class Build {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("eu/ortlepp/blogbuilder/contrib/goto.php"), StandardCharsets.UTF_8))) {
 
             /* Read template file */
-            StringBuilder phpfile = new StringBuilder();
+            final StringBuilder phpfile = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 phpfile.append(line).append(System.lineSeparator());
             }
 
             /* Put generated code in the template */
-            String shortener = phpfile.toString().replaceFirst("\\$\\$URLS\\$\\$", urls.toString());
+            final String shortener = phpfile.toString().replaceFirst("\\$\\$URLS\\$\\$", urls.toString());
 
             /* Write the PHP file */
-            byte[] bytes = shortener.getBytes(StandardCharsets.UTF_8);
+            final byte[] bytes = shortener.getBytes(StandardCharsets.UTF_8);
             Files.write(Paths.get(directory.toString(), Config.DIR_BLOG, "goto.php"), bytes, StandardOpenOption.CREATE);
 
             LOGGER.info("URL shortener goto.php created");

@@ -58,7 +58,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
      * @param directory The directory to scan
      * @return A list of all found Markdown files and their content
      */
-    public List<Document> scanDirectory(Path directory) {
+    public List<Document> scanDirectory(final Path directory) {
         dirContent = directory;
         files.clear();
         try {
@@ -81,10 +81,10 @@ public class Scanner extends SimpleFileVisitor<Path> {
      * @throws IOException Error while reading the file
      */
     @Override
-    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+    public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
 
         if (file.toString().endsWith(".md")) {
-            Document document = readFile(file);
+            final Document document = readFile(file);
 
             if (document.isValidDocument()) {
                 files.add(document);
@@ -102,7 +102,48 @@ public class Scanner extends SimpleFileVisitor<Path> {
      * @param file The file to read
      * @return The content of the file as Document object
      */
-    private Document readFile(Path file) {
+    private Document readFile(final Path file) {
+        final Document document = createDocument(file);
+
+        try {
+            /* Read the file */
+            final List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
+
+            /* Create Document data object */
+            parseContentFile(lines, document);
+
+            /* Create the short URL (for blog posts only) */
+            if (document.isBlog() && Config.getInstance().isUrlShortener()) {
+                /* Base URL for shortening */
+                String baseurl = Config.getInstance().getBaseUrl();
+                if (baseurl.endsWith("/")) {
+                    baseurl += "go/";
+                }else {
+                    baseurl += "/go/";
+                }
+
+                /* ID = timestamp of the creation date without trailing zeros */
+                String postId = String.valueOf(document.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+                postId = postId.replaceAll("0+$", "");
+
+                document.setShortlink(baseurl + postId);
+            }
+
+        } catch (IOException ex) {
+            LOGGER.severe(String.format("Reading %s failed: %s", Tools.getFilenameFromPath(file), ex.getMessage()));
+        }
+
+        return document;
+    }
+
+
+    /**
+     * Create a Document data object and initialize it with the correct files and paths.
+     *
+     * @param file The content / Markdown file that is the base for the Document data object
+     * @return The created and initialized Document data object
+     */
+    private Document createDocument(final Path file) {
         /* Get the relative path of the file and change the extension to .html */
         String htmlFile = dirContent.relativize(file).toString();
         htmlFile = htmlFile.replaceAll("\\\\", "/");
@@ -117,74 +158,56 @@ public class Scanner extends SimpleFileVisitor<Path> {
             toBaseDir = toBaseDir.replaceFirst("../", "") + "/";
         }
 
-        Document document = new Document(file, htmlFile, toBaseDir);
+        return new Document(file, htmlFile, toBaseDir);
+    }
 
-        try {
-            /* Read the file */
-            List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
 
-            for (String line : lines) {
+    /**
+     * Parse the content lines of a Markdown file and add the read content of the file to a Document data object.
+     *
+     * @param lines The content lines of the Markdown file
+     * @param document The Document data object that is related to the file
+     */
+    private void parseContentFile(final List<String> lines, final Document document) {
+        for (final String line : lines) {
 
-                /* Headers start with ;; */
-                if (line.trim().startsWith(";;")) {
+            /* Headers start with ;; */
+            if (line.trim().startsWith(";;")) {
 
-                    /* Split line to a key-value-pair */
-                    String[] keyvalue = line.trim().substring(2).split("=");
+                /* Split line to a key-value-pair */
+                final String[] keyvalue = line.trim().substring(2).split("=");
 
-                    /* Set headers */
-                    switch(keyvalue[0].trim().toLowerCase(Locale.getDefault())) {
-                        case "title":
-                            document.setTitle(keyvalue[1].trim());
-                            break;
-                        case "created":
-                            document.setCreated(parseString(keyvalue[1].trim()));
-                            break;
-                        case "modified":
-                            document.setModified(parseString(keyvalue[1].trim()));
-                            break;
-                        case "noblog":
-                            document.setNoBlog();
-                            break;
-                        case "category":
-                            String[] categories = keyvalue[1].split(",");
-                            for (String category : categories) {
-                                document.addCategory(category);
-                            }
-                            break;
-                        default:
-                            LOGGER.warning(String.format("Unknown header %s in %s", keyvalue[0], Tools.getFilenameFromPath(file)));
-                            break;
-                    }
-                }
-
-                /* Everything that is not a header is handled as content */
-                else {
-                    document.addContent(line + System.lineSeparator());
+                /* Set headers */
+                switch(keyvalue[0].trim().toLowerCase(Locale.getDefault())) {
+                    case "title":
+                        document.setTitle(keyvalue[1].trim());
+                        break;
+                    case "created":
+                        document.setCreated(parseString(keyvalue[1].trim()));
+                        break;
+                    case "modified":
+                        document.setModified(parseString(keyvalue[1].trim()));
+                        break;
+                    case "noblog":
+                        document.setNoBlog();
+                        break;
+                    case "category":
+                        final String[] categories = keyvalue[1].split(",");
+                        for (final String category : categories) {
+                            document.addCategory(category);
+                        }
+                        break;
+                    default:
+                        LOGGER.warning(String.format("Unknown header %s in %s", keyvalue[0], Tools.getFilenameFromPath(document.getFile())));
+                        break;
                 }
             }
 
-            /* Create the short URL (for blog posts only) */
-            if (document.isBlog() && Config.getInstance().isUrlShortener()) {
-                /* Base URL for shortening */
-                String baseurl = Config.getInstance().getBaseUrl();
-                if (!baseurl.endsWith("/")) {
-                    baseurl += "/go/";
-                }else {
-                    baseurl += "go/";
-                }
-
-                /* ID = timestamp of the creation date without trailing zeros */
-                String id = String.valueOf(document.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-                id = id.replaceAll("0+$", "");
-
-                document.setShortlink(baseurl + id);
+            /* Everything that is not a header is handled as content */
+            else {
+                document.addContent(line + System.lineSeparator());
             }
-
-        } catch (IOException ex) {
-            LOGGER.severe(String.format("Reading %s failed: %s", Tools.getFilenameFromPath(file), ex.getMessage()));
         }
-
-        return document;
     }
 
 
@@ -195,7 +218,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
      * @param string The string to parse
      * @return The date and time object
      */
-    private LocalDateTime parseString(String string) {
+    private LocalDateTime parseString(final String string) {
         try {
             return LocalDateTime.parse(string, inputFormat);
         } catch (DateTimeException ex) {

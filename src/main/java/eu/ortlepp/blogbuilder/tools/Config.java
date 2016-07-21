@@ -117,11 +117,11 @@ public final class Config {
      *
      * @param directory The project directory which contains the properties file.
      */
-    public void loadConfig(File directory) {
-        String confFile = "blog.properties";
+    public void loadConfig(final File directory) {
+        final String confFile = "blog.properties";
 
         try (FileInputStream fis = new FileInputStream(new File(directory, confFile))) {
-            Properties properties = new Properties();
+            final Properties properties = new Properties();
             properties.load(fis);
 
             /* Read properties, use defaults if not found in properties file */

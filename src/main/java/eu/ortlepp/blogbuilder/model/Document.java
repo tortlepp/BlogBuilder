@@ -39,7 +39,7 @@ public class Document implements Comparable<Document> {
     private boolean blog;
 
     /** The content of the document. */
-    private StringBuilder content;
+    private final StringBuilder content;
 
     /** A link to the previous (earlier) blog post. */
     private String previous;
@@ -73,7 +73,7 @@ public class Document implements Comparable<Document> {
      * @param path The relative path of the HTML file
      * @param The relative path from the document to the base dir
      */
-    public Document(Path file, String path, String toBaseDir) {
+    public Document(final Path file, final String path, final String toBaseDir) {
         this.file = file;
         this.path = path;
         this.toBaseDir = toBaseDir;
@@ -134,7 +134,7 @@ public class Document implements Comparable<Document> {
      *
      * @param title Title of the document
      */
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title.trim();
     }
 
@@ -154,7 +154,7 @@ public class Document implements Comparable<Document> {
      *
      * @param created Creation date of the document
      */
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(final LocalDateTime created) {
         this.created = created;
     }
 
@@ -178,7 +178,7 @@ public class Document implements Comparable<Document> {
      *
      * @param modified Modification date of the document
      */
-    public void setModified(LocalDateTime modified) {
+    public void setModified(final LocalDateTime modified) {
         this.modified = modified;
     }
 
@@ -226,7 +226,7 @@ public class Document implements Comparable<Document> {
      *
      * @param part The string to add
      */
-    public void addContent(String part) {
+    public void addContent(final String part) {
         content.append(part);
     }
 
@@ -246,7 +246,7 @@ public class Document implements Comparable<Document> {
      *
      * @param previous Link to the previous blog post
      */
-    public void setPrevious(String previous) {
+    public void setPrevious(final String previous) {
         this.previous = previous;
     }
 
@@ -266,7 +266,7 @@ public class Document implements Comparable<Document> {
      *
      * @param next Link to the next blog post
      */
-    public void setNext(String next) {
+    public void setNext(final String next) {
         this.next = next;
     }
 
@@ -286,7 +286,7 @@ public class Document implements Comparable<Document> {
      *
      * @param shortlink Shortlink of the document
      */
-    public void setShortlink(String shortlink) {
+    public void setShortlink(final String shortlink) {
         this.shortlink = shortlink;
     }
 
@@ -307,8 +307,8 @@ public class Document implements Comparable<Document> {
      *
      * @param A new category of the document
      */
-    public void addCategory(String category) {
-        Category temp = new Category(category, toBaseDir);
+    public void addCategory(final String category) {
+        final Category temp = new Category(category, toBaseDir);
 
         if (!categories.contains(temp)) {
             categories.add(temp);
@@ -336,7 +336,7 @@ public class Document implements Comparable<Document> {
      * @param The result of the comparison
      */
     @Override
-    public int compareTo(Document other) {
+    public int compareTo(final Document other) {
         if (getCreated().isBefore(other.getCreated())) {
             return 1;
         } else if (getCreated().isAfter(other.getCreated())) {
@@ -354,9 +354,9 @@ public class Document implements Comparable<Document> {
      *  false = the documents (their original files) are not equal or the other object is not a document
      */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof Document) {
-            Document document = (Document) object;
+            final Document document = (Document) object;
             try {
                 return Files.isSameFile(document.getFile(), getFile());
             } catch (IOException ex) {
@@ -391,7 +391,7 @@ public class Document implements Comparable<Document> {
 
         /* Calculate hash value (7 is a randomly chosen prime number) */
         int result = 0;
-        for (int hash : hashes) {
+        for (final int hash : hashes) {
             result = 7 * result + hash;
         }
 

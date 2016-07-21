@@ -18,7 +18,7 @@ public class DocumentWrapper extends DefaultObjectWrapper {
      *
      * @param version Incompatible Improvements
      */
-    public DocumentWrapper(Version version) {
+    public DocumentWrapper(final Version version) {
         super(version);
     }
 
