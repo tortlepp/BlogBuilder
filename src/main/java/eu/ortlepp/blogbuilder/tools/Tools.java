@@ -1,6 +1,7 @@
 package eu.ortlepp.blogbuilder.tools;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,15 +78,11 @@ public final class Tools {
      * Extract the filename from a path.
      *
      * @param path The complete path
-     * @return The extracted filename
+     * @return The extracted filename; or "unknown" if path is not valid
      */
     public static String getFilenameFromPath(final Path path) {
-        final Path tmpFilename = path.getFileName();
-        String filename = "unknown";
-        if (tmpFilename != null) {
-            filename = tmpFilename.toString();
-        }
-        return filename;
+        final Optional<Path> optional = Optional.ofNullable(path.getFileName());
+        return optional.isPresent() ? optional.get().toString() : "unknown";
     }
 
 

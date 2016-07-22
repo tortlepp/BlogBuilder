@@ -86,11 +86,8 @@ public final class ResourceCopy extends SimpleFileVisitor<Path> {
         } else {
 
             /* Check parent because it could be null when the path does not contain a parent */
-            /* But usually this should never happen */
             final Path tmpParent = temp.getParent();
-            if (tmpParent == null) {
-                LOGGER.warning(String.format("Creating path for %s failed, parent directory is unknown", Tools.getFilenameFromPath(temp)));
-            } else {
+            if (tmpParent != null) {
                 Files.createDirectories(tmpParent);
                 Files.copy(file, temp);
                 counter++;

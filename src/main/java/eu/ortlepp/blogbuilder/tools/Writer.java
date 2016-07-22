@@ -132,9 +132,7 @@ public class Writer {
                 /* Get the parent directory (will be null if file has no parent directory) */
                 final Path parent = file.getParent();
 
-                if (parent == null) {
-                    LOGGER.warning(String.format("%s has no parent directory, creating directories failed", file.toString()));
-                } else {
+                if (parent != null) {
                     /* Create directories */
                     Files.createDirectories(parent);
 
