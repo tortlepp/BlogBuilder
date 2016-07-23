@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import org.w3c.dom.Element;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -8,14 +10,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.w3c.dom.Element;
-
 /**
  * A creator for Atom Feeds. Creates an Atom Feed which contains the most recent blog posts.
  *
  * @author Thorsten Ortlepp
  */
-public class FeedCreator extends AbstractXmlCreator {
+public final class FeedCreator extends AbstractXmlCreator {
 
     /** A list with all blog posts in chronological order. */
     private final List<eu.ortlepp.blogbuilder.model.Document> blogposts;
@@ -33,7 +33,7 @@ public class FeedCreator extends AbstractXmlCreator {
      * @param blogposts A list with all blog posts
      * @param directory The project directory
      */
-    public FeedCreator(List<eu.ortlepp.blogbuilder.model.Document> blogposts, String directory) {
+    public FeedCreator(final List<eu.ortlepp.blogbuilder.model.Document> blogposts, final String directory) {
         super();
         initRootElement();
         this.blogposts = blogposts;
@@ -71,10 +71,11 @@ public class FeedCreator extends AbstractXmlCreator {
         xmlRoot.appendChild(createElement("title", config.getTitle()));
 
         /* <id> */
-        xmlRoot.appendChild(createElement("id", createId(config.getBaseUrl(), LocalDateTime.parse("2016-01-01T12:00:00"), config.getFeedFile())));
+        xmlRoot.appendChild(createElement("id", createId(config.getBaseUrl(),
+                LocalDateTime.parse("2016-01-01T12:00:00"), config.getFeedFile())));
 
         /* <link> */
-        Element link = xmlDocument.createElement("link");
+        final Element link = xmlDocument.createElement("link");
         link.setAttributeNode(createAttribute("href", config.getBaseUrl()));
         link.setAttributeNode(createAttribute("rel", "self"));
         xmlRoot.appendChild(link);
@@ -93,7 +94,7 @@ public class FeedCreator extends AbstractXmlCreator {
         xmlRoot.appendChild(createElement("updated", formatDateTime(updated)));
 
         /* <author> (contains <name>) */
-        Element author = xmlDocument.createElement("author");
+        final Element author = xmlDocument.createElement("author");
         author.appendChild(createElement("name", config.getAuthor()));
         xmlRoot.appendChild(author);
     }
@@ -106,27 +107,28 @@ public class FeedCreator extends AbstractXmlCreator {
         for (int i = 0; i < config.getFeedPosts(); i++) {
 
             if (i < blogposts.size()) {
-                eu.ortlepp.blogbuilder.model.Document document = blogposts.get(i);
+                final eu.ortlepp.blogbuilder.model.Document document = blogposts.get(i);
 
                 /* The root element of the blog post / entry */
-                Element entry = xmlDocument.createElement("entry");
+                final Element entry = xmlDocument.createElement("entry");
 
                 /* <title> */
                 entry.appendChild(createElement("title", document.getTitle()));
 
                 /* <id> */
-                entry.appendChild(createElement("id", createId(config.getBaseUrl(), document.getCreated(), document.getPath())));
+                entry.appendChild(createElement("id", createId(config.getBaseUrl(), document.getCreated(),
+                        document.getPath())));
 
                 /* <updated> */
                 entry.appendChild(createElement("updated", formatDateTime(document.getModified())));
 
                 /* <link> */
-                Element link = xmlDocument.createElement("link");
+                final Element link = xmlDocument.createElement("link");
                 link.setAttributeNode(createAttribute("href", config.getBaseUrl() + "/" + document.getPath()));
                 entry.appendChild(link);
 
                 /* <content> */
-                Element content = createElement("content", Tools.makeLinksAbsolute(document.getContentAsHtml()));
+                final Element content = createElement("content", Tools.makeLinksAbsolute(document.getContentAsHtml()));
                 content.setAttributeNode(createAttribute("type", "html"));
                 entry.appendChild(content);
 
@@ -147,9 +149,9 @@ public class FeedCreator extends AbstractXmlCreator {
      * @param file A filename with path
      * @return The created ID
      */
-    private String createId(String baseurl, LocalDateTime created, String file) {
-        String url = baseurl.replaceAll("http[s]*://", "");
-        String date = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    private String createId(final String baseurl, final LocalDateTime created, final String file) {
+        final String url = baseurl.replaceAll("http[s]*://", "");
+        final String date = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return String.format("tag:%s,%s:/%s", url, date, file);
     }
 
@@ -160,8 +162,8 @@ public class FeedCreator extends AbstractXmlCreator {
      * @param datetime The date / time to format
      * @return The formatted date / time
      */
-    private String formatDateTime(LocalDateTime datetime) {
-        ZonedDateTime zoned = datetime.atZone(ZoneId.systemDefault());
+    private String formatDateTime(final LocalDateTime datetime) {
+        final ZonedDateTime zoned = datetime.atZone(ZoneId.systemDefault());
         return zoned.format(DateTimeFormatter.ISO_INSTANT);
     }
 

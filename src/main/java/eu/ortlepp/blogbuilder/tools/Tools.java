@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import java.nio.file.Path;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,15 +13,14 @@ import java.util.regex.Pattern;
 public final class Tools {
 
     /**
-     * Change all non-absolute links in an HTML formatted string into relative links.
-     * All links in href and src attributes are prepended with the relative path to the base
-     * directory (e.g. ../../path/file.html).
+     * Change all non-absolute links in an HTML formatted string into relative links. All links in href and src
+     * attributes are prepended with the relative path to the base directory (e.g. ../../path/file.html).
      *
      * @param content The (HTML) text in which the links should be changed
      * @param relative The relative path to add to the links
      * @return The content with changed links
      */
-    public static String makeLinksRelative(String content, String relative) {
+    public static String makeLinksRelative(final String content, final String relative) {
         String replaced = replaceLinks(content, relative, "href");
         replaced = replaceLinks(replaced, relative, "src");
         return replaced;
@@ -27,13 +28,13 @@ public final class Tools {
 
 
     /**
-     * Change all non-absolute links in an HTML formatted string into absolute links.
-     * All links in href and src attributes are prepended with the base URL.
+     * Change all non-absolute links in an HTML formatted string into absolute links. All links in href and src
+     * attributes are prepended with the base URL.
      *
      * @param content The (HTML) text in which the links should be changed
      * @return The content with changed links
      */
-    public static String makeLinksAbsolute(String content) {
+    public static String makeLinksAbsolute(final String content) {
         String baseurl = Config.getInstance().getBaseUrl();
         if (!baseurl.endsWith("/")) {
             baseurl += "/";
@@ -53,9 +54,9 @@ public final class Tools {
      * @param attribute The attribute whose links are changed
      * @return The content with changed links
      */
-    private static String replaceLinks(String content, String prefix, String attribute) {
-        Matcher matcher = Pattern.compile(attribute + "=\".*?\"").matcher(content);
-        StringBuffer strBuffer = new StringBuffer(content.length());
+    private static String replaceLinks(final String content, final String prefix, final String attribute) {
+        final Matcher matcher = Pattern.compile(attribute + "=\".*?\"").matcher(content);
+        final StringBuffer strBuffer = new StringBuffer(content.length());
 
         while (matcher.find()) {
             String found = matcher.group();
@@ -69,6 +70,18 @@ public final class Tools {
 
         matcher.appendTail(strBuffer);
         return strBuffer.toString();
+    }
+
+
+    /**
+     * Extract the filename from a path.
+     *
+     * @param path The complete path
+     * @return The extracted filename; or "unknown" if path is not valid
+     */
+    public static String getFilenameFromPath(final Path path) {
+        final Optional<Path> optional = Optional.ofNullable(path.getFileName());
+        return optional.isPresent() ? optional.get().toString() : "unknown";
     }
 
 

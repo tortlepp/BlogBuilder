@@ -38,13 +38,18 @@ public final class Config {
     /** The default value for the name of the index file. Used if no value is set in the configuration file. */
     private static final String DEFAULT_INDEX_FILE = "index";
 
-    /** The default value for the number of blog posts on each index page. Used if no value is set in the configuration file. */
+    /**
+     * The default value for the number of blog posts on each index page. Used if no value is set in the
+     * configuration file.
+     */
     private static final String DEFAULT_INDEX_POSTS = "3";
 
     /** The default value for the filename of the feed. Used if no value is set in the configuration file. */
     private static final String DEFAULT_FEED_FILE = "feed.xml";
 
-    /** The default value for the number of blog posts in the feed. Used if no value is set in the configuration file. */
+    /**
+     * The default value for the number of blog posts in the feed. Used if no value is set in the configuration file.
+     */
     private static final String DEFAULT_FEED_POSTS = "3";
 
     /** The default value for the filename of the category pages. Used if no value is set in the configuration file. */
@@ -112,16 +117,16 @@ public final class Config {
 
 
     /**
-     * Read the configuration from the properties file. The properties file is located in the project
-     * directory and named blog.properties.
+     * Read the configuration from the properties file. The properties file is located in the project directory and
+     * named blog.properties.
      *
      * @param directory The project directory which contains the properties file.
      */
-    public void loadConfig(File directory) {
-        String confFile = "blog.properties";
+    public void loadConfig(final File directory) {
+        final String confFile = "blog.properties";
 
         try (FileInputStream fis = new FileInputStream(new File(directory, confFile))) {
-            Properties properties = new Properties();
+            final Properties properties = new Properties();
             properties.load(fis);
 
             /* Read properties, use defaults if not found in properties file */
@@ -137,13 +142,15 @@ public final class Config {
             try {
                 indexPosts = Integer.parseInt(properties.getProperty("index.posts", DEFAULT_INDEX_POSTS));
             } catch (NumberFormatException ex) {
-                Logger.getLogger(Config.class.getName()).warning(String.format("Parsing index.posts failed: %s", ex.getMessage()));
+                Logger.getLogger(Config.class.getName()).warning(String.format("Parsing index.posts failed: %s",
+                        ex.getMessage()));
             }
 
             try {
                 feedPosts = Integer.parseInt(properties.getProperty("feed.posts", DEFAULT_FEED_POSTS));
             } catch (NumberFormatException ex) {
-                Logger.getLogger(Config.class.getName()).warning(String.format("Parsing feed.posts failed: %s", ex.getMessage()));
+                Logger.getLogger(Config.class.getName()).warning(String.format("Parsing feed.posts failed: %s",
+                        ex.getMessage()));
             }
 
             Locale localeTemp = Locale.forLanguageTag(properties.getProperty("blog.locale", ""));
@@ -154,7 +161,8 @@ public final class Config {
 
             Logger.getLogger(Config.class.getName()).info(String.format("Read configuration from %s", confFile));
         } catch (IOException ex) {
-            Logger.getLogger(Config.class.getName()).severe(String.format("Reading %s failed: %s", confFile, ex.getMessage()));
+            Logger.getLogger(Config.class.getName()).severe(String.format("Reading %s failed: %s",
+                    confFile, ex.getMessage()));
             throw new RuntimeException(ex);
         }
     }
@@ -274,8 +282,8 @@ public final class Config {
 
 
     /**
-     * Getter for the flag for the creation of the URL shortener.
-     * Returns true = create shortener or false = do not create shortener.
+     * Getter for the flag for the creation of the URL shortener. Returns true = create shortener or
+     * false = do not create shortener.
      *
      * @return The flag for the creation of the URL shortener
      */

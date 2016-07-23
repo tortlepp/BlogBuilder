@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.action;
 
+import eu.ortlepp.blogbuilder.tools.Config;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -7,14 +9,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
-import eu.ortlepp.blogbuilder.tools.Config;
-
 /**
  * Action: Initialize a new project.
  *
  * @author Thorsten Ortlepp
  */
-public class Initialize {
+public final class Initialize {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Initialize.class.getName());
@@ -28,7 +28,7 @@ public class Initialize {
      *
      * @param directory Directory of the project to initialize
      */
-    public static void initialize(Path directory) {
+    public static void initialize(final Path directory) {
         new Initialize(directory).process();
     }
 
@@ -36,9 +36,9 @@ public class Initialize {
     /**
      * Constructor, prepare the initialization.
      *
-     * @param directory
+     * @param directory Directory of the project to initialize
      */
-    private Initialize(Path directory) {
+    private Initialize(final Path directory) {
         this.directory = directory;
     }
 
@@ -63,7 +63,7 @@ public class Initialize {
      * @throws IOException Error while creating the directories
      */
     private void createDirectories() throws IOException {
-        String dirStr = directory.toString();
+        final String dirStr = directory.toString();
 
         Files.createDirectories(directory);
         LOGGER.info(String.format("Created project directory %s", directory.toString()));
@@ -87,31 +87,52 @@ public class Initialize {
      * @throws IOException Error while copying the files
      */
     private void copyFiles() throws IOException {
-        String dirStr = directory.toString();
+        final String dirStr = directory.toString();
+        final String dirStrContent = Paths.get(dirStr, Config.DIR_CONTENT).toString();
+        final String dirStrYear1 = Paths.get(dirStrContent, "2015").toString();
+        final String dirStrYear2 = Paths.get(dirStrContent, "2016").toString();
+        final String dirStrResources = Paths.get(dirStr, Config.DIR_RESOURCES).toString();
+        final String dirStrTemplates = Paths.get(dirStr, Config.DIR_TEMPLATES).toString();
 
         Files.copy(getResourceStream("config/blog.properties"), Paths.get(dirStr, "blog.properties"));
         LOGGER.info("Created configuration file");
 
-        Files.copy(getResourceStream("content/minions_ipsum_bananaaa_version.md"), Paths.get(dirStr, Config.DIR_CONTENT, "minions_ipsum_bananaaa_version.md"));
-        Files.copy(getResourceStream("content/minions_ipsum_latin_version.md"), Paths.get(dirStr, Config.DIR_CONTENT, "minions_ipsum_latin_version.md"));
-        Files.copy(getResourceStream("content/zombie_ipsum_part_1.md"), Paths.get(dirStr, Config.DIR_CONTENT, "2015", "zombie_ipsum_part_1.md"));
-        Files.copy(getResourceStream("content/zombie_ipsum_part_2.md"), Paths.get(dirStr, Config.DIR_CONTENT, "2015", "zombie_ipsum_part_2.md"));
-        Files.copy(getResourceStream("content/cupcake_ipsum_part_1.md"), Paths.get(dirStr, Config.DIR_CONTENT, "2016", "cupcake_ipsum_part_1.md"));
-        Files.copy(getResourceStream("content/cupcake_ipsum_part_2.md"), Paths.get(dirStr, Config.DIR_CONTENT, "2016", "cupcake_ipsum_part_2.md"));
-        Files.copy(getResourceStream("content/cupcake_ipsum_part_3.md"), Paths.get(dirStr, Config.DIR_CONTENT, "2016", "cupcake_ipsum_part_3.md"));
-        Files.copy(getResourceStream("content/veggie_ipsum.md"), Paths.get(dirStr, Config.DIR_CONTENT, "2016", "veggie_ipsum.md"));
+        Files.copy(getResourceStream("content/minions_ipsum_bananaaa_version.md"),
+                Paths.get(dirStrContent, "minions_ipsum_bananaaa_version.md"));
+        Files.copy(getResourceStream("content/minions_ipsum_latin_version.md"),
+                Paths.get(dirStrContent, "minions_ipsum_latin_version.md"));
+        Files.copy(getResourceStream("content/zombie_ipsum_part_1.md"),
+                Paths.get(dirStrYear1, "zombie_ipsum_part_1.md"));
+        Files.copy(getResourceStream("content/zombie_ipsum_part_2.md"),
+                Paths.get(dirStrYear1, "zombie_ipsum_part_2.md"));
+        Files.copy(getResourceStream("content/cupcake_ipsum_part_1.md"),
+                Paths.get(dirStrYear2, "cupcake_ipsum_part_1.md"));
+        Files.copy(getResourceStream("content/cupcake_ipsum_part_2.md"),
+                Paths.get(dirStrYear2, "cupcake_ipsum_part_2.md"));
+        Files.copy(getResourceStream("content/cupcake_ipsum_part_3.md"),
+                Paths.get(dirStrYear2, "cupcake_ipsum_part_3.md"));
+        Files.copy(getResourceStream("content/veggie_ipsum.md"),
+                Paths.get(dirStrYear2, "veggie_ipsum.md"));
         LOGGER.info("Created sample Markdown files");
 
-        Files.copy(getResourceStream("resources/image.jpg"), Paths.get(dirStr, Config.DIR_RESOURCES, "images", "image.jpg"));
-        Files.copy(getResourceStream("resources/style.css"), Paths.get(dirStr, Config.DIR_RESOURCES, "style.css"));
+        Files.copy(getResourceStream("resources/image.jpg"),
+                Paths.get(dirStrResources, "images", "image.jpg"));
+        Files.copy(getResourceStream("resources/style.css"),
+                Paths.get(dirStrResources, "style.css"));
         LOGGER.info("Created sample resource files");
 
-        Files.copy(getResourceStream("templates/include_footer.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "include_footer.ftl"));
-        Files.copy(getResourceStream("templates/include_header.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "include_header.ftl"));
-        Files.copy(getResourceStream("templates/page_blogpost.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "page_blogpost.ftl"));
-        Files.copy(getResourceStream("templates/page_category.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "page_category.ftl"));
-        Files.copy(getResourceStream("templates/page_index.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "page_index.ftl"));
-        Files.copy(getResourceStream("templates/page_page.ftl"), Paths.get(dirStr, Config.DIR_TEMPLATES, "page_page.ftl"));
+        Files.copy(getResourceStream("templates/include_footer.ftl"),
+                Paths.get(dirStrTemplates, "include_footer.ftl"));
+        Files.copy(getResourceStream("templates/include_header.ftl"),
+                Paths.get(dirStrTemplates, "include_header.ftl"));
+        Files.copy(getResourceStream("templates/page_blogpost.ftl"),
+                Paths.get(dirStrTemplates, "page_blogpost.ftl"));
+        Files.copy(getResourceStream("templates/page_category.ftl"),
+                Paths.get(dirStrTemplates, "page_category.ftl"));
+        Files.copy(getResourceStream("templates/page_index.ftl"),
+                Paths.get(dirStrTemplates, "page_index.ftl"));
+        Files.copy(getResourceStream("templates/page_page.ftl"),
+                Paths.get(dirStrTemplates, "page_page.ftl"));
         LOGGER.info("Created Freemarker templates");
     }
 
@@ -122,7 +143,7 @@ public class Initialize {
      * @param resource The resource file to get
      * @return The resource file as stream
      */
-    private InputStream getResourceStream(String resource) {
+    private InputStream getResourceStream(final String resource) {
         return this.getClass().getClassLoader().getResourceAsStream("eu/ortlepp/blogbuilder/samples/" + resource);
     }
 

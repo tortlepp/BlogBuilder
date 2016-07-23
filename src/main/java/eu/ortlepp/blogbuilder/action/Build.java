@@ -1,5 +1,14 @@
 package eu.ortlepp.blogbuilder.action;
 
+import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.tools.Cleaner;
+import eu.ortlepp.blogbuilder.tools.Config;
+import eu.ortlepp.blogbuilder.tools.FeedCreator;
+import eu.ortlepp.blogbuilder.tools.ResourceCopy;
+import eu.ortlepp.blogbuilder.tools.Scanner;
+import eu.ortlepp.blogbuilder.tools.SitemapCreator;
+import eu.ortlepp.blogbuilder.tools.Writer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,18 +19,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.logging.Logger;
-
-import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.tools.Cleaner;
-import eu.ortlepp.blogbuilder.tools.Config;
-import eu.ortlepp.blogbuilder.tools.FeedCreator;
-import eu.ortlepp.blogbuilder.tools.ResourceCopy;
-import eu.ortlepp.blogbuilder.tools.Scanner;
-import eu.ortlepp.blogbuilder.tools.SitemapCreator;
-import eu.ortlepp.blogbuilder.tools.Writer;
 
 /**
  * Action: Build an existing project.
@@ -40,7 +40,7 @@ public final class Build {
     private List<Document> blogposts;
 
     /** The list which contains all simple pages. */
-    private List<Document> pages;
+    private final List<Document> pages;
 
 
     /**
@@ -48,7 +48,7 @@ public final class Build {
      *
      * @param directory Directory of the project to build
      */
-    public static void build(Path directory) {
+    public static void build(final Path directory) {
         new Build(directory).process();
     }
 
@@ -56,9 +56,9 @@ public final class Build {
     /**
      * Constructor, prepare the build process.
      *
-     * @param directory
+     * @param directory Directory of the project to build
      */
-    private Build(Path directory) {
+    private Build(final Path directory) {
         this.directory = directory;
         blogposts = new ArrayList<Document>();
         pages = new ArrayList<Document>();
@@ -90,20 +90,15 @@ public final class Build {
         /* Find all Markdown files */
         blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), Config.DIR_CONTENT));
 
-        /* Copy pages to pages list */
-        for (Document doc : blogposts) {
-            if (!doc.isBlog()) {
-                pages.add(doc);
+        /* Copy pages to pages list and remove them from blog post list */
+        final Iterator<Document> iterator = blogposts.iterator();
+        while (iterator.hasNext()) {
+            final Document document = iterator.next();
+            if (!document.isBlog()) {
+                pages.add(document);
+                iterator.remove();
             }
         }
-
-        /* Remove simple pages from blog post list */
-        blogposts.removeIf(new Predicate<Document>() {
-            @Override
-            public boolean test(Document document) {
-                return !document.isBlog();
-            }
-        });
 
         /* Sort the blog posts by creation date (most recent first) */
         Collections.sort(blogposts);
@@ -132,7 +127,7 @@ public final class Build {
      * @param doc2 The previous or next document
      * @return The link to the previous or next HTML file
      */
-    private String getRelaviveLink(Document current, Document other) {
+    private String getRelaviveLink(final Document current, final Document other) {
         String link = current.getFile().relativize(other.getFile()).toString();
         link = link.replaceAll("\\\\", "/");
         link = link.substring(0, link.lastIndexOf('.')) + ".html";
@@ -145,7 +140,7 @@ public final class Build {
      * Write all blog posts, pages and special pages to HTML files.
      */
     private void writeFiles() {
-        Writer writer = new Writer(Paths.get(directory.toString(), Config.DIR_BLOG),
+        final Writer writer = new Writer(Paths.get(directory.toString(), Config.DIR_BLOG),
                 Paths.get(directory.toString(), Config.DIR_TEMPLATES));
         writer.writeBlogPosts(blogposts);
         writer.writePages(pages);
@@ -155,8 +150,8 @@ public final class Build {
 
 
     /**
-     * Create the URL shortener. The shortener is a PHP script that redirects URLs. The basic script is available as template
-     * which is filled with some generated PHP code.
+     * Create the URL shortener. The shortener is a PHP script that redirects URLs. The basic script is available
+     * as template which is filled with some generated PHP code.
      */
     private void createUrlShortener() {
         String baseurl = Config.getInstance().getBaseUrl();
@@ -165,35 +160,36 @@ public final class Build {
         }
 
         /* Renerate redirect code for PHP */
-        StringBuilder urls = new StringBuilder();
-        for (Document document : blogposts) {
-            String id = document.getShortlink().substring(document.getShortlink().lastIndexOf('/') + 1);
+        final StringBuilder urls = new StringBuilder();
+        for (final Document document : blogposts) {
+            final String postId = document.getShortlink().substring(document.getShortlink().lastIndexOf('/') + 1);
 
             /* Created string: case "ID": redirect("URL"); */
-            urls.append("case \"").append(id).append("\": redirect(\"").append(baseurl)
+            urls.append("case \"").append(postId).append("\": redirect(\"").append(baseurl)
                 .append(document.getPath()).append("\");").append(System.lineSeparator());
         }
 
         /* Open template file, fill it with the generated code and write it to a file */
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("eu/ortlepp/blogbuilder/contrib/goto.php")));) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader()
+                        .getResourceAsStream("eu/ortlepp/blogbuilder/contrib/goto.php"), StandardCharsets.UTF_8))) {
 
             /* Read template file */
-            StringBuilder phpfile = new StringBuilder();
+            final StringBuilder phpfile = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 phpfile.append(line).append(System.lineSeparator());
             }
 
             /* Put generated code in the template */
-            String shortener = phpfile.toString().replaceFirst("\\$\\$URLS\\$\\$", urls.toString());
+            final String shortener = phpfile.toString().replaceFirst("\\$\\$URLS\\$\\$", urls.toString());
 
             /* Write the PHP file */
-            byte[] bytes = shortener.getBytes(StandardCharsets.UTF_8);
+            final byte[] bytes = shortener.getBytes(StandardCharsets.UTF_8);
             Files.write(Paths.get(directory.toString(), Config.DIR_BLOG, "goto.php"), bytes, StandardOpenOption.CREATE);
 
             LOGGER.info("URL shortener goto.php created");
         } catch (IOException ex) {
-            LOGGER.severe(String.format("Error while creating URL shortener: ", ex.getMessage()));
+            LOGGER.severe(String.format("Error while creating URL shortener: %s", ex.getMessage()));
         }
     }
 

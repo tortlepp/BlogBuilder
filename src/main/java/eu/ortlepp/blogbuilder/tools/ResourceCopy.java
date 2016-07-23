@@ -14,30 +14,49 @@ import java.util.logging.Logger;
  *
  * @author Thorsten Ortlepp
  */
-public class ResourceCopy extends SimpleFileVisitor<Path> {
+public final class ResourceCopy extends SimpleFileVisitor<Path> {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(ResourceCopy.class.getName());
 
     /** The target directory for the built blog. */
-    private static Path target;
+    private final Path target;
 
     /** A counter for all successfully copied files. */
-    private static int counter;
+    private int counter;
 
 
     /**
-     * Do the copying: Copy all files from the resources directory to the target directory for built blogs.
-     * If necessary copy the directory structure as well. If a file already exists in the target directory
-     * it is skipped.
+     * Create an instance of ResourceCopy an run the copy process.
      *
      * @param directory The project directory which contains the resources an the target directory
      */
-    public static void copy(Path directory) {
+    public static void copy(final Path directory) {
+        new ResourceCopy(directory).process(directory);
+    }
+
+
+    /**
+     * Constructor, initializes the copy process.
+     *
+     * @param directory The project directory which contains the resources an the target directory
+     */
+    private ResourceCopy(final Path directory) {
         target = Paths.get(directory.toString(), Config.DIR_BLOG);
         counter = 0;
+    }
+
+
+    /**
+     * Do the copying: Copy all files from the resources directory to the target directory for built blogs. If
+     * necessary copy the directory structure as well. If a file already exists in the target directory it is
+     * skipped.
+     *
+     * @param directory The project directory which contains the resources an the target directory
+     */
+    private void process(final Path directory) {
         try {
-            Files.walkFileTree(Paths.get(directory.toString(), Config.DIR_RESOURCES), new ResourceCopy());
+            Files.walkFileTree(Paths.get(directory.toString(), Config.DIR_RESOURCES), this);
             LOGGER.info(String.format("%d resource files copied", counter));
         } catch (IOException ex) {
             LOGGER.severe(String.format("Error while copying: %s", ex.getMessage()));
@@ -55,7 +74,7 @@ public class ResourceCopy extends SimpleFileVisitor<Path> {
      * @throws IOException Error while deleting the file
      */
     @Override
-    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+    public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
         /* Create full target path */
         Path temp = target.relativize(file);
         temp = temp.subpath(2, temp.getNameCount());
@@ -63,12 +82,18 @@ public class ResourceCopy extends SimpleFileVisitor<Path> {
 
         /* Create folders and copy file */
         if (Files.exists(temp)) {
-            LOGGER.warning(String.format("Resource file %s already exists, file not copied", temp.getFileName().toString()));
+            LOGGER.warning(String.format("Resource file %s already exists, file not copied",
+                    Tools.getFilenameFromPath(temp)));
         } else {
-            Files.createDirectories(temp.getParent());
-            Files.copy(file, temp);
-            counter++;
-            LOGGER.info(String.format("Resource file %s copied", temp.getFileName().toString()));
+
+            /* Check parent because it could be null when the path does not contain a parent */
+            final Path tmpParent = temp.getParent();
+            if (tmpParent != null) {
+                Files.createDirectories(tmpParent);
+                Files.copy(file, temp);
+                counter++;
+                LOGGER.info(String.format("Resource file %s copied", Tools.getFilenameFromPath(temp)));
+            }
         }
 
         return FileVisitResult.CONTINUE;

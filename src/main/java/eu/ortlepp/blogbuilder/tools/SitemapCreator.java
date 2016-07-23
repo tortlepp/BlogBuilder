@@ -1,19 +1,19 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import org.w3c.dom.Element;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.w3c.dom.Element;
-
 /**
  * A creator for sitemaps. Creates a sitemap which contains all blog posts, pages and index pages.
  *
  * @author Thorsten Ortlepp
  */
-public class SitemapCreator extends AbstractXmlCreator {
+public final class SitemapCreator extends AbstractXmlCreator {
 
     /** Get access to configuration read from the properties file. */
     private final Config config;
@@ -33,12 +33,12 @@ public class SitemapCreator extends AbstractXmlCreator {
      *
      * @param directory The project directory
      */
-    public SitemapCreator(String directory) {
+    public SitemapCreator(final String directory) {
         super();
         initRootElement();
         this.config = Config.getInstance();
         this.directory = Paths.get(directory, Config.DIR_BLOG).toString();
-        this.dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");;
+        this.dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         baseurl = config.getBaseUrl();
         if (!baseurl.endsWith("/")) {
@@ -64,15 +64,21 @@ public class SitemapCreator extends AbstractXmlCreator {
      * @param blogposts A list off all blog posts
      * @param pages A list off all pages
      */
-    public void createSitemap(List<eu.ortlepp.blogbuilder.model.Document> blogposts, List<eu.ortlepp.blogbuilder.model.Document> pages) {
+    public void createSitemap(final List<eu.ortlepp.blogbuilder.model.Document> blogposts,
+            final List<eu.ortlepp.blogbuilder.model.Document> pages) {
         /* Add all blog posts and pages to the sitemap */
         addDocuments(blogposts);
         addDocuments(pages);
 
+        /* Get a list of all files (will be null if directory is not a directory) */
+        final String[] files = new File(directory).list();
+
         /* Add all index files to the sitemap */
-        for (String file : new File(directory).list()) {
-            if (file.matches(config.getIndexFile() + "(-\\d+)*" + "\\.html")) {
-                addUrl(baseurl + file, LocalDateTime.now());
+        if (files != null) {
+            for (final String file : files) {
+                if (file.matches(config.getIndexFile() + "(-\\d+)*" + "\\.html")) {
+                    addUrl(baseurl + file, LocalDateTime.now());
+                }
             }
         }
 
@@ -86,8 +92,8 @@ public class SitemapCreator extends AbstractXmlCreator {
      *
      * @param documents The list of Document objects
      */
-    private void addDocuments(List<eu.ortlepp.blogbuilder.model.Document> documents) {
-        for (eu.ortlepp.blogbuilder.model.Document document : documents) {
+    private void addDocuments(final List<eu.ortlepp.blogbuilder.model.Document> documents) {
+        for (final eu.ortlepp.blogbuilder.model.Document document : documents) {
             addUrl(baseurl + document.getPath(), document.getModified());
         }
     }
@@ -99,8 +105,8 @@ public class SitemapCreator extends AbstractXmlCreator {
      * @param loc The URL to add to the XML document
      * @param lastmod The modification date of the URL
      */
-    private void addUrl(String loc, LocalDateTime lastmod) {
-        Element url = xmlDocument.createElement("url");
+    private void addUrl(final String loc, final LocalDateTime lastmod) {
+        final Element url = xmlDocument.createElement("url");
         url.appendChild(createElement("loc", loc));
         url.appendChild(createElement("lastmod", lastmod.format(dateFormatter)));
         xmlRoot.appendChild(url);

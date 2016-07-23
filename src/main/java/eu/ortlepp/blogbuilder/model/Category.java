@@ -1,13 +1,14 @@
 package eu.ortlepp.blogbuilder.model;
 
-import java.util.Locale;
-
 import eu.ortlepp.blogbuilder.tools.Config;
 
+import java.util.Locale;
+import java.util.Objects;
+
 /**
- * Data object for a category. Each category has a name. The data object also knows the path
- * from the blog base directory to the category page and the relative path from its parent object
- * (a document / blog post) to the category page.
+ * Data object for a category. Each category has a name. The data object also knows the path from the blog base
+ * directory to the category page and the relative path from its parent object (a document / blog post) to the
+ * category page.
  *
  * @author Thorsten Ortlepp
  */
@@ -27,15 +28,15 @@ public class Category {
 
 
     /**
-     * Constructor, initialize the category with the given name and path. The name of the category might be
-     * "fixed": All white spaces (" ") are removed from the name.
+     * Constructor, initialize the category with the given name and path. The name of the category might be "fixed":
+     * All white spaces (" ") are removed from the name.
      *
      * @param name The name of the category
      * @param toBaseDir The relative path from the parent object (a document / blog post) to the blog base directory
      */
-    public Category(String name, String toBaseDir) {
-        Config config = Config.getInstance();
-        String tmpName = name.replaceAll(" ", "");
+    public Category(final String name, final String toBaseDir) {
+        final Config config = Config.getInstance();
+        final String tmpName = name.replaceAll(" ", "");
 
         this.locale = config.getLocale();
         this.name = tmpName;
@@ -55,13 +56,13 @@ public class Category {
 
 
     /**
-     * Getter for the name of the category. The name is formatted: The first letter of the name is
-     * capitalized while all other letters are transformed to lower case.
+     * Getter for the name of the category. The name is formatted: The first letter of the name is capitalized while
+     * all other letters are transformed to lower case.
      *
      * @return The formatted name of the category
      */
     public String getNameFormatted() {
-        String tmpName = name.toLowerCase(Config.getInstance().getLocale());
+        final String tmpName = name.toLowerCase(Config.getInstance().getLocale());
         return tmpName.substring(0, 1).toUpperCase(locale) + tmpName.substring(1);
     }
 
@@ -91,17 +92,28 @@ public class Category {
      *
      * @param object The other category to compare to this category
      * @return The result of the comparison; true = the categories (their names) are equal,
-     *  false = the categories (their names) are not equal or the other object is not a category
+     *     false = the categories (their names) are not equal or the other object is not a category
      */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof Category) {
-            Category category = (Category) object;
+            final Category category = (Category) object;
             if (category.getName().equalsIgnoreCase(name)) {
                 return true;
             }
         }
         return false;
+    }
+
+
+    /**
+     * Custom implementation of hashCode(), uses Objects.hash().
+     *
+     * @return The calculated hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, path, relativePath, locale);
     }
 
 }

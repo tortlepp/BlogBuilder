@@ -1,5 +1,9 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -12,10 +16,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Abstract class to create XML documents / files. Contains some useful helper-methods.
@@ -39,8 +39,8 @@ public abstract class AbstractXmlCreator {
      */
     public AbstractXmlCreator() {
         try {
-            DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder xmlBuilder = xmlFactory.newDocumentBuilder();
+            final DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder xmlBuilder = xmlFactory.newDocumentBuilder();
             xmlDocument = xmlBuilder.newDocument();
         } catch (ParserConfigurationException ex) {
             LOGGER.severe("Initialization of the XML builder failed");
@@ -62,8 +62,8 @@ public abstract class AbstractXmlCreator {
      * @param content The content of the element
      * @return The created element
      */
-    protected Element createElement(String name, String content) {
-        Element element = xmlDocument.createElement(name);
+    protected Element createElement(final String name, final String content) {
+        final Element element = xmlDocument.createElement(name);
         element.appendChild(xmlDocument.createTextNode(content));
         return element;
     }
@@ -76,8 +76,8 @@ public abstract class AbstractXmlCreator {
      * @param value The value of the attribute
      * @return The created attribute
      */
-    protected Attr createAttribute(String name, String value) {
-        Attr attr = xmlDocument.createAttribute(name);
+    protected Attr createAttribute(final String name, final String value) {
+        final Attr attr = xmlDocument.createAttribute(name);
         attr.setValue(value);
         return attr;
     }
@@ -88,10 +88,10 @@ public abstract class AbstractXmlCreator {
      *
      * @param file The XML file to write
      */
-    protected void writeFeed(File file) {
+    protected void writeFeed(final File file) {
         try {
-            TransformerFactory xmlTransFactory = TransformerFactory.newInstance();
-            Transformer transformer = xmlTransFactory.newTransformer();
+            final TransformerFactory xmlTransFactory = TransformerFactory.newInstance();
+            final Transformer transformer = xmlTransFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             xmlDocument.setXmlStandalone(true);
