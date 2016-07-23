@@ -1,5 +1,13 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import eu.ortlepp.blogbuilder.model.Category;
+import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.model.InnerDocument;
+import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,14 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-
-import eu.ortlepp.blogbuilder.model.Category;
-import eu.ortlepp.blogbuilder.model.InnerDocument;
-import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 /**
  * A writer for HTML files. Writes the processed Markdown files to HTML files.
@@ -245,7 +245,8 @@ public class Writer {
         int counter = 0;
 
         for (final Entry<String, List<InnerDocument>> entry : categories.entrySet()) {
-            final String filename = String.format("%s%s.html", config.getCategoryFile(), entry.getKey().toLowerCase(config.getLocale()));
+            final String filename = String.format("%s%s.html", config.getCategoryFile(),
+                    entry.getKey().toLowerCase(config.getLocale()));
 
             /* Set the document */
             if (content.containsKey("posts")) {
@@ -276,7 +277,8 @@ public class Writer {
      * @return Success flag: true = file written successfully, false = error while writing the file
      */
     private boolean writeFile(final Map<String, Object> content, final File file, final String template) {
-        try (java.io.Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
+        try (java.io.Writer out =
+                new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
             final Template fmTemplate = fmConfig.getTemplate(template);
             fmTemplate.process(content, out);
         } catch (IOException | TemplateException ex) {

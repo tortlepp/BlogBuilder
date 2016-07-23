@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import org.w3c.dom.Element;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -7,8 +9,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import org.w3c.dom.Element;
 
 /**
  * A creator for Atom Feeds. Creates an Atom Feed which contains the most recent blog posts.
@@ -71,7 +71,8 @@ public final class FeedCreator extends AbstractXmlCreator {
         xmlRoot.appendChild(createElement("title", config.getTitle()));
 
         /* <id> */
-        xmlRoot.appendChild(createElement("id", createId(config.getBaseUrl(), LocalDateTime.parse("2016-01-01T12:00:00"), config.getFeedFile())));
+        xmlRoot.appendChild(createElement("id", createId(config.getBaseUrl(),
+                LocalDateTime.parse("2016-01-01T12:00:00"), config.getFeedFile())));
 
         /* <link> */
         final Element link = xmlDocument.createElement("link");
@@ -115,7 +116,8 @@ public final class FeedCreator extends AbstractXmlCreator {
                 entry.appendChild(createElement("title", document.getTitle()));
 
                 /* <id> */
-                entry.appendChild(createElement("id", createId(config.getBaseUrl(), document.getCreated(), document.getPath())));
+                entry.appendChild(createElement("id", createId(config.getBaseUrl(), document.getCreated(),
+                        document.getPath())));
 
                 /* <updated> */
                 entry.appendChild(createElement("updated", formatDateTime(document.getModified())));

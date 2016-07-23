@@ -1,5 +1,8 @@
 package eu.ortlepp.blogbuilder;
 
+import eu.ortlepp.blogbuilder.action.Build;
+import eu.ortlepp.blogbuilder.action.Initialize;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,12 +10,9 @@ import java.nio.file.Paths;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import eu.ortlepp.blogbuilder.action.Build;
-import eu.ortlepp.blogbuilder.action.Initialize;
-
 /**
- * This is the main class for BlogBuilder. It contains the main() method which starts the
- * application and handles the command line arguments.
+ * This is the main class for BlogBuilder. It contains the main() method which starts the application and handles the
+ * command line arguments.
  *
  * @author Thorsten Ortlepp
  */
@@ -28,9 +28,8 @@ public final class BlogBuilder {
     /**
      * Main method to start the application.
      *
-     * @param args Arguments for the application; Two arguments are necessary to start:
-     *  The first argument is the action to start (initialize or build), the second
-     *  argument ist path to the project directory
+     * @param args Arguments for the application; Two arguments are necessary to start: The first argument
+     *     is the action to start (initialize or build), the second argument ist path to the project directory
      *
      */
     public static void main(final String[] args) {
@@ -69,7 +68,8 @@ public final class BlogBuilder {
             LOGGER.info(String.format("Starting initialization for %s", path.getFileName()));
 
             if (Files.exists(path)) {
-                LOGGER.severe(String.format("Directory %s already exists, initialization aborted", path.getFileName()));
+                LOGGER.severe(String.format("Directory %s already exists, initialization aborted",
+                        path.getFileName()));
             } else {
                 Initialize.initialize(path);
             }
@@ -99,8 +99,8 @@ public final class BlogBuilder {
     private static void printUsageInfo() {
         System.out.printf("BlogBuilder %s%s%s", VERSION, System.lineSeparator(), System.lineSeparator());
         System.out.println("Usage:");
-        System.out.println(" -init <DIRECTORY>   - Initialize a new project in <DIRECTORY>");
-        System.out.println(" -build <DIRECTORY>  - Build the project in <DIRECTORY>");
+        System.out.println(" --init <DIRECTORY>   - Initialize a new project in <DIRECTORY>");
+        System.out.println(" --build <DIRECTORY>  - Build the project in <DIRECTORY>");
     }
 
 }

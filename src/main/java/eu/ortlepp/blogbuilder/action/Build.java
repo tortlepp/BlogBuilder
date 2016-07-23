@@ -1,5 +1,14 @@
 package eu.ortlepp.blogbuilder.action;
 
+import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.tools.Cleaner;
+import eu.ortlepp.blogbuilder.tools.Config;
+import eu.ortlepp.blogbuilder.tools.FeedCreator;
+import eu.ortlepp.blogbuilder.tools.ResourceCopy;
+import eu.ortlepp.blogbuilder.tools.Scanner;
+import eu.ortlepp.blogbuilder.tools.SitemapCreator;
+import eu.ortlepp.blogbuilder.tools.Writer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,15 +22,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-
-import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.tools.Cleaner;
-import eu.ortlepp.blogbuilder.tools.Config;
-import eu.ortlepp.blogbuilder.tools.FeedCreator;
-import eu.ortlepp.blogbuilder.tools.ResourceCopy;
-import eu.ortlepp.blogbuilder.tools.Scanner;
-import eu.ortlepp.blogbuilder.tools.SitemapCreator;
-import eu.ortlepp.blogbuilder.tools.Writer;
 
 /**
  * Action: Build an existing project.
@@ -56,7 +56,7 @@ public final class Build {
     /**
      * Constructor, prepare the build process.
      *
-     * @param directory
+     * @param directory Directory of the project to build
      */
     private Build(final Path directory) {
         this.directory = directory;
@@ -150,8 +150,8 @@ public final class Build {
 
 
     /**
-     * Create the URL shortener. The shortener is a PHP script that redirects URLs. The basic script is available as template
-     * which is filled with some generated PHP code.
+     * Create the URL shortener. The shortener is a PHP script that redirects URLs. The basic script is available
+     * as template which is filled with some generated PHP code.
      */
     private void createUrlShortener() {
         String baseurl = Config.getInstance().getBaseUrl();
@@ -170,7 +170,8 @@ public final class Build {
         }
 
         /* Open template file, fill it with the generated code and write it to a file */
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("eu/ortlepp/blogbuilder/contrib/goto.php"), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader()
+                        .getResourceAsStream("eu/ortlepp/blogbuilder/contrib/goto.php"), StandardCharsets.UTF_8))) {
 
             /* Read template file */
             final StringBuilder phpfile = new StringBuilder();

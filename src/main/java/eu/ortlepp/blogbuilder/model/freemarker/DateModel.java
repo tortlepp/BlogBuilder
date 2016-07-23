@@ -1,11 +1,11 @@
 package eu.ortlepp.blogbuilder.model.freemarker;
 
+import freemarker.template.TemplateDateModel;
+import freemarker.template.TemplateModelException;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-
-import freemarker.template.TemplateDateModel;
-import freemarker.template.TemplateModelException;
 
 /**
  * A model to handle date and time values from a Document data object.
@@ -19,8 +19,8 @@ public class DateModel implements TemplateDateModel {
 
 
     /**
-     * Constructor, initialize the date and time value by converting the LocalDateTime to Date.
-     * The conversion is necessary because Freemarker does not support LocalDateTime so far.
+     * Constructor, initialize the date and time value by converting the LocalDateTime to Date. The conversion is
+     * necessary because Freemarker does not support LocalDateTime so far.
      *
      * @param datetime The date and time value
      */

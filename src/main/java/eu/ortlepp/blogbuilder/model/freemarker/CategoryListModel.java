@@ -1,13 +1,13 @@
 package eu.ortlepp.blogbuilder.model.freemarker;
 
-import java.util.List;
-
 import eu.ortlepp.blogbuilder.model.Category;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateModelIterator;
+
+import java.util.List;
 
 /**
  * A model to handle the category list from the Document data object.

@@ -13,9 +13,8 @@ import java.util.regex.Pattern;
 public final class Tools {
 
     /**
-     * Change all non-absolute links in an HTML formatted string into relative links.
-     * All links in href and src attributes are prepended with the relative path to the base
-     * directory (e.g. ../../path/file.html).
+     * Change all non-absolute links in an HTML formatted string into relative links. All links in href and src
+     * attributes are prepended with the relative path to the base directory (e.g. ../../path/file.html).
      *
      * @param content The (HTML) text in which the links should be changed
      * @param relative The relative path to add to the links
@@ -29,8 +28,8 @@ public final class Tools {
 
 
     /**
-     * Change all non-absolute links in an HTML formatted string into absolute links.
-     * All links in href and src attributes are prepended with the base URL.
+     * Change all non-absolute links in an HTML formatted string into absolute links. All links in href and src
+     * attributes are prepended with the base URL.
      *
      * @param content The (HTML) text in which the links should be changed
      * @return The content with changed links

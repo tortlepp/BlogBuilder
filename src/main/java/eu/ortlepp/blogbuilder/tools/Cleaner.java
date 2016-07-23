@@ -23,8 +23,7 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
 
 
     /**
-     * Do the cleaning: delete all files and directories from the directory.
-     * The directory itself is not deleted.
+     * Do the cleaning: delete all files and directories from the directory. The directory itself is not deleted.
      *
      * @param directory The directory whose contents should be deleted
      */
@@ -65,7 +64,7 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      */
     @Override
     public FileVisitResult postVisitDirectory(final Path directory, final IOException exception) throws IOException {
-        if(!directory.equals(startdir)) {
+        if (!directory.equals(startdir)) {
             Files.deleteIfExists(directory);
         }
         return FileVisitResult.CONTINUE;

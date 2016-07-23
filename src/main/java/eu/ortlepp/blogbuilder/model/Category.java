@@ -1,14 +1,14 @@
 package eu.ortlepp.blogbuilder.model;
 
+import eu.ortlepp.blogbuilder.tools.Config;
+
 import java.util.Locale;
 import java.util.Objects;
 
-import eu.ortlepp.blogbuilder.tools.Config;
-
 /**
- * Data object for a category. Each category has a name. The data object also knows the path
- * from the blog base directory to the category page and the relative path from its parent object
- * (a document / blog post) to the category page.
+ * Data object for a category. Each category has a name. The data object also knows the path from the blog base
+ * directory to the category page and the relative path from its parent object (a document / blog post) to the
+ * category page.
  *
  * @author Thorsten Ortlepp
  */
@@ -28,8 +28,8 @@ public class Category {
 
 
     /**
-     * Constructor, initialize the category with the given name and path. The name of the category might be
-     * "fixed": All white spaces (" ") are removed from the name.
+     * Constructor, initialize the category with the given name and path. The name of the category might be "fixed":
+     * All white spaces (" ") are removed from the name.
      *
      * @param name The name of the category
      * @param toBaseDir The relative path from the parent object (a document / blog post) to the blog base directory
@@ -56,8 +56,8 @@ public class Category {
 
 
     /**
-     * Getter for the name of the category. The name is formatted: The first letter of the name is
-     * capitalized while all other letters are transformed to lower case.
+     * Getter for the name of the category. The name is formatted: The first letter of the name is capitalized while
+     * all other letters are transformed to lower case.
      *
      * @return The formatted name of the category
      */
@@ -92,7 +92,7 @@ public class Category {
      *
      * @param object The other category to compare to this category
      * @return The result of the comparison; true = the categories (their names) are equal,
-     *  false = the categories (their names) are not equal or the other object is not a category
+     *     false = the categories (their names) are not equal or the other object is not a category
      */
     @Override
     public boolean equals(final Object object) {

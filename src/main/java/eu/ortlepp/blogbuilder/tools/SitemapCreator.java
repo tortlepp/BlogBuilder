@@ -1,12 +1,12 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import org.w3c.dom.Element;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import org.w3c.dom.Element;
 
 /**
  * A creator for sitemaps. Creates a sitemap which contains all blog posts, pages and index pages.
@@ -64,7 +64,8 @@ public final class SitemapCreator extends AbstractXmlCreator {
      * @param blogposts A list off all blog posts
      * @param pages A list off all pages
      */
-    public void createSitemap(final List<eu.ortlepp.blogbuilder.model.Document> blogposts, final List<eu.ortlepp.blogbuilder.model.Document> pages) {
+    public void createSitemap(final List<eu.ortlepp.blogbuilder.model.Document> blogposts,
+            final List<eu.ortlepp.blogbuilder.model.Document> pages) {
         /* Add all blog posts and pages to the sitemap */
         addDocuments(blogposts);
         addDocuments(pages);

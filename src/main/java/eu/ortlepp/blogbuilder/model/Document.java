@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.model;
 
+import org.pegdown.PegDownProcessor;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,11 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.pegdown.PegDownProcessor;
-
 /**
- * Data object for a document (a Markdown file). If multiple objects are sorted in a list the
- * sorting is done by the creation date (with most recent date at the beginning).
+ * Data object for a document (a Markdown file). If multiple objects are sorted in a list the sorting is done by the
+ * creation date (with most recent date at the beginning).
  *
  * @author Thorsten Ortlepp
  */
@@ -67,12 +67,11 @@ public class Document implements Comparable<Document> {
 
 
     /**
-     * Constructor, initialize the document with empty / default values. The document type is set to
-     * blog post.
+     * Constructor, initialize the document with empty / default values. The document type is set to blog post.
      *
      * @param file Name and path of the file
      * @param path The relative path of the HTML file
-     * @param The relative path from the document to the base dir
+     * @param toBaseDir The relative path from the document to the base dir
      */
     public Document(final Path file, final String path, final String toBaseDir) {
         this.file = file;
@@ -161,8 +160,8 @@ public class Document implements Comparable<Document> {
 
 
     /**
-     * Getter for the modification date of the document. If no modification date was set
-     * the creation date of the document is returned.
+     * Getter for the modification date of the document. If no modification date was set the creation date of the
+     * document is returned.
      *
      * @return Modification date of the document
      */
@@ -323,10 +322,10 @@ public class Document implements Comparable<Document> {
 
 
     /**
-     * Adds a new category to the list of categories of the document. The new category is only added
-     * if the list does not contain the category so far.
+     * Adds a new category to the list of categories of the document. The new category is only added if the list does
+     * not contain the category so far.
      *
-     * @param A new category of the document
+     * @param category A new category of the document
      */
     public void addCategory(final String category) {
         final Category temp = new Category(category, toBaseDir);
@@ -353,8 +352,8 @@ public class Document implements Comparable<Document> {
     /**
      * Compare the Document to another document (used to sort lists).
      *
-     * @param The document to which this document is compared
-     * @param The result of the comparison
+     * @param other The document to which this document is compared
+     * @return The result of the comparison
      */
     @Override
     public int compareTo(final Document other) {
@@ -363,7 +362,7 @@ public class Document implements Comparable<Document> {
         } else if (getCreated().isAfter(other.getCreated())) {
             return -1;
         }
-         return 0;
+        return 0;
     }
 
 
@@ -372,7 +371,7 @@ public class Document implements Comparable<Document> {
      *
      * @param object The other document to compare to this document
      * @return The result of the comparison; true = the documents (their original files) are equal,
-     *  false = the documents (their original files) are not equal or the other object is not a document
+     *     false = the documents (their original files) are not equal or the other object is not a document
      */
     @Override
     public boolean equals(final Object object) {
@@ -395,7 +394,8 @@ public class Document implements Comparable<Document> {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(file, path, toBaseDir, title, created, modified, blog, content, previous, next, shortlink, categories);
+        return Objects.hash(file, path, toBaseDir, title, created, modified,
+                blog, content, previous, next, shortlink, categories);
     }
 
 }

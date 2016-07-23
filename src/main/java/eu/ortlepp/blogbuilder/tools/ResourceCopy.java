@@ -48,9 +48,9 @@ public final class ResourceCopy extends SimpleFileVisitor<Path> {
 
 
     /**
-     * Do the copying: Copy all files from the resources directory to the target directory for built blogs.
-     * If necessary copy the directory structure as well. If a file already exists in the target directory
-     * it is skipped.
+     * Do the copying: Copy all files from the resources directory to the target directory for built blogs. If
+     * necessary copy the directory structure as well. If a file already exists in the target directory it is
+     * skipped.
      *
      * @param directory The project directory which contains the resources an the target directory
      */
@@ -82,7 +82,8 @@ public final class ResourceCopy extends SimpleFileVisitor<Path> {
 
         /* Create folders and copy file */
         if (Files.exists(temp)) {
-            LOGGER.warning(String.format("Resource file %s already exists, file not copied", Tools.getFilenameFromPath(temp)));
+            LOGGER.warning(String.format("Resource file %s already exists, file not copied",
+                    Tools.getFilenameFromPath(temp)));
         } else {
 
             /* Check parent because it could be null when the path does not contain a parent */

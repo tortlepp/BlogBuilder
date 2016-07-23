@@ -1,13 +1,13 @@
 package eu.ortlepp.blogbuilder.model.freemarker;
 
-import eu.ortlepp.blogbuilder.model.InnerDocument;
 import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.model.InnerDocument;
 import freemarker.template.ObjectWrapper;
 
 /**
- * An adapter for InnerDocument data objects in Freemarker templates. The only difference to DocumentAdapter
- * is the handling of the content of the Document. InnerDocumentAdapter leaves the content untouched and
- * does not change the links it contains.
+ * An adapter for InnerDocument data objects in Freemarker templates. The only difference to DocumentAdapter is the
+ * handling of the content of the Document. InnerDocumentAdapter leaves the content untouched and does not change
+ * the links it contains.
  *
  * @author Thorsten Ortlepp
  */

@@ -1,7 +1,7 @@
 package eu.ortlepp.blogbuilder.model.freemarker;
 
-import eu.ortlepp.blogbuilder.model.InnerDocument;
 import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.model.InnerDocument;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -25,9 +25,8 @@ public class DocumentWrapper extends DefaultObjectWrapper {
 
 
     /**
-     * Add handler for Document data objects in Freemarker templates. For objects of type Document or
-     * InnerDocument a custom adapter is created; all other object types will be handled by the
-     * super class.
+     * Add handler for Document data objects in Freemarker templates. For objects of type Document or InnerDocument a
+     * custom adapter is created; all other object types will be handled by the super class.
      *
      * @param object Object to be handled by Freemarker
      * @return The TemplateModel for the object

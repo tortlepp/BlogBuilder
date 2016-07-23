@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import eu.ortlepp.blogbuilder.model.Document;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
@@ -16,11 +18,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-import eu.ortlepp.blogbuilder.model.Document;
-
 /**
- * A scanner for the content directory. Searches recursively for Markdown files and reads their content.
- * Only files with the extension .md are read, files with other extensions are ignored.
+ * A scanner for the content directory. Searches recursively for Markdown files and reads their content. Only files
+ * with the extension .md are read, files with other extensions are ignored.
  *
  * @author Thorsten Ortlepp
  */
@@ -52,8 +52,8 @@ public class Scanner extends SimpleFileVisitor<Path> {
 
 
     /**
-     * Scan the directory recursively and find all Markdown files.
-     * The blog posts and simple pages that were found are added to the result list.
+     * Scan the directory recursively and find all Markdown files. The blog posts and simple pages that were found are
+     * added to the result list.
      *
      * @param directory The directory to scan
      * @return A list of all found Markdown files and their content
@@ -72,8 +72,8 @@ public class Scanner extends SimpleFileVisitor<Path> {
 
 
     /**
-     * Visiting a file: If the file extension is .md the file is read. If the file is valid it is added
-     * to the list of read files. After visiting a file visit the next file.
+     * Visiting a file: If the file extension is .md the file is read. If the file is valid it is added to the list of
+     * read files. After visiting a file visit the next file.
      *
      * @param file The visited file itself
      * @param attrs The attributes of the file
@@ -118,12 +118,13 @@ public class Scanner extends SimpleFileVisitor<Path> {
                 String baseurl = Config.getInstance().getBaseUrl();
                 if (baseurl.endsWith("/")) {
                     baseurl += "go/";
-                }else {
+                } else {
                     baseurl += "/go/";
                 }
 
                 /* ID = timestamp of the creation date without trailing zeros */
-                String postId = String.valueOf(document.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+                String postId = String.valueOf(
+                        document.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
                 postId = postId.replaceAll("0+$", "");
 
                 document.setShortlink(baseurl + postId);
@@ -178,7 +179,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
                 final String[] keyvalue = line.trim().substring(2).split("=");
 
                 /* Set headers */
-                switch(keyvalue[0].trim().toLowerCase(Locale.getDefault())) {
+                switch (keyvalue[0].trim().toLowerCase(Locale.getDefault())) {
                     case "title":
                         document.setTitle(keyvalue[1].trim());
                         break;
@@ -198,7 +199,8 @@ public class Scanner extends SimpleFileVisitor<Path> {
                         }
                         break;
                     default:
-                        LOGGER.warning(String.format("Unknown header %s in %s", keyvalue[0], Tools.getFilenameFromPath(document.getFile())));
+                        LOGGER.warning(String.format("Unknown header %s in %s", keyvalue[0],
+                                Tools.getFilenameFromPath(document.getFile())));
                         break;
                 }
             }
@@ -212,8 +214,8 @@ public class Scanner extends SimpleFileVisitor<Path> {
 
 
     /**
-     * Converts a string into a date and time object. If the string is formatted in a wrong way the minimum
-     * date is returned.
+     * Converts a string into a date and time object. If the string is formatted in a wrong way the minimum date
+     * is returned.
      *
      * @param string The string to parse
      * @return The date and time object
