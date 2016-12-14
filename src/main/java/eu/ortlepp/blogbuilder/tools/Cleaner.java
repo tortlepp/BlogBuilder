@@ -21,6 +21,9 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
     /** The parent / start directory which must not be deleted. */
     private static Path startdir;
 
+    /** A list of files that are ignored (= not deleted). */
+    private static String[] ignore;
+
 
     /**
      * Do the cleaning: delete all files and directories from the directory. The directory itself is not deleted.
@@ -29,6 +32,7 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      */
     public static void clean(final Path directory) {
         startdir = directory;
+        ignore = Config.getInstance().getBlogIgnore();
         try {
             Files.walkFileTree(directory, new Cleaner());
             LOGGER.info(String.format("Cleaned directory %s", directory.getFileName()));
@@ -40,7 +44,7 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
 
 
     /**
-     * Visiting a file: Delete the file.
+     * Visiting a file: Delete the file if it is not on the ignore list.
      *
      * @param file The visited file itself
      * @param attrs The attributes of the file
@@ -49,7 +53,9 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      */
     @Override
     public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-        Files.deleteIfExists(file);
+        if (!isIgnored(file.getFileName().toString())) {
+            Files.deleteIfExists(file);
+        }
         return FileVisitResult.CONTINUE;
     }
 
@@ -64,10 +70,27 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      */
     @Override
     public FileVisitResult postVisitDirectory(final Path directory, final IOException exception) throws IOException {
-        if (!directory.equals(startdir)) {
+        if (!directory.equals(startdir) && directory.toFile().list().length == 0) {
             Files.deleteIfExists(directory);
         }
         return FileVisitResult.CONTINUE;
+    }
+
+
+    /**
+     * Checks, if a file is on the ignore list.
+     *
+     * @param filename The filename to check
+     * @return The result of the check; true = the file is on the ignore list,
+     *  false = the file is not in the ignore list
+     */
+    private boolean isIgnored(String filename) {
+        for (String name : ignore) {
+            if (name.equals(filename)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

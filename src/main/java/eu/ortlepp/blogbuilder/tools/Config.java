@@ -97,6 +97,9 @@ public final class Config {
     /** Flag for the creation of the URL shortener; true = create shortener, false = do not create shortener. */
     private boolean urlShortener;
 
+    /** Files in the "Blog" folder that are ignored while cleaning. */
+    private String[] blogIgnore;
+
 
     /**
      * Constructor, initialize all configuration values with their defaults.
@@ -113,6 +116,7 @@ public final class Config {
         locale = Locale.getDefault();
         sitemapFile = DEFAULT_SITEMAP_FILE;
         urlShortener = Boolean.parseBoolean(DEFAULT_URLSHORTENER);
+        blogIgnore = new String[]{};
     }
 
 
@@ -138,6 +142,7 @@ public final class Config {
             baseurl = properties.getProperty("blog.baseurl", DEFAULT_BASEURL);
             sitemapFile = properties.getProperty("sitemap.filename", DEFAULT_SITEMAP_FILE);
             urlShortener = Boolean.parseBoolean(properties.getProperty("create.urlshortener", DEFAULT_URLSHORTENER));
+            blogIgnore = properties.getProperty("blog.ignore", "").split(";");
 
             try {
                 indexPosts = Integer.parseInt(properties.getProperty("index.posts", DEFAULT_INDEX_POSTS));
@@ -289,6 +294,16 @@ public final class Config {
      */
     public boolean isUrlShortener() {
         return urlShortener;
+    }
+
+
+    /**
+     * Getter for the Files in the "Blog" folder that are ignored while cleaning.
+     *
+     * @return Files in the "Blog" folder that are ignored while cleaning
+     */
+    public String[] getBlogIgnore() {
+        return blogIgnore.clone();
     }
 
 }
