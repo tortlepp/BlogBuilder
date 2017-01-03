@@ -61,9 +61,6 @@ public final class Config {
     /** The default value for the filename of the sitemap. Used if no value is set in the configuration file. */
     private static final String DEFAULT_SITEMAP_FILE = "sitemap.xml";
 
-    /** The default value for the creation of the URL shortener. Used if no value is set in the configuration file. */
-    private static final String DEFAULT_URLSHORTENER = "true";
-
     /** The title of the blog. */
     private String title;
 
@@ -94,9 +91,6 @@ public final class Config {
     /** The filename of the sitemap. */
     private String sitemapFile;
 
-    /** Flag for the creation of the URL shortener; true = create shortener, false = do not create shortener. */
-    private boolean urlShortener;
-
     /** Files in the "Blog" folder that are ignored while cleaning. */
     private String[] blogIgnore;
 
@@ -115,7 +109,6 @@ public final class Config {
         baseurl = DEFAULT_BASEURL;
         locale = Locale.getDefault();
         sitemapFile = DEFAULT_SITEMAP_FILE;
-        urlShortener = Boolean.parseBoolean(DEFAULT_URLSHORTENER);
         blogIgnore = new String[]{};
     }
 
@@ -141,7 +134,6 @@ public final class Config {
             categoryFile = properties.getProperty("category.filename", DEFAULT_CATEGORY_FILE);
             baseurl = properties.getProperty("blog.baseurl", DEFAULT_BASEURL);
             sitemapFile = properties.getProperty("sitemap.filename", DEFAULT_SITEMAP_FILE);
-            urlShortener = Boolean.parseBoolean(properties.getProperty("create.urlshortener", DEFAULT_URLSHORTENER));
             blogIgnore = properties.getProperty("blog.ignore", "").split(";");
 
             try {
@@ -283,17 +275,6 @@ public final class Config {
      */
     public String getSitemapFile() {
         return sitemapFile;
-    }
-
-
-    /**
-     * Getter for the flag for the creation of the URL shortener. Returns true = create shortener or
-     * false = do not create shortener.
-     *
-     * @return The flag for the creation of the URL shortener
-     */
-    public boolean isUrlShortener() {
-        return urlShortener;
     }
 
 

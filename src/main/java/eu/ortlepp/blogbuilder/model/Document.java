@@ -48,9 +48,6 @@ public class Document implements Comparable<Document> {
     /** A link to the next (newer) blog post. */
     private String next;
 
-    /** A shortlink to the document (its HTML page). */
-    private String shortlink;
-
     /** A list that contains the categories of the document. */
     private final List<Category> categories;
 
@@ -84,7 +81,6 @@ public class Document implements Comparable<Document> {
         this.content = new StringBuilder();
         this.previous = "";
         this.next = "";
-        this.shortlink = "";
         this.categories = new ArrayList<Category>();
     }
 
@@ -282,26 +278,6 @@ public class Document implements Comparable<Document> {
 
 
     /**
-     * Getter for the shortlink of the document.
-     *
-     * @return Shortlink of the document
-     */
-    public String getShortlink() {
-        return shortlink;
-    }
-
-
-    /**
-     * Setter for the shortlink of the document.
-     *
-     * @param shortlink Shortlink of the document
-     */
-    public void setShortlink(final String shortlink) {
-        this.shortlink = shortlink;
-    }
-
-
-    /**
      * Getter for the list that contains the categories of the document.
      *
      * @return The list of categories
@@ -395,7 +371,7 @@ public class Document implements Comparable<Document> {
     @Override
     public int hashCode() {
         return Objects.hash(file, path, toBaseDir, title, created, modified,
-                blog, content, previous, next, shortlink, categories);
+                blog, content, previous, next, categories);
     }
 
 }

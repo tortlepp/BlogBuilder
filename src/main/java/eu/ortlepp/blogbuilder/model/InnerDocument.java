@@ -26,7 +26,6 @@ public class InnerDocument extends Document {
         addContent(document.getContent());
         setPrevious(document.getPrevious());
         setNext(document.getNext());
-        setShortlink(document.getShortlink());
         setCategories(document.getCategories());
     }
 

@@ -11,7 +11,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,24 +110,6 @@ public class Scanner extends SimpleFileVisitor<Path> {
 
             /* Create Document data object */
             parseContentFile(lines, document);
-
-            /* Create the short URL (for blog posts only) */
-            if (document.isBlog() && Config.getInstance().isUrlShortener()) {
-                /* Base URL for shortening */
-                String baseurl = Config.getInstance().getBaseUrl();
-                if (baseurl.endsWith("/")) {
-                    baseurl += "go/";
-                } else {
-                    baseurl += "/go/";
-                }
-
-                /* ID = timestamp of the creation date without trailing zeros */
-                String postId = String.valueOf(
-                        document.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-                postId = postId.replaceAll("0+$", "");
-
-                document.setShortlink(baseurl + postId);
-            }
 
         } catch (IOException ex) {
             LOGGER.severe(String.format("Reading %s failed: %s", Tools.getFilenameFromPath(file), ex.getMessage()));

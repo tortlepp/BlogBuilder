@@ -9,14 +9,8 @@ import eu.ortlepp.blogbuilder.tools.Scanner;
 import eu.ortlepp.blogbuilder.tools.SitemapCreator;
 import eu.ortlepp.blogbuilder.tools.Writer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -76,10 +70,6 @@ public final class Build {
         ResourceCopy.copy(directory);
         new FeedCreator(blogposts, directory.toString()).createFeed();
         new SitemapCreator(directory.toString()).createSitemap(blogposts, pages);
-
-        if (Config.getInstance().isUrlShortener()) {
-            createUrlShortener();
-        }
     }
 
 
@@ -146,51 +136,6 @@ public final class Build {
         writer.writePages(pages);
         writer.writeIndex(blogposts);
         writer.writeCategoryPages(blogposts);
-    }
-
-
-    /**
-     * Create the URL shortener. The shortener is a PHP script that redirects URLs. The basic script is available
-     * as template which is filled with some generated PHP code.
-     */
-    private void createUrlShortener() {
-        String baseurl = Config.getInstance().getBaseUrl();
-        if (!baseurl.endsWith("/")) {
-            baseurl += "/";
-        }
-
-        /* Renerate redirect code for PHP */
-        final StringBuilder urls = new StringBuilder();
-        for (final Document document : blogposts) {
-            final String postId = document.getShortlink().substring(document.getShortlink().lastIndexOf('/') + 1);
-
-            /* Created string: case "ID": redirect("URL"); */
-            urls.append("case \"").append(postId).append("\": redirect(\"").append(baseurl)
-                .append(document.getPath()).append("\");").append(System.lineSeparator());
-        }
-
-        /* Open template file, fill it with the generated code and write it to a file */
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader()
-                        .getResourceAsStream("eu/ortlepp/blogbuilder/contrib/goto.php"), StandardCharsets.UTF_8))) {
-
-            /* Read template file */
-            final StringBuilder phpfile = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                phpfile.append(line).append(System.lineSeparator());
-            }
-
-            /* Put generated code in the template */
-            final String shortener = phpfile.toString().replaceFirst("\\$\\$URLS\\$\\$", urls.toString());
-
-            /* Write the PHP file */
-            final byte[] bytes = shortener.getBytes(StandardCharsets.UTF_8);
-            Files.write(Paths.get(directory.toString(), Config.DIR_BLOG, "goto.php"), bytes, StandardOpenOption.CREATE);
-
-            LOGGER.info("URL shortener goto.php created");
-        } catch (IOException ex) {
-            LOGGER.severe(String.format("Error while creating URL shortener: %s", ex.getMessage()));
-        }
     }
 
 }
