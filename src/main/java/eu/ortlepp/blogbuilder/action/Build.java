@@ -9,6 +9,7 @@ import eu.ortlepp.blogbuilder.tools.Scanner;
 import eu.ortlepp.blogbuilder.tools.SitemapCreator;
 import eu.ortlepp.blogbuilder.tools.Writer;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.logging.Logger;
  *
  * @author Thorsten Ortlepp
  */
-public final class Build {
+public final class Build implements Action {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Build.class.getName());
@@ -38,22 +39,12 @@ public final class Build {
 
 
     /**
-     * Run the build process for the project.
-     *
-     * @param directory Directory of the project to build
-     */
-    public static void build(final Path directory) {
-        new Build(directory).process();
-    }
-
-
-    /**
      * Constructor, prepare the build process.
      *
      * @param directory Directory of the project to build
      */
-    private Build(final Path directory) {
-        this.directory = directory;
+    public Build(final String directory) {
+        this.directory = Paths.get(directory);
         blogposts = new ArrayList<Document>();
         pages = new ArrayList<Document>();
     }
@@ -62,14 +53,22 @@ public final class Build {
     /**
      * Run the build process step by step.
      */
-    private void process() {
-        Config.getInstance().loadConfig(directory.toFile());
-        Cleaner.clean(Paths.get(directory.toString(), Config.DIR_BLOG));
-        scanDirectory();
-        writeFiles();
-        ResourceCopy.copy(directory);
-        new FeedCreator(blogposts, directory.toString()).createFeed();
-        new SitemapCreator(directory.toString()).createSitemap(blogposts, pages);
+    @Override
+    public void run() {
+        if (Files.exists(directory) && Files.isDirectory(directory)) {
+            LOGGER.info(String.format("Starting build process for %s", directory.getFileName()));
+
+            Config.getInstance().loadConfig(directory.toFile());
+            Cleaner.clean(Paths.get(directory.toString(), Config.DIR_BLOG));
+            scanDirectory();
+            writeFiles();
+            ResourceCopy.copy(directory);
+            new FeedCreator(blogposts, directory.toString()).createFeed();
+            new SitemapCreator(directory.toString()).createSitemap(blogposts, pages);
+
+        } else {
+            LOGGER.severe(String.format("Directory %s does not exist, build aborted", directory.getFileName()));
+        }
     }
 
 

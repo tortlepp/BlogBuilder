@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Thorsten Ortlepp
  */
-public final class Initialize {
+public final class Initialize implements Action {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Initialize.class.getName());
@@ -24,35 +24,34 @@ public final class Initialize {
 
 
     /**
-     * Run the initialization process for the project.
+     * Constructor, prepares the initialization.
      *
      * @param directory Directory of the project to initialize
      */
-    public static void initialize(final Path directory) {
-        new Initialize(directory).process();
-    }
-
-
-    /**
-     * Constructor, prepare the initialization.
-     *
-     * @param directory Directory of the project to initialize
-     */
-    private Initialize(final Path directory) {
-        this.directory = directory;
+    public Initialize(final String directory) {
+        this.directory = Paths.get(directory);
     }
 
 
     /**
      * Run the initialization process step by step.
      */
-    private void process() {
-        try {
-            createDirectories();
-            copyFiles();
-            LOGGER.info("Initialization successful");
-        } catch (IOException ex) {
-            LOGGER.severe(String.format("Initialization failed: %s", ex.getMessage()));
+    @Override
+    public void run() {
+        if (Files.exists(directory)) {
+            LOGGER.severe(String.format("Directory %s already exists, initialization aborted",
+                    directory.getFileName()));
+
+        } else {
+            LOGGER.info(String.format("Starting initialization for %s", directory.getFileName()));
+
+            try {
+                createDirectories();
+                copyFiles();
+                LOGGER.info("Initialization successful");
+            } catch (IOException ex) {
+                LOGGER.severe(String.format("Initialization failed: %s", ex.getMessage()));
+            }
         }
     }
 
