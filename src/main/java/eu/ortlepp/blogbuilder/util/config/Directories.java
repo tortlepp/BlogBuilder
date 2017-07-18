@@ -1,4 +1,4 @@
-package eu.ortlepp.blogbuilder.tools.config;
+package eu.ortlepp.blogbuilder.util.config;
 
 /**
  * An Enum that conains the main directories of BlogBuilder.

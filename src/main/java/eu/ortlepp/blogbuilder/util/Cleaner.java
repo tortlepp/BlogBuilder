@@ -1,6 +1,4 @@
-package eu.ortlepp.blogbuilder.tools;
-
-import eu.ortlepp.blogbuilder.tools.config.Config;
+package eu.ortlepp.blogbuilder.util;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -9,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.logging.Logger;
+
+import eu.ortlepp.blogbuilder.util.config.Config;
 
 /**
  * A tool class to delete the contents (files and child directories) of a directory.

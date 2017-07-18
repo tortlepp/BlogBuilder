@@ -1,14 +1,14 @@
 package eu.ortlepp.blogbuilder.action;
 
 import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.tools.Cleaner;
-import eu.ortlepp.blogbuilder.tools.FeedCreator;
-import eu.ortlepp.blogbuilder.tools.ResourceCopy;
-import eu.ortlepp.blogbuilder.tools.Scanner;
-import eu.ortlepp.blogbuilder.tools.SitemapCreator;
-import eu.ortlepp.blogbuilder.tools.Writer;
-import eu.ortlepp.blogbuilder.tools.config.Config;
-import eu.ortlepp.blogbuilder.tools.config.Directories;
+import eu.ortlepp.blogbuilder.util.Cleaner;
+import eu.ortlepp.blogbuilder.util.FeedCreator;
+import eu.ortlepp.blogbuilder.util.ResourceCopy;
+import eu.ortlepp.blogbuilder.util.Scanner;
+import eu.ortlepp.blogbuilder.util.SitemapCreator;
+import eu.ortlepp.blogbuilder.util.Writer;
+import eu.ortlepp.blogbuilder.util.config.Config;
+import eu.ortlepp.blogbuilder.util.config.Directories;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

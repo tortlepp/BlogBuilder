@@ -1,7 +1,7 @@
 package eu.ortlepp.blogbuilder.model.freemarker;
 
 import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.tools.Tools;
+import eu.ortlepp.blogbuilder.util.Tools;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateHashModel;

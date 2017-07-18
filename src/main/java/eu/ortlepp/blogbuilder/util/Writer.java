@@ -1,10 +1,10 @@
-package eu.ortlepp.blogbuilder.tools;
+package eu.ortlepp.blogbuilder.util;
 
 import eu.ortlepp.blogbuilder.model.Category;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.model.InnerDocument;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
-import eu.ortlepp.blogbuilder.tools.config.Config;
+import eu.ortlepp.blogbuilder.util.config.Config;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

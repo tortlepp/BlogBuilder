@@ -1,4 +1,4 @@
-package eu.ortlepp.blogbuilder.tools.config;
+package eu.ortlepp.blogbuilder.util.config;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package eu.ortlepp.blogbuilder.tools;
+package eu.ortlepp.blogbuilder.util;
 
 import eu.ortlepp.blogbuilder.model.Document;
 

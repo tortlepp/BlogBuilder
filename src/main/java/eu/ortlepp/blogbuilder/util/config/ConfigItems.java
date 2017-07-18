@@ -1,4 +1,4 @@
-package eu.ortlepp.blogbuilder.tools.config;
+package eu.ortlepp.blogbuilder.util.config;
 
 /**
  * An Enum for configuration items. Each item has a key (to locate the item in the properties
