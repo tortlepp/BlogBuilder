@@ -61,7 +61,7 @@ public enum Parameter {
      * @return The parameter info
      */
     public String getParamInfo() {
-        String usage = String.format(" %s %s", name, value);
+        final String usage = String.format(" %s %s", name, value);
         return String.format("%-22s - %s", usage, description);
     }
 
@@ -85,7 +85,7 @@ public enum Parameter {
      * @return The result of the check; true = valid parameter, false = no valid parameter
      */
     public static boolean isValidParam(final String input) {
-        for (Parameter parameter : Parameter.values()) {
+        for (final Parameter parameter : Parameter.values()) {
             if (parameter.toString().equalsIgnoreCase(input)) {
                 return true;
             }

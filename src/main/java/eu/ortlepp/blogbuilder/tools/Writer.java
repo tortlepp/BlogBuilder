@@ -4,6 +4,7 @@ import eu.ortlepp.blogbuilder.model.Category;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.model.InnerDocument;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
+import eu.ortlepp.blogbuilder.tools.config.Config;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -46,9 +47,6 @@ public class Writer {
     /** Static data / information from the configuration file. */
     private final Map<String, String> blogInfo;
 
-    /** Get access to configuration read from the properties file. */
-    private final Config config;
-
 
     /**
      * Constructor, initializes the Freemarker template engine and loads the static data.
@@ -58,14 +56,13 @@ public class Writer {
      */
     public Writer(final Path target, final Path templates) {
         this.target = target;
-        config = Config.getInstance();
 
         /* Initialize Freemarker */
         fmConfig = new Configuration(Configuration.VERSION_2_3_25);
         try {
             fmConfig.setDirectoryForTemplateLoading(templates.toFile());
             fmConfig.setDefaultEncoding("UTF-8");
-            fmConfig.setLocale(config.getLocale());
+            fmConfig.setLocale(Config.INSTANCE.getLocale());
             fmConfig.setObjectWrapper(new DocumentWrapper(fmConfig.getIncompatibleImprovements()));
         } catch (IOException ex) {
             LOGGER.severe("Initializing Freemarker failed!");
@@ -74,9 +71,9 @@ public class Writer {
 
         /* Load static data from configuration */
         blogInfo = new HashMap<String, String>();
-        blogInfo.put("title", config.getTitle());
-        blogInfo.put("author", config.getAuthor());
-        blogInfo.put("language", config.getLocale().getLanguage());
+        blogInfo.put("title", Config.INSTANCE.getTitle());
+        blogInfo.put("author", Config.INSTANCE.getAuthor());
+        blogInfo.put("language", Config.INSTANCE.getLocale().getLanguage());
     }
 
 
@@ -163,7 +160,7 @@ public class Writer {
         content.put(BASEDIR_KEY, "");
         int counter = 0;
 
-        final int postsPerPage = config.getIndexPosts();
+        final int postsPerPage = Config.INSTANCE.getIndexPosts();
 
         /* Calculate the number of index pages */
         int pages = blogposts.size() / postsPerPage;
@@ -174,10 +171,10 @@ public class Writer {
         /* Create the filenames for pagination */
         String[] filenames = new String[pages + 2];
         filenames[0] = "";
-        filenames[1] = String.format("%s.html", config.getIndexFile());
+        filenames[1] = String.format("%s.html", Config.INSTANCE.getIndexFile());
         filenames[filenames.length - 1] = "";
         for (int i = 1; i < pages; i++) {
-            filenames[i + 1] = String.format("%s-%d.html", config.getIndexFile(), i);
+            filenames[i + 1] = String.format("%s-%d.html", Config.INSTANCE.getIndexFile(), i);
         }
 
         /* Counter for the number of blog posts that were already added to an index page */
@@ -245,8 +242,8 @@ public class Writer {
         int counter = 0;
 
         for (final Entry<String, List<InnerDocument>> entry : categories.entrySet()) {
-            final String filename = String.format("%s%s.html", config.getCategoryFile(),
-                    entry.getKey().toLowerCase(config.getLocale()));
+            final String filename = String.format("%s%s.html", Config.INSTANCE.getCategoryFile(),
+                    entry.getKey().toLowerCase(Config.INSTANCE.getLocale()));
 
             /* Set the document */
             if (content.containsKey("posts")) {

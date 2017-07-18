@@ -1,6 +1,6 @@
 package eu.ortlepp.blogbuilder.model;
 
-import eu.ortlepp.blogbuilder.tools.Config;
+import eu.ortlepp.blogbuilder.tools.config.Config;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -35,12 +35,12 @@ public class Category {
      * @param toBaseDir The relative path from the parent object (a document / blog post) to the blog base directory
      */
     public Category(final String name, final String toBaseDir) {
-        final Config config = Config.getInstance();
         final String tmpName = name.replaceAll(" ", "");
 
-        this.locale = config.getLocale();
+        this.locale = Config.INSTANCE.getLocale();
         this.name = tmpName;
-        this.path = String.format("%s%s.html", config.getCategoryFile(), tmpName.toLowerCase(config.getLocale()));
+        this.path = String.format("%s%s.html", Config.INSTANCE.getCategoryFile(),
+                tmpName.toLowerCase(Config.INSTANCE.getLocale()));
         this.relativePath = toBaseDir + this.path;
     }
 
@@ -62,7 +62,7 @@ public class Category {
      * @return The formatted name of the category
      */
     public String getNameFormatted() {
-        final String tmpName = name.toLowerCase(Config.getInstance().getLocale());
+        final String tmpName = name.toLowerCase(Config.INSTANCE.getLocale());
         return tmpName.substring(0, 1).toUpperCase(locale) + tmpName.substring(1);
     }
 

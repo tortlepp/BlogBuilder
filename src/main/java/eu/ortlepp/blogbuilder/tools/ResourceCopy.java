@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import eu.ortlepp.blogbuilder.tools.config.Directories;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -42,7 +44,7 @@ public final class ResourceCopy extends SimpleFileVisitor<Path> {
      * @param directory The project directory which contains the resources an the target directory
      */
     private ResourceCopy(final Path directory) {
-        target = Paths.get(directory.toString(), Config.DIR_BLOG);
+        target = Paths.get(directory.toString(), Directories.BLOG.toString());
         counter = 0;
     }
 
@@ -56,7 +58,7 @@ public final class ResourceCopy extends SimpleFileVisitor<Path> {
      */
     private void process(final Path directory) {
         try {
-            Files.walkFileTree(Paths.get(directory.toString(), Config.DIR_RESOURCES), this);
+            Files.walkFileTree(Paths.get(directory.toString(), Directories.RESOURCES.toString()), this);
             LOGGER.info(String.format("%d resource files copied", counter));
         } catch (IOException ex) {
             LOGGER.severe(String.format("Error while copying: %s", ex.getMessage()));

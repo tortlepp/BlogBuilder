@@ -1,6 +1,6 @@
 package eu.ortlepp.blogbuilder.action;
 
-import eu.ortlepp.blogbuilder.tools.Config;
+import eu.ortlepp.blogbuilder.tools.config.Directories;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,15 +67,15 @@ public final class Initialize implements Action {
         Files.createDirectories(directory);
         LOGGER.info(String.format("Created project directory %s", directory.toString()));
 
-        Files.createDirectory(Paths.get(dirStr, Config.DIR_BLOG));
-        Files.createDirectory(Paths.get(dirStr, Config.DIR_CONTENT));
-        Files.createDirectory(Paths.get(dirStr, Config.DIR_RESOURCES));
-        Files.createDirectory(Paths.get(dirStr, Config.DIR_TEMPLATES));
+        Files.createDirectory(Paths.get(dirStr, Directories.BLOG.toString()));
+        Files.createDirectory(Paths.get(dirStr, Directories.CONTENT.toString()));
+        Files.createDirectory(Paths.get(dirStr, Directories.RESOURCES.toString()));
+        Files.createDirectory(Paths.get(dirStr, Directories.TEMPLATES.toString()));
         LOGGER.info("Created directories");
 
-        Files.createDirectory(Paths.get(dirStr, Config.DIR_CONTENT, "2015"));
-        Files.createDirectory(Paths.get(dirStr, Config.DIR_CONTENT, "2016"));
-        Files.createDirectory(Paths.get(dirStr, Config.DIR_RESOURCES, "images"));
+        Files.createDirectory(Paths.get(dirStr, Directories.CONTENT.toString(), "2015"));
+        Files.createDirectory(Paths.get(dirStr, Directories.CONTENT.toString(), "2016"));
+        Files.createDirectory(Paths.get(dirStr, Directories.RESOURCES.toString(), "images"));
         LOGGER.info("Created subdirectories");
     }
 
@@ -87,11 +87,11 @@ public final class Initialize implements Action {
      */
     private void copyFiles() throws IOException {
         final String dirStr = directory.toString();
-        final String dirStrContent = Paths.get(dirStr, Config.DIR_CONTENT).toString();
+        final String dirStrContent = Paths.get(dirStr, Directories.CONTENT.toString()).toString();
         final String dirStrYear1 = Paths.get(dirStrContent, "2015").toString();
         final String dirStrYear2 = Paths.get(dirStrContent, "2016").toString();
-        final String dirStrResources = Paths.get(dirStr, Config.DIR_RESOURCES).toString();
-        final String dirStrTemplates = Paths.get(dirStr, Config.DIR_TEMPLATES).toString();
+        final String dirStrResources = Paths.get(dirStr, Directories.RESOURCES.toString()).toString();
+        final String dirStrTemplates = Paths.get(dirStr, Directories.TEMPLATES.toString()).toString();
 
         Files.copy(getResourceStream("config/blog.properties"), Paths.get(dirStr, "blog.properties"));
         LOGGER.info("Created configuration file");

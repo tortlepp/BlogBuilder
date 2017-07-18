@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import eu.ortlepp.blogbuilder.tools.config.Config;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -32,7 +34,7 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      */
     public static void clean(final Path directory) {
         startdir = directory;
-        ignore = Config.getInstance().getBlogIgnore();
+        ignore = Config.INSTANCE.getCleanIgnore();
         try {
             Files.walkFileTree(directory, new Cleaner());
             LOGGER.info(String.format("Cleaned directory %s", directory.getFileName()));
@@ -85,7 +87,7 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      *  false = the file is not in the ignore list
      */
     private boolean isIgnored(String filename) {
-        for (String name : ignore) {
+        for (final String name : ignore) {
             if (name.equals(filename)) {
                 return true;
             }

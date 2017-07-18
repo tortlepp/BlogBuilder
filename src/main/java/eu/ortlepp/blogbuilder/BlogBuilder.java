@@ -72,7 +72,6 @@ public final class BlogBuilder {
                 LOGGER.severe(MESSAGE_NO_DIR);
             } else {
                 new Initialize(optional).run();
-
             }
         }
 

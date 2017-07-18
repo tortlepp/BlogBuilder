@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import eu.ortlepp.blogbuilder.tools.config.Config;
+
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -35,7 +37,7 @@ public final class Tools {
      * @return The content with changed links
      */
     public static String makeLinksAbsolute(final String content) {
-        String baseurl = Config.getInstance().getBaseUrl();
+        String baseurl = Config.INSTANCE.getBaseUrl();
         if (!baseurl.endsWith("/")) {
             baseurl += "/";
         }

@@ -2,12 +2,13 @@ package eu.ortlepp.blogbuilder.action;
 
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.tools.Cleaner;
-import eu.ortlepp.blogbuilder.tools.Config;
 import eu.ortlepp.blogbuilder.tools.FeedCreator;
 import eu.ortlepp.blogbuilder.tools.ResourceCopy;
 import eu.ortlepp.blogbuilder.tools.Scanner;
 import eu.ortlepp.blogbuilder.tools.SitemapCreator;
 import eu.ortlepp.blogbuilder.tools.Writer;
+import eu.ortlepp.blogbuilder.tools.config.Config;
+import eu.ortlepp.blogbuilder.tools.config.Directories;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,8 +59,8 @@ public final class Build implements Action {
         if (Files.exists(directory) && Files.isDirectory(directory)) {
             LOGGER.info(String.format("Starting build process for %s", directory.getFileName()));
 
-            Config.getInstance().loadConfig(directory.toFile());
-            Cleaner.clean(Paths.get(directory.toString(), Config.DIR_BLOG));
+            Config.INSTANCE.loadConfig(directory.toFile());
+            Cleaner.clean(Paths.get(directory.toString(), Directories.BLOG.toString()));
             scanDirectory();
             writeFiles();
             ResourceCopy.copy(directory);
@@ -77,7 +78,7 @@ public final class Build implements Action {
      */
     private void scanDirectory() {
         /* Find all Markdown files */
-        blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), Config.DIR_CONTENT));
+        blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), Directories.CONTENT.toString()));
 
         /* Copy pages to pages list and remove them from blog post list */
         final Iterator<Document> iterator = blogposts.iterator();
@@ -129,8 +130,8 @@ public final class Build implements Action {
      * Write all blog posts, pages and special pages to HTML files.
      */
     private void writeFiles() {
-        final Writer writer = new Writer(Paths.get(directory.toString(), Config.DIR_BLOG),
-                Paths.get(directory.toString(), Config.DIR_TEMPLATES));
+        final Writer writer = new Writer(Paths.get(directory.toString(), Directories.BLOG.toString()),
+                Paths.get(directory.toString(), Directories.TEMPLATES.toString()));
         writer.writeBlogPosts(blogposts);
         writer.writePages(pages);
         writer.writeIndex(blogposts);

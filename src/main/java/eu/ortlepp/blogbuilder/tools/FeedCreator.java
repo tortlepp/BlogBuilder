@@ -1,5 +1,8 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import eu.ortlepp.blogbuilder.tools.config.Config;
+import eu.ortlepp.blogbuilder.tools.config.Directories;
+
 import org.w3c.dom.Element;
 
 import java.io.File;
@@ -23,9 +26,6 @@ public final class FeedCreator extends AbstractXmlCreator {
     /** The file to create. */
     private final File feed;
 
-    /** Get access to configuration read from the properties file. */
-    private final Config config;
-
 
     /**
      * Constructor, initializes the XML document and its root element. The creation of the feed is prepared.
@@ -37,8 +37,8 @@ public final class FeedCreator extends AbstractXmlCreator {
         super();
         initRootElement();
         this.blogposts = blogposts;
-        this.config = Config.getInstance();
-        this.feed = Paths.get(directory, Config.DIR_BLOG, config.getFeedFile()).toFile();
+        this.feed =
+                Paths.get(directory, Directories.BLOG.toString(), Config.INSTANCE.getFeedFile()).toFile();
     }
 
 
@@ -68,21 +68,21 @@ public final class FeedCreator extends AbstractXmlCreator {
      */
     private void createFeedInfo() {
         /* <title> */
-        xmlRoot.appendChild(createElement("title", config.getTitle()));
+        xmlRoot.appendChild(createElement("title", Config.INSTANCE.getTitle()));
 
         /* <id> */
-        xmlRoot.appendChild(createElement("id", createId(config.getBaseUrl(),
-                LocalDateTime.parse("2016-01-01T12:00:00"), config.getFeedFile())));
+        xmlRoot.appendChild(createElement("id", createId(Config.INSTANCE.getBaseUrl(),
+                LocalDateTime.parse("2016-01-01T12:00:00"), Config.INSTANCE.getFeedFile())));
 
         /* <link> */
         final Element link = xmlDocument.createElement("link");
-        link.setAttributeNode(createAttribute("href", config.getBaseUrl()));
+        link.setAttributeNode(createAttribute("href", Config.INSTANCE.getBaseUrl()));
         link.setAttributeNode(createAttribute("rel", "self"));
         xmlRoot.appendChild(link);
 
         /* <updated> */
         LocalDateTime updated = LocalDateTime.MIN;
-        for (int i = 0; i < config.getFeedPosts(); i++) {
+        for (int i = 0; i < Config.INSTANCE.getFeedPosts(); i++) {
             if (i < blogposts.size()) {
                 if (blogposts.get(i).getModified().isAfter(updated)) {
                     updated = blogposts.get(i).getModified();
@@ -95,7 +95,7 @@ public final class FeedCreator extends AbstractXmlCreator {
 
         /* <author> (contains <name>) */
         final Element author = xmlDocument.createElement("author");
-        author.appendChild(createElement("name", config.getAuthor()));
+        author.appendChild(createElement("name", Config.INSTANCE.getAuthor()));
         xmlRoot.appendChild(author);
     }
 
@@ -104,7 +104,7 @@ public final class FeedCreator extends AbstractXmlCreator {
      * Add blog posts to the feed. The number of posts to add is set in the configuration file.
      */
     private void addBlogPosts() {
-        for (int i = 0; i < config.getFeedPosts(); i++) {
+        for (int i = 0; i < Config.INSTANCE.getFeedPosts(); i++) {
 
             if (i < blogposts.size()) {
                 final eu.ortlepp.blogbuilder.model.Document document = blogposts.get(i);
@@ -116,7 +116,7 @@ public final class FeedCreator extends AbstractXmlCreator {
                 entry.appendChild(createElement("title", document.getTitle()));
 
                 /* <id> */
-                entry.appendChild(createElement("id", createId(config.getBaseUrl(), document.getCreated(),
+                entry.appendChild(createElement("id", createId(Config.INSTANCE.getBaseUrl(), document.getCreated(),
                         document.getPath())));
 
                 /* <updated> */
@@ -124,7 +124,7 @@ public final class FeedCreator extends AbstractXmlCreator {
 
                 /* <link> */
                 final Element link = xmlDocument.createElement("link");
-                link.setAttributeNode(createAttribute("href", config.getBaseUrl() + "/" + document.getPath()));
+                link.setAttributeNode(createAttribute("href", Config.INSTANCE.getBaseUrl() + "/" + document.getPath()));
                 entry.appendChild(link);
 
                 /* <content> */

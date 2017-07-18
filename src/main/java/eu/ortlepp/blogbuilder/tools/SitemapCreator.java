@@ -1,5 +1,8 @@
 package eu.ortlepp.blogbuilder.tools;
 
+import eu.ortlepp.blogbuilder.tools.config.Config;
+import eu.ortlepp.blogbuilder.tools.config.Directories;
+
 import org.w3c.dom.Element;
 
 import java.io.File;
@@ -14,9 +17,6 @@ import java.util.List;
  * @author Thorsten Ortlepp
  */
 public final class SitemapCreator extends AbstractXmlCreator {
-
-    /** Get access to configuration read from the properties file. */
-    private final Config config;
 
     /** The directory with the built blog. */
     private final String directory;
@@ -36,11 +36,10 @@ public final class SitemapCreator extends AbstractXmlCreator {
     public SitemapCreator(final String directory) {
         super();
         initRootElement();
-        this.config = Config.getInstance();
-        this.directory = Paths.get(directory, Config.DIR_BLOG).toString();
+        this.directory = Paths.get(directory, Directories.BLOG.toString()).toString();
         this.dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        baseurl = config.getBaseUrl();
+        baseurl = Config.INSTANCE.getBaseUrl();
         if (!baseurl.endsWith("/")) {
             baseurl += "/";
         }
@@ -76,14 +75,14 @@ public final class SitemapCreator extends AbstractXmlCreator {
         /* Add all index files to the sitemap */
         if (files != null) {
             for (final String file : files) {
-                if (file.matches(config.getIndexFile() + "(-\\d+)*" + "\\.html")) {
+                if (file.matches(Config.INSTANCE.getIndexFile() + "(-\\d+)*" + "\\.html")) {
                     addUrl(baseurl + file, LocalDateTime.now());
                 }
             }
         }
 
         /* Write XML to file */
-        writeFeed(new File(directory, config.getSitemapFile()));
+        writeFeed(new File(directory, Config.INSTANCE.getSitemapFile()));
     }
 
 
