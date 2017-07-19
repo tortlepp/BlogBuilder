@@ -1,9 +1,9 @@
 package eu.ortlepp.blogbuilder.model;
 
+import eu.ortlepp.blogbuilder.util.config.Config;
+
 import java.util.Locale;
 import java.util.Objects;
-
-import eu.ortlepp.blogbuilder.util.config.Config;
 
 /**
  * Data object for a category. Each category has a name. The data object also knows the path from the blog base

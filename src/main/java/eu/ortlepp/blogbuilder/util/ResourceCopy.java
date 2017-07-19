@@ -1,5 +1,7 @@
 package eu.ortlepp.blogbuilder.util;
 
+import eu.ortlepp.blogbuilder.util.config.Directories;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -8,8 +10,6 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.logging.Logger;
-
-import eu.ortlepp.blogbuilder.util.config.Directories;
 
 /**
  * A tool class to copy the contents from the resources directory to the directory with the built blog.

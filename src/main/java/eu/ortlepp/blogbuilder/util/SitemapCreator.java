@@ -1,9 +1,9 @@
 package eu.ortlepp.blogbuilder.util;
 
-import org.w3c.dom.Element;
-
 import eu.ortlepp.blogbuilder.util.config.Config;
 import eu.ortlepp.blogbuilder.util.config.Directories;
+
+import org.w3c.dom.Element;
 
 import java.io.File;
 import java.nio.file.Paths;

@@ -1,3 +1,3 @@
 <footer>
- <p>&copy; 2016 ${blog.author}</p>
+ <p>&copy; 2017 ${blog.author}</p>
 </footer>

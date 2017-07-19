@@ -1,11 +1,11 @@
 package eu.ortlepp.blogbuilder.util;
 
+import eu.ortlepp.blogbuilder.util.config.Config;
+
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import eu.ortlepp.blogbuilder.util.config.Config;
 
 /**
  * An utility class with some useful (static) methods.

@@ -18,7 +18,7 @@ public enum Config {
     INSTANCE;
 
     /** The name of the properties file. */
-    private static final String CONFIG_FILE = "blog.properties";
+    public static final String CONFIG_FILE = "blog.properties";
 
     /** The title of the blog. */
     private String title;
