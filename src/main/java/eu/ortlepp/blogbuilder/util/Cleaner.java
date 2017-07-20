@@ -24,17 +24,18 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
     private static Path startdir;
 
     /** A list of files that are ignored (= not deleted). */
-    private static String[] ignore;
+    private final String[] ignore;
 
 
     /**
-     * Do the cleaning: delete all files and directories from the directory. The directory itself is not deleted.
+     * Do the cleaning: delete all files and directories from the directory (except those who are)
+     * in the ignore list). The directory itself is not deleted.
      *
      * @param directory The directory whose contents should be deleted
      */
     public static void clean(final Path directory) {
         startdir = directory;
-        ignore = Config.INSTANCE.getCleanIgnore();
+
         try {
             Files.walkFileTree(directory, new Cleaner());
             LOGGER.info(String.format("Cleaned directory %s", directory.getFileName()));
@@ -55,7 +56,10 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      */
     @Override
     public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-        if (!isIgnored(file.getFileName().toString())) {
+        /* Necessary because file.getFileName() could return null */
+        final Path tmpFile = file.getFileName();
+
+        if (tmpFile != null && !isIgnored(tmpFile.toString())) {
             Files.deleteIfExists(file);
         }
         return FileVisitResult.CONTINUE;
@@ -72,7 +76,10 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      */
     @Override
     public FileVisitResult postVisitDirectory(final Path directory, final IOException exception) throws IOException {
-        if (!directory.equals(startdir) && directory.toFile().list().length == 0) {
+        /* Necessary because directory.toFile().list() could return null */
+        final String[] files = directory.toFile().list();
+
+        if (!directory.equals(startdir) && files != null && files.length == 0) {
             Files.deleteIfExists(directory);
         }
         return FileVisitResult.CONTINUE;
@@ -97,10 +104,11 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
 
 
     /**
-     * Private constructor for tool class - without any functionality.
+     * Private constructor for tool class - initializes the list of ignored files.
      */
     private Cleaner() {
-        /* Nothing happens here... */
+        super();
+        ignore = Config.INSTANCE.getCleanIgnore();
     }
 
 }
