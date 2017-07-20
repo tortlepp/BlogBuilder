@@ -1,4 +1,4 @@
-package eu.ortlepp.blogbuilder.util;
+package eu.ortlepp.blogbuilder.util.xml;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -88,7 +88,7 @@ public abstract class AbstractXmlCreator {
      *
      * @param file The XML file to write
      */
-    protected void writeFeed(final File file) {
+    protected void writeXmlFile(final File file) {
         try {
             final TransformerFactory xmlTransFactory = TransformerFactory.newInstance();
             final Transformer transformer = xmlTransFactory.newTransformer();

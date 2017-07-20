@@ -1,4 +1,4 @@
-package eu.ortlepp.blogbuilder.util;
+package eu.ortlepp.blogbuilder.util.xml;
 
 import eu.ortlepp.blogbuilder.util.config.Config;
 import eu.ortlepp.blogbuilder.util.config.Directories;
@@ -75,14 +75,15 @@ public final class SitemapCreator extends AbstractXmlCreator {
         /* Add all index files to the sitemap */
         if (files != null) {
             for (final String file : files) {
-                if (file.matches(Config.INSTANCE.getIndexFile() + "(-\\d+)*" + "\\.html")) {
+                if (file.matches(Config.INSTANCE.getIndexFile() + "(-\\d+)*\\.html")
+                        || file.matches(Config.INSTANCE.getCategoryFile() + "(.)+\\.html")) {
                     addUrl(baseurl + file, LocalDateTime.now());
                 }
             }
         }
 
         /* Write XML to file */
-        writeFeed(new File(directory, Config.INSTANCE.getSitemapFile()));
+        writeXmlFile(new File(directory, Config.INSTANCE.getSitemapFile()));
     }
 
 

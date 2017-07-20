@@ -1,5 +1,6 @@
-package eu.ortlepp.blogbuilder.util;
+package eu.ortlepp.blogbuilder.util.xml;
 
+import eu.ortlepp.blogbuilder.util.Tools;
 import eu.ortlepp.blogbuilder.util.config.Config;
 import eu.ortlepp.blogbuilder.util.config.Directories;
 
@@ -59,7 +60,7 @@ public final class FeedCreator extends AbstractXmlCreator {
     public void createFeed() {
         createFeedInfo();
         addBlogPosts();
-        writeFeed(feed);
+        writeXmlFile(feed);
     }
 
 
