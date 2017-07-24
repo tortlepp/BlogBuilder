@@ -1,46 +1,56 @@
 package eu.ortlepp.blogbuilder.util;
 
 import eu.ortlepp.blogbuilder.util.config.Config;
+import eu.ortlepp.blogbuilder.util.config.Directories;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.logging.Logger;
 
 /**
- * A tool class to delete the contents (files and child directories) of a directory.
+ * A tool class to delete the contents (files and directories) of the "Blog" directory.
  *
- * @author Torsten Ortlepp
+ * @author Thorsten Ortlepp
  */
 public final class Cleaner extends SimpleFileVisitor<Path> {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Cleaner.class.getName());
 
-    /** The parent / start directory which must not be deleted. */
-    private static Path startdir;
+    /** The parent / start directory whose content is deleted. */
+    private final Path startdir;
 
     /** A list of files that are ignored (= not deleted). */
     private final String[] ignore;
 
 
     /**
-     * Do the cleaning: delete all files and directories from the directory (except those who are)
-     * in the ignore list). The directory itself is not deleted.
+     * Constructor, initializes the cleaning process.
      *
-     * @param directory The directory whose contents should be deleted
+     * @param directory The project directory whose "Blog" directory should be cleaned
      */
-    public static void clean(final Path directory) {
-        startdir = directory;
+    public Cleaner(final String directory) {
+        super();
+        startdir = Paths.get(directory, Directories.BLOG.toString());
+        ignore = Config.INSTANCE.getCleanIgnore();
+    }
 
+
+    /**
+     * Do the cleaning: delete all files and directories from the directory set in the constructor
+     * (except those who are in the ignore list). The directory itself is not deleted.
+     */
+    public void clean() {
         try {
-            Files.walkFileTree(directory, new Cleaner());
-            LOGGER.info(String.format("Cleaned directory %s", directory.getFileName()));
+            Files.walkFileTree(startdir, this);
+            LOGGER.info(String.format("Cleaned directory %s", startdir.getFileName()));
         } catch (IOException ex) {
-            LOGGER.severe(String.format("Cleaning directory %s failed: %s", directory.getFileName(), ex.getMessage()));
+            LOGGER.severe(String.format("Cleaning directory %s failed: %s", startdir.getFileName(), ex.getMessage()));
             throw new RuntimeException(ex);
         }
     }
@@ -56,10 +66,7 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      */
     @Override
     public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-        /* Necessary because file.getFileName() could return null */
-        final Path tmpFile = file.getFileName();
-
-        if (tmpFile != null && !isIgnored(tmpFile.toString())) {
+        if (!isOnIgnoreList(file.getFileName())) {
             Files.deleteIfExists(file);
         }
         return FileVisitResult.CONTINUE;
@@ -67,7 +74,8 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
 
 
     /**
-     * After visiting a directory: Delete the directory (except the parent / start directory).
+     * After visiting a directory: Delete the directory (except the parent / start directory) if it
+     * is empty. If the directory is not empty, it will not be deleted.
      *
      * @param directory The visited directory itself
      * @param exception Error while visiting the files inside the directory
@@ -87,28 +95,23 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
 
 
     /**
-     * Checks, if a file is on the ignore list.
+     * Checks, if a filename is on the ignore list. If the filename is null, true = "on ignore list"
+     * is returned because the file cannot be deleted anyway.
      *
-     * @param filename The filename to check
-     * @return The result of the check; true = the file is on the ignore list,
-     *  false = the file is not in the ignore list
+     * @param file The filename to check
+     * @return The result of the check; true = the filename is on the ignore list (or was null),
+     *  false = the filename is not in the ignore list
      */
-    private boolean isIgnored(String filename) {
-        for (final String name : ignore) {
-            if (name.equals(filename)) {
-                return true;
+    private boolean isOnIgnoreList(final Path filename) {
+        if (filename != null) {
+            for (final String name : ignore) {
+                if (name.equals(filename.toString())) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
-    }
-
-
-    /**
-     * Private constructor for tool class - initializes the list of ignored files.
-     */
-    private Cleaner() {
-        super();
-        ignore = Config.INSTANCE.getCleanIgnore();
+        return true;
     }
 
 }

@@ -66,26 +66,24 @@ public final class BlogBuilder {
      */
     private void run(final String action, final String optional) {
 
-        /* Run the initialization action */
         if (Parameter.INITIALIZE.toString().equalsIgnoreCase(action)) {
+            /* Run the initialization action */
             if (optional.isEmpty()) {
                 LOGGER.severe(MESSAGE_NO_DIR);
             } else {
                 new Initialize(optional).run();
             }
-        }
 
-        /* Run the build action */
-        else if (Parameter.BUILD.toString().equalsIgnoreCase(action)) {
+        } else if (Parameter.BUILD.toString().equalsIgnoreCase(action)) {
+            /* Run the build action */
             if (optional.isEmpty()) {
                 LOGGER.severe(MESSAGE_NO_DIR);
             } else {
                 new Build(optional).run();
             }
-        }
 
-        /* Action is validated before, this error should never happen */
-        else {
+        } else {
+            /* Action is validated before, this error should never happen */
             throw new AssertionError("No action for valid parameter!");
         }
     }

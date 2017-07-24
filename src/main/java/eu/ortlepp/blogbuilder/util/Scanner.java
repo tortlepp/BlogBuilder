@@ -1,12 +1,14 @@
 package eu.ortlepp.blogbuilder.util;
 
 import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.util.config.Directories;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.DateTimeException;
@@ -18,12 +20,12 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 /**
- * A scanner for the content directory. Searches recursively for Markdown files and reads their content. Only files
- * with the extension .md are read, files with other extensions are ignored.
+ * A scanner for the "Content" directory. Searches recursively for Markdown files and reads their content.
+ * Only files with the extension .md are read, files with other extensions are ignored.
  *
  * @author Thorsten Ortlepp
  */
-public class Scanner extends SimpleFileVisitor<Path> {
+public final class Scanner extends SimpleFileVisitor<Path> {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Scanner.class.getName());
@@ -38,32 +40,33 @@ public class Scanner extends SimpleFileVisitor<Path> {
     private final DateTimeFormatter inputFormat;
 
     /** The directory where the Markdown files are located. Necessary to create relative paths. */
-    private Path dirContent;
+    private final Path dirContent;
 
 
     /**
      * Constructor, initializes the scanner.
+     *
+     * @param directory The project directory whose "Content" directory should be read
      */
-    public Scanner() {
+    public Scanner(final String directory) {
+        dirContent = Paths.get(directory, Directories.CONTENT.toString());
         files = new ArrayList<Document>();
         inputFormat = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
     }
 
 
     /**
-     * Scan the directory recursively and find all Markdown files. The blog posts and simple pages that were found are
-     * added to the result list.
+     * Scan the "Content" directory recursively and find all Markdown files. The blog posts and simple pages
+     * that were found are added to the result list.
      *
-     * @param directory The directory to scan
      * @return A list of all found Markdown files and their content
      */
-    public List<Document> scanDirectory(final Path directory) {
-        dirContent = directory;
+    public List<Document> scanDirectory() {
         files.clear();
         try {
-            Files.walkFileTree(directory, this);
+            Files.walkFileTree(dirContent, this);
         } catch (IOException ex) {
-            LOGGER.severe(String.format("Scanning %s failed: %s", directory.getFileName(), ex.getMessage()));
+            LOGGER.severe(String.format("Scanning %s failed: %s", dirContent.getFileName(), ex.getMessage()));
             throw new RuntimeException(ex);
         }
         return files;
@@ -134,7 +137,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
         /* Build the relative path to the base directory */
         String toBaseDir = file.relativize(dirContent).toString();
         toBaseDir = toBaseDir.replaceAll("\\\\", "/");
-        if (toBaseDir.equals("..")) {
+        if ("..".equals(toBaseDir)) {
             toBaseDir = "";
         } else {
             toBaseDir = toBaseDir.replaceFirst("../", "") + "/";
@@ -153,7 +156,7 @@ public class Scanner extends SimpleFileVisitor<Path> {
     private void parseContentFile(final List<String> lines, final Document document) {
         for (final String line : lines) {
 
-            /* Headers start with ;; */
+            /* Each header line starts with ;; */
             if (line.trim().startsWith(";;")) {
 
                 /* Split line to a key-value-pair */
@@ -184,10 +187,9 @@ public class Scanner extends SimpleFileVisitor<Path> {
                                 Tools.getFilenameFromPath(document.getFile())));
                         break;
                 }
-            }
 
-            /* Everything that is not a header is handled as content */
-            else {
+            } else {
+                /* Everything that is not a header is treated as content */
                 document.addContent(line + System.lineSeparator());
             }
         }

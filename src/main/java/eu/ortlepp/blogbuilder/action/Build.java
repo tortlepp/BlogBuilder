@@ -60,10 +60,10 @@ public final class Build implements Action {
             LOGGER.info(String.format("Starting build process for %s", directory.getFileName()));
 
             Config.INSTANCE.loadConfig(directory.toFile());
-            Cleaner.clean(Paths.get(directory.toString(), Directories.BLOG.toString()));
+            new Cleaner(directory.toString()).clean();
             scanDirectory();
             writeFiles();
-            ResourceCopy.copy(directory);
+            new ResourceCopy(directory.toString()).copyResources();
             new FeedCreator(blogposts, directory.toString()).createFeed();
             new SitemapCreator(directory.toString()).createSitemap(blogposts, pages);
 
@@ -78,7 +78,7 @@ public final class Build implements Action {
      */
     private void scanDirectory() {
         /* Find all Markdown files */
-        blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), Directories.CONTENT.toString()));
+        blogposts = new Scanner(directory.toString()).scanDirectory();
 
         /* Copy pages to pages list and remove them from blog post list */
         final Iterator<Document> iterator = blogposts.iterator();

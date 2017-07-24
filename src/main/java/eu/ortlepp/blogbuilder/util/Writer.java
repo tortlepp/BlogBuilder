@@ -3,6 +3,7 @@ package eu.ortlepp.blogbuilder.util;
 import eu.ortlepp.blogbuilder.model.Category;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.model.InnerDocument;
+import eu.ortlepp.blogbuilder.model.TemplateKey;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
 import eu.ortlepp.blogbuilder.util.config.Config;
 import freemarker.template.Configuration;
@@ -14,7 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,13 +31,10 @@ import java.util.logging.Logger;
  *
  * @author Thorsten Ortlepp
  */
-public class Writer {
+public final class Writer {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Writer.class.getName());
-
-    /** The key for the base directory in the templates. */
-    private static final String BASEDIR_KEY = "basedir";
 
     /** The target directory (where the HTML files are created). */
     private final Path target;
@@ -71,9 +69,9 @@ public class Writer {
 
         /* Load static data from configuration */
         blogInfo = new HashMap<String, String>();
-        blogInfo.put("title", Config.INSTANCE.getTitle());
-        blogInfo.put("author", Config.INSTANCE.getAuthor());
-        blogInfo.put("language", Config.INSTANCE.getLocale().getLanguage());
+        blogInfo.put(TemplateKey.Config.TITLE.toString(), Config.INSTANCE.getTitle());
+        blogInfo.put(TemplateKey.Config.AUTHOR.toString(), Config.INSTANCE.getAuthor());
+        blogInfo.put(TemplateKey.Config.LANGUAGE.toString(), Config.INSTANCE.getLocale().getLanguage());
     }
 
 
@@ -83,7 +81,7 @@ public class Writer {
      * @param blogposts The list of blog posts
      */
     public void writeBlogPosts(final List<Document> blogposts) {
-        final int written = writeDocuments(blogposts, "post", "page_blogpost.ftl");
+        final int written = writeDocuments(blogposts, TemplateKey.Prefix.POST, "page_blogpost.ftl");
         LOGGER.info(String.format("%d blog posts written", written));
     }
 
@@ -94,7 +92,7 @@ public class Writer {
      * @param pages The list of simple pages
      */
     public void writePages(final List<Document> pages) {
-        final int written = writeDocuments(pages, "page", "page_page.ftl");
+        final int written = writeDocuments(pages, TemplateKey.Prefix.PAGE, "page_page.ftl");
         LOGGER.info(String.format("%d pages written", written));
     }
 
@@ -107,19 +105,20 @@ public class Writer {
      * @param template The template file to use for the HTML files
      * @return Returns the number of HTML files that were written
      */
-    public int writeDocuments(final List<Document> documents, final String key, final String template) {
+    public int writeDocuments(final List<Document> documents, final TemplateKey.Prefix key, final String template) {
         int counter = 0;
+        final String keyStr = key.toString();
         final Map<String, Object> content = new HashMap<String, Object>();
-        content.put("blog", blogInfo);
+        content.put(TemplateKey.Prefix.BLOG.toString(), blogInfo);
 
         for (final Document document : documents) {
             /* Set the document */
-            if (content.containsKey(key)) {
-                content.replace(key, document);
-                content.replace(BASEDIR_KEY, document.getToBaseDir());
+            if (content.containsKey(keyStr)) {
+                content.replace(keyStr, document);
+                content.replace(TemplateKey.BASEDIR.toString(), document.getToBaseDir());
             } else {
-                content.put(key, document);
-                content.put(BASEDIR_KEY, document.getToBaseDir());
+                content.put(keyStr, document);
+                content.put(TemplateKey.BASEDIR.toString(), document.getToBaseDir());
             }
 
             /* The absolute path of the file */
@@ -156,8 +155,8 @@ public class Writer {
      */
     public void writeIndex(final List<Document> blogposts) {
         final Map<String, Object> content = new HashMap<String, Object>();
-        content.put("blog", blogInfo);
-        content.put(BASEDIR_KEY, "");
+        content.put(TemplateKey.Prefix.BLOG.toString(), blogInfo);
+        content.put(TemplateKey.BASEDIR.toString(), "");
         int counter = 0;
 
         final int postsPerPage = Config.INSTANCE.getIndexPosts();
@@ -198,14 +197,15 @@ public class Writer {
             }
 
             /* Set the document */
-            if (content.containsKey("posts")) {
-                content.replace("posts", posts);
-                content.replace("index_newer", filenames[i]);
-                content.replace("index_older", filenames[i + 2]);
+            final String postsKey = TemplateKey.Prefix.POSTS.toString();
+            if (content.containsKey(postsKey)) {
+                content.replace(postsKey, posts);
+                content.replace(TemplateKey.INDEX_NEWER.toString(), filenames[i]);
+                content.replace(TemplateKey.INDEX_OLDER.toString(), filenames[i + 2]);
             } else {
-                content.put("posts", posts);
-                content.put("index_newer", filenames[i]);
-                content.put("index_older", filenames[i + 2]);
+                content.put(postsKey, posts);
+                content.put(TemplateKey.INDEX_NEWER.toString(), filenames[i]);
+                content.put(TemplateKey.INDEX_OLDER.toString(), filenames[i + 2]);
             }
 
             /* Write file to disk using the Freemarker template */
@@ -237,8 +237,8 @@ public class Writer {
 
         /* Write category pages */
         final Map<String, Object> content = new HashMap<String, Object>();
-        content.put("blog", blogInfo);
-        content.put(BASEDIR_KEY, "");
+        content.put(TemplateKey.Prefix.BLOG.toString(), blogInfo);
+        content.put(TemplateKey.BASEDIR.toString(), "");
         int counter = 0;
 
         for (final Entry<String, List<InnerDocument>> entry : categories.entrySet()) {
@@ -246,12 +246,12 @@ public class Writer {
                     entry.getKey().toLowerCase(Config.INSTANCE.getLocale()));
 
             /* Set the document */
-            if (content.containsKey("posts")) {
-                content.replace("posts", entry.getValue());
-                content.replace("category", entry.getKey());
+            if (content.containsKey(TemplateKey.Prefix.POSTS.toString())) {
+                content.replace(TemplateKey.Prefix.POSTS.toString(), entry.getValue());
+                content.replace(TemplateKey.CATEGORY.toString(), entry.getKey());
             } else {
-                content.put("posts", entry.getValue());
-                content.put("category", entry.getKey());
+                content.put(TemplateKey.Prefix.POSTS.toString(), entry.getValue());
+                content.put(TemplateKey.CATEGORY.toString(), entry.getKey());
             }
 
             /* Write file to disk using the Freemarker template */
@@ -275,7 +275,7 @@ public class Writer {
      */
     private boolean writeFile(final Map<String, Object> content, final File file, final String template) {
         try (java.io.Writer out =
-                new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8")))) {
+                new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             final Template fmTemplate = fmConfig.getTemplate(template);
             fmTemplate.process(content, out);
         } catch (IOException | TemplateException ex) {

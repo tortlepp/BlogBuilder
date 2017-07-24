@@ -72,7 +72,7 @@ public final class SitemapCreator extends AbstractXmlCreator {
         /* Get a list of all files (will be null if directory is not a directory) */
         final String[] files = new File(directory).list();
 
-        /* Add all index files to the sitemap */
+        /* Add all index and category files to the sitemap */
         if (files != null) {
             for (final String file : files) {
                 if (file.matches(Config.INSTANCE.getIndexFile() + "(-\\d+)*\\.html")
