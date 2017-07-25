@@ -43,6 +43,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
      * @param hint A hint for the object
      * @return The Document data object
      */
+    @SuppressWarnings("rawtypes")
     @Override
     public Object getAdaptedObject(final Class hint) {
         return document;

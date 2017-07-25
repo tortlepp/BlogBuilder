@@ -37,8 +37,7 @@ public class DocumentWrapper extends DefaultObjectWrapper {
     protected TemplateModel handleUnknownType(final Object object) throws TemplateModelException {
         if (object instanceof EmbeddedDocument) {
             return new EmbeddedDocumentAdapter((EmbeddedDocument) object, this);
-        }
-        if (object instanceof Document) {
+        } else if (object instanceof Document) {
             return new DocumentAdapter((Document) object, this);
         }
         return super.handleUnknownType(object);
