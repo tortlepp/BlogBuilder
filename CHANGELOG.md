@@ -13,6 +13,7 @@ All notable changes to BlogBuilder are documented in this file. The format is ba
 
 ### Added
 - A new sample project content based on [Cupcake Ipsum](http://www.cupcakeipsum.com/)
+- Gradle task for Javadoc
 
 
 ## [0.5] - 2016-07-23
