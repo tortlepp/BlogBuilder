@@ -1,6 +1,7 @@
 package eu.ortlepp.blogbuilder.util;
 
 import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.model.DocumentType;
 import eu.ortlepp.blogbuilder.util.config.Directories;
 
 import java.io.IOException;
@@ -174,7 +175,7 @@ public final class Scanner extends SimpleFileVisitor<Path> {
                         document.setModified(parseString(keyvalue[1].trim()));
                         break;
                     case "noblog":
-                        document.setNoBlog();
+                        document.setType(DocumentType.PAGE);
                         break;
                     case "category":
                         final String[] categories = keyvalue[1].split(",");

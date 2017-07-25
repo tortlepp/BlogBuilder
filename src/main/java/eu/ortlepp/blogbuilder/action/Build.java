@@ -1,6 +1,7 @@
 package eu.ortlepp.blogbuilder.action;
 
 import eu.ortlepp.blogbuilder.model.Document;
+import eu.ortlepp.blogbuilder.model.DocumentType;
 import eu.ortlepp.blogbuilder.util.Cleaner;
 import eu.ortlepp.blogbuilder.util.ResourceCopy;
 import eu.ortlepp.blogbuilder.util.Scanner;
@@ -84,7 +85,7 @@ public final class Build implements Action {
         final Iterator<Document> iterator = blogposts.iterator();
         while (iterator.hasNext()) {
             final Document document = iterator.next();
-            if (!document.isBlog()) {
+            if (document.getType() == DocumentType.PAGE) {
                 pages.add(document);
                 iterator.remove();
             }

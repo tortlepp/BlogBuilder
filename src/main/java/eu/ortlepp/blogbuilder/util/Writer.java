@@ -2,7 +2,7 @@ package eu.ortlepp.blogbuilder.util;
 
 import eu.ortlepp.blogbuilder.model.Category;
 import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.model.InnerDocument;
+import eu.ortlepp.blogbuilder.model.EmbeddedDocument;
 import eu.ortlepp.blogbuilder.model.TemplateKey;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
 import eu.ortlepp.blogbuilder.util.config.Config;
@@ -180,7 +180,7 @@ public final class Writer {
         int added = 0;
 
         /* A list for all blog posts of an index page */
-        final List<InnerDocument> posts = new ArrayList<InnerDocument>();
+        final List<EmbeddedDocument> posts = new ArrayList<EmbeddedDocument>();
 
         /* Create all index pages */
         for (int i = 0; i < pages; i++) {
@@ -189,7 +189,7 @@ public final class Writer {
             /* Get blog posts for the page */
             for (int j = added; j < (i + 1) * postsPerPage; j++) {
                 if (added < blogposts.size()) {
-                    posts.add(new InnerDocument(blogposts.get(added)));
+                    posts.add(new EmbeddedDocument(blogposts.get(added)));
                     added++;
                 } else {
                     break;
@@ -225,13 +225,13 @@ public final class Writer {
      * @param blogposts The list of blog posts
      */
     public void writeCategoryPages(final List<Document> blogposts) {
-        final Map<String, List<InnerDocument>> categories = new HashMap<String, List<InnerDocument>>();
+        final Map<String, List<EmbeddedDocument>> categories = new HashMap<String, List<EmbeddedDocument>>();
 
         /* Build category index */
         for (final Document blogpost : blogposts) {
             for (final Category category : blogpost.getCategories()) {
-                categories.putIfAbsent(category.getNameFormatted(), new ArrayList<InnerDocument>());
-                categories.get(category.getNameFormatted()).add(new InnerDocument(blogpost));
+                categories.putIfAbsent(category.getNameFormatted(), new ArrayList<EmbeddedDocument>());
+                categories.get(category.getNameFormatted()).add(new EmbeddedDocument(blogpost));
             }
         }
 
@@ -241,7 +241,7 @@ public final class Writer {
         content.put(TemplateKey.BASEDIR.toString(), "");
         int counter = 0;
 
-        for (final Entry<String, List<InnerDocument>> entry : categories.entrySet()) {
+        for (final Entry<String, List<EmbeddedDocument>> entry : categories.entrySet()) {
             final String filename = String.format("%s%s.html", Config.INSTANCE.getCategoryFile(),
                     entry.getKey().toLowerCase(Config.INSTANCE.getLocale()));
 

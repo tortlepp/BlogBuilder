@@ -107,7 +107,7 @@ public class Category {
 
 
     /**
-     * Custom implementation of hashCode(), uses Objects.hash().
+     * Custom implementation of hashCode(), implemented using Objects.hash().
      *
      * @return The calculated hash code
      */
