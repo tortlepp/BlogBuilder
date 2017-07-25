@@ -114,8 +114,8 @@ public final class Build implements Action {
     /**
      * Create a link to the previous or next HTML file.
      *
-     * @param doc1 The current document
-     * @param doc2 The previous or next document
+     * @param current The current document
+     * @param other The previous or next document
      * @return The link to the previous or next HTML file
      */
     private String getRelaviveLink(final Document current, final Document other) {
