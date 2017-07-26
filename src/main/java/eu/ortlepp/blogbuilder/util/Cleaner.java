@@ -98,7 +98,7 @@ public final class Cleaner extends SimpleFileVisitor<Path> {
      * Checks, if a filename is on the ignore list. If the filename is null, true = "on ignore list"
      * is returned because the file cannot be deleted anyway.
      *
-     * @param file The filename to check
+     * @param filename The filename to check
      * @return The result of the check; true = the filename is on the ignore list (or was null),
      *  false = the filename is not in the ignore list
      */

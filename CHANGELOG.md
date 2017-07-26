@@ -12,8 +12,9 @@ All notable changes to BlogBuilder are documented in this file. The format is ba
 - Old sample project content based on various ipsum texts
 
 ### Added
-- A new sample project content based on [Cupcake Ipsum](http://www.cupcakeipsum.com/)
-- Gradle task for Javadoc
+- New sample project content based on [Cupcake Ipsum](http://www.cupcakeipsum.com/)
+- Custom Gradle task for Javadoc to include private members
+- Added a `package-info.java` to all packages
 
 
 ## [0.5] - 2016-07-23
@@ -21,4 +22,5 @@ All notable changes to BlogBuilder are documented in this file. The format is ba
 - First public release of BlogBuilder
 
 
+[Unreleased]: https://github.com/tortlepp/BlogBuilder
 [0.5]: https://github.com/tortlepp/BlogBuilder/releases/tag/v0.5

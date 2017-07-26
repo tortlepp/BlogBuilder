@@ -61,7 +61,7 @@ public enum ConfigItems {
      * Constructor to initialize a configuration item.
      *
      * @param key The key of a configuration item
-     * @param default The default value of a configuration item
+     * @param defaultValue The default value of a configuration item
      * @param description A description for a configuration item
      */
     ConfigItems(final String key, final String defaultValue, final String description) {
