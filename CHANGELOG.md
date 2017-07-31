@@ -7,6 +7,7 @@ All notable changes to BlogBuilder are documented in this file. The format is ba
 - Refactoring of almost all classes; some moving, renaming and splitting of classes
 - Updated build dependency: Freemarker 2.3.25-incubating to 2.3.26-incubating
 - Updated check dependencies: PMD 5.5.0 to 5.8.1 and Checkstyle 7.0 to 8.1
+- Changed Markdown parser from [pegdown](https://github.com/sirthias/pegdown) to [flexmark-java](https://github.com/vsch/flexmark-java)
 
 ### Removed
 - Old sample project content based on various ipsum texts

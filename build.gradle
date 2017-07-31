@@ -18,7 +18,7 @@ repositories {
 // Dependencies for this project
 dependencies {
     compile 'org.freemarker:freemarker:2.3.26-incubating'
-    compile 'org.pegdown:pegdown:1.6.0'
+    compile 'com.vladsch.flexmark:flexmark-all:0.22.16'
 }
 
 

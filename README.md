@@ -31,7 +31,7 @@ For further information see [Development](https://github.com/tortlepp/BlogBuilde
 ===================
 BlogBuilder uses some 3rd party libraries:
 
-* [pegdown](https://github.com/sirthias/pegdown) to process Markdown to HTML
+* [flexmark-java](https://github.com/vsch/flexmark-java) to process Markdown to HTML
 * [FreeMarker](http://freemarker.org/) as template engine
 
 

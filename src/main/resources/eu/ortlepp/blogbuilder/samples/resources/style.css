@@ -23,3 +23,6 @@ p#pubdate {
 p#nav {
  text-align: center;
 }
+li.task-list-item {
+ list-style-type: none;
+}

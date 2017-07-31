@@ -1,12 +1,22 @@
 package eu.ortlepp.blogbuilder.model;
 
-import org.pegdown.PegDownProcessor;
+import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
+import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
+import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.ext.typographic.TypographicExtension;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.superscript.SuperscriptExtension;
+import com.vladsch.flexmark.util.options.MutableDataHolder;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,15 +61,30 @@ public class Document implements Comparable<Document> {
     /** A list that contains the categories of the document. */
     private final List<Category> categories;
 
-    /** A Markdown processor to transform the content from Markdown to HTML. */
-    private static final PegDownProcessor PROCESSOR;
+    /** A parser to parse the Markdown content. */
+    private static final Parser PARSER;
+
+    /** A renderer to render the parsed Markdown to HTML. */
+    private static final HtmlRenderer RENDERER;
 
 
     /**
-     * Static initializer, initialize the static Markdown processor.
+     * Static initializer, initialize the static Markdown parser and renderer.
      */
     static {
-        PROCESSOR = new PegDownProcessor();
+        final MutableDataHolder options = new MutableDataSet()
+                .set(TablesExtension.COLUMN_SPANS, false)
+                .set(TablesExtension.APPEND_MISSING_COLUMNS, true)
+                .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
+                .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true)
+                .set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(),
+                                                        StrikethroughSubscriptExtension.create(),
+                                                        SuperscriptExtension.create(),
+                                                        AutolinkExtension.create(),
+                                                        TaskListExtension.create(),
+                                                        TypographicExtension.create()));
+        PARSER = Parser.builder(options).build();
+        RENDERER = HtmlRenderer.builder(options).build();
     }
 
 
@@ -215,7 +240,7 @@ public class Document implements Comparable<Document> {
      * @return Content of the document as HTML
      */
     public String getContentAsHtml() {
-        return PROCESSOR.markdownToHtml(getContent());
+        return RENDERER.render(PARSER.parse(getContent()));
     }
 
 
