@@ -22,7 +22,7 @@ For detailed information, see [Getting started](https://github.com/tortlepp/Blog
 
 Development & Building
 ======================
-The code of BlogBuilder is written in Java, [Gradle](https://gradle.org) is used as build system. To build the executable JAR file for distribution, run `gradle jar` in the repository root. This will build the `BlogBuilder.jar` in the `build/libs` folder.
+The code of BlogBuilder is written in Java, [Gradle](https://gradle.org) is used as build system. To build the executable JAR file for distribution, run `gradle jar` in the repository root. This will build the *BlogBuilder.jar* in the `build/libs` folder.
 
 For further information see [Development](https://github.com/tortlepp/BlogBuilder/wiki/Development) in the Wiki.
 
@@ -37,4 +37,4 @@ BlogBuilder uses some 3rd party libraries:
 
 License
 =======
-BlogBuilder is developed and distributed under the terms of the MIT License. See [LICENSE.md](https://github.com/tortlepp/BlogBuilder/blob/master/LICENSE.md) for more details.
+BlogBuilder is developed and distributed under the terms of the MIT License. See [LICENSE.md](LICENSE.md) for more details.
