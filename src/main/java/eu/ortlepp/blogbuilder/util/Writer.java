@@ -40,7 +40,7 @@ public final class Writer {
     /** The target directory (where the HTML files are created). */
     private final Path target;
 
-    /** The configuration of the Freemarker template engine. */
+    /** The configuration of the FreeMarker template engine. */
     private final Configuration fmConfig;
 
     /** Static data / information from the configuration file. */
@@ -48,7 +48,7 @@ public final class Writer {
 
 
     /**
-     * Constructor, initializes the Freemarker template engine and loads the static data.
+     * Constructor, initializes the FreeMarker template engine and loads the static data.
      *
      * @param target The target directory (where the HTML files are created)
      * @param templates The directory which contains the templates
@@ -56,7 +56,7 @@ public final class Writer {
     public Writer(final Path target, final Path templates) {
         this.target = target;
 
-        /* Initialize Freemarker */
+        /* Initialize FreeMarker */
         fmConfig = new Configuration(Configuration.VERSION_2_3_25);
         try {
             fmConfig.setDirectoryForTemplateLoading(templates.toFile());
@@ -64,7 +64,7 @@ public final class Writer {
             fmConfig.setLocale(Config.INSTANCE.getLocale());
             fmConfig.setObjectWrapper(new DocumentWrapper(fmConfig.getIncompatibleImprovements()));
         } catch (IOException ex) {
-            LOGGER.severe("Initializing Freemarker failed!");
+            LOGGER.severe("Initializing FreeMarker failed!");
             throw new RuntimeException(ex);
         }
 
@@ -134,7 +134,7 @@ public final class Writer {
                     /* Create directories */
                     Files.createDirectories(parent);
 
-                    /* Write file to disk using the Freemarker template */
+                    /* Write file to disk using the FreeMarker template */
                     if (writeFile(content, file.toFile(), template)) {
                         counter++;
                         LOGGER.info(String.format("Wrote %s", document.getPath()));
@@ -210,7 +210,7 @@ public final class Writer {
                 content.put(TemplateKey.INDEX_OLDER.toString(), filenames[i + 2]);
             }
 
-            /* Write file to disk using the Freemarker template */
+            /* Write file to disk using the FreeMarker template */
             if (writeFile(content, new File(target.toFile(), filenames[i + 1]), TemplateFile.INDEX)) {
                 counter++;
                 LOGGER.info(String.format("Wrote index page %s", filenames[i + 1]));
@@ -256,7 +256,7 @@ public final class Writer {
                 content.put(TemplateKey.CATEGORY.toString(), entry.getKey());
             }
 
-            /* Write file to disk using the Freemarker template */
+            /* Write file to disk using the FreeMarker template */
             if (writeFile(content, new File(target.toFile(), filename), TemplateFile.CATEGORY)) {
                 counter++;
                 LOGGER.info(String.format("Wrote category page %s for category %s", filename, entry.getKey()));

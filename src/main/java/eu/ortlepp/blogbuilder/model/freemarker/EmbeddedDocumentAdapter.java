@@ -5,7 +5,7 @@ import eu.ortlepp.blogbuilder.model.EmbeddedDocument;
 import freemarker.template.ObjectWrapper;
 
 /**
- * An adapter for EmbeddedDocument data objects in Freemarker templates. The only difference to DocumentAdapter is the
+ * An adapter for EmbeddedDocument data objects in FreeMarker templates. The only difference to DocumentAdapter is the
  * handling of the content of the Document. EmbeddedDocumentAdapter leaves the content untouched and does not change
  * the links it contains.
  *

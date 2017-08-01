@@ -16,7 +16,7 @@ public enum Directories {
     /** Directory which contains additional resources (CSS, images, ...) for the blog. */
     RESOURCES("resources"),
 
-    /** Directory where the (Freemarker) templates are located. */
+    /** Directory where the (FreeMarker) templates are located. */
     TEMPLATES("templates");
 
 

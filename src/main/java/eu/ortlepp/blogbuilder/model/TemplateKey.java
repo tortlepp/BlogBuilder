@@ -1,9 +1,9 @@
 package eu.ortlepp.blogbuilder.model;
 
 /**
- * An Enum for variables used in the Freemarker templates. Please note that this Enum is a
+ * An Enum for variables used in the FreeMarker templates. Please note that this Enum is a
  * collection of some variables, but not all variables are available in each context. Also
- * note, that e.g. Document exposes its variables to the Freemarker templates - these
+ * note, that e.g. Document exposes its variables to the FreeMarker templates - these
  * variables are not part of this Enum.
  *
  * @author Thorsten Ortlepp

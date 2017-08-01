@@ -1,5 +1,5 @@
 /**
- * Data structures and related utilities to extend the Freemarker capabilities.
+ * Data structures and related utilities to extend the FreeMarker capabilities.
  *
  * @author Thorsten Ortlepp
  */

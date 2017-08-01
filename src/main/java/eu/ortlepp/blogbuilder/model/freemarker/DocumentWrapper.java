@@ -8,7 +8,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
 
 /**
- * A wrapper for Document data objects in Freemarker templates.
+ * A wrapper for Document data objects in FreeMarker templates.
  *
  * @author Thorsten Ortlepp
  */
@@ -25,11 +25,11 @@ public class DocumentWrapper extends DefaultObjectWrapper {
 
 
     /**
-     * Add handler for Document data objects in Freemarker templates. For objects of type Document
+     * Add handler for Document data objects in FreeMarker templates. For objects of type Document
      * or EmbeddedDocument a custom adapter is created; all other object types will be handled by
      * the super class.
      *
-     * @param object Object to be handled by Freemarker
+     * @param object Object to be handled by FreeMarker
      * @return The TemplateModel for the object
      * @throws TemplateModelException Error while creating the handler
      */

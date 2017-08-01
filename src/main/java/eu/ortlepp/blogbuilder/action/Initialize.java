@@ -123,7 +123,7 @@ public final class Initialize implements Action {
 
         /* Copy template files */
         copyTemplateFiles(dirStr);
-        LOGGER.info("Created Freemarker templates");
+        LOGGER.info("Created FreeMarker templates");
     }
 
 

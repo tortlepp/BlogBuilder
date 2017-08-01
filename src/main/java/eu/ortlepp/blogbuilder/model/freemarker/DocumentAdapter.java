@@ -10,8 +10,8 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.WrappingTemplateModel;
 
 /**
- * An adapter for Document data objects in Freemarker templates. Some fields of the Document data object are
- * exposed for the use in Freemarker templates.
+ * An adapter for Document data objects in FreeMarker templates. Some fields of the Document data object are
+ * exposed for the use in FreeMarker templates.
  *
  * @author Thorsten Ortlepp
  */
