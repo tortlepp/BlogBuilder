@@ -1,5 +1,6 @@
 package eu.ortlepp.blogbuilder.action;
 
+import eu.ortlepp.blogbuilder.model.TemplateFile;
 import eu.ortlepp.blogbuilder.util.config.Config;
 import eu.ortlepp.blogbuilder.util.config.ConfigItems;
 import eu.ortlepp.blogbuilder.util.config.Directories;
@@ -223,14 +224,14 @@ public final class Initialize implements Action {
                     Paths.get(dirStrTemplates, "include_footer.ftl"));
             Files.copy(getResourceStream("templates/include_header.ftl"),
                     Paths.get(dirStrTemplates, "include_header.ftl"));
-            Files.copy(getResourceStream("templates/page_blogpost.ftl"),
-                    Paths.get(dirStrTemplates, "page_blogpost.ftl"));
-            Files.copy(getResourceStream("templates/page_category.ftl"),
-                    Paths.get(dirStrTemplates, "page_category.ftl"));
-            Files.copy(getResourceStream("templates/page_index.ftl"),
-                    Paths.get(dirStrTemplates, "page_index.ftl"));
-            Files.copy(getResourceStream("templates/page_page.ftl"),
-                    Paths.get(dirStrTemplates, "page_page.ftl"));
+            Files.copy(getResourceStream(TemplateFile.BLOGPOST.getResourcePath()),
+                    Paths.get(dirStrTemplates, TemplateFile.BLOGPOST.toString()));
+            Files.copy(getResourceStream(TemplateFile.CATEGORY.getResourcePath()),
+                    Paths.get(dirStrTemplates, TemplateFile.CATEGORY.toString()));
+            Files.copy(getResourceStream(TemplateFile.INDEX.getResourcePath()),
+                    Paths.get(dirStrTemplates, TemplateFile.INDEX.toString()));
+            Files.copy(getResourceStream(TemplateFile.PAGE.getResourcePath()),
+                    Paths.get(dirStrTemplates, TemplateFile.PAGE.toString()));
         } catch (IOException ex) {
             LOGGER.severe(String.format("Error while copying template files: %s", ex.getMessage()));
             throw ex;

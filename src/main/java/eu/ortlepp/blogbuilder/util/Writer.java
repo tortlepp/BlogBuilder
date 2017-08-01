@@ -3,6 +3,7 @@ package eu.ortlepp.blogbuilder.util;
 import eu.ortlepp.blogbuilder.model.Category;
 import eu.ortlepp.blogbuilder.model.Document;
 import eu.ortlepp.blogbuilder.model.EmbeddedDocument;
+import eu.ortlepp.blogbuilder.model.TemplateFile;
 import eu.ortlepp.blogbuilder.model.TemplateKey;
 import eu.ortlepp.blogbuilder.model.freemarker.DocumentWrapper;
 import eu.ortlepp.blogbuilder.util.config.Config;
@@ -81,7 +82,7 @@ public final class Writer {
      * @param blogposts The list of blog posts
      */
     public void writeBlogPosts(final List<Document> blogposts) {
-        final int written = writeDocuments(blogposts, TemplateKey.Prefix.POST, "page_blogpost.ftl");
+        final int written = writeDocuments(blogposts, TemplateKey.Prefix.POST, TemplateFile.BLOGPOST);
         LOGGER.info(String.format("%d blog posts written", written));
     }
 
@@ -92,7 +93,7 @@ public final class Writer {
      * @param pages The list of simple pages
      */
     public void writePages(final List<Document> pages) {
-        final int written = writeDocuments(pages, TemplateKey.Prefix.PAGE, "page_page.ftl");
+        final int written = writeDocuments(pages, TemplateKey.Prefix.PAGE, TemplateFile.PAGE);
         LOGGER.info(String.format("%d pages written", written));
     }
 
@@ -105,7 +106,8 @@ public final class Writer {
      * @param template The template file to use for the HTML files
      * @return Returns the number of HTML files that were written
      */
-    public int writeDocuments(final List<Document> documents, final TemplateKey.Prefix key, final String template) {
+    public int writeDocuments(final List<Document> documents,
+            final TemplateKey.Prefix key, final TemplateFile template) {
         int counter = 0;
         final String keyStr = key.toString();
         final Map<String, Object> content = new HashMap<String, Object>();
@@ -209,7 +211,7 @@ public final class Writer {
             }
 
             /* Write file to disk using the Freemarker template */
-            if (writeFile(content, new File(target.toFile(), filenames[i + 1]), "page_index.ftl")) {
+            if (writeFile(content, new File(target.toFile(), filenames[i + 1]), TemplateFile.INDEX)) {
                 counter++;
                 LOGGER.info(String.format("Wrote index page %s", filenames[i + 1]));
             }
@@ -255,7 +257,7 @@ public final class Writer {
             }
 
             /* Write file to disk using the Freemarker template */
-            if (writeFile(content, new File(target.toFile(), filename), "page_category.ftl")) {
+            if (writeFile(content, new File(target.toFile(), filename), TemplateFile.CATEGORY)) {
                 counter++;
                 LOGGER.info(String.format("Wrote category page %s for category %s", filename, entry.getKey()));
             }
@@ -273,10 +275,10 @@ public final class Writer {
      * @param template The template to use for the HTML file
      * @return Success flag: true = file written successfully, false = error while writing the file
      */
-    private boolean writeFile(final Map<String, Object> content, final File file, final String template) {
+    private boolean writeFile(final Map<String, Object> content, final File file, final TemplateFile template) {
         try (java.io.Writer out =
                 new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
-            final Template fmTemplate = fmConfig.getTemplate(template);
+            final Template fmTemplate = fmConfig.getTemplate(template.toString());
             fmTemplate.process(content, out);
         } catch (IOException | TemplateException ex) {
             LOGGER.severe(String.format("Error while writing %s: %s", file.getName(), ex.getMessage()));
