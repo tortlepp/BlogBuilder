@@ -3,6 +3,9 @@ All notable changes to BlogBuilder are documented in this file. The format is ba
 
 
 ## [Unreleased]
+
+
+## [0.6] - 2017-08-03
 ### Changed
 - Refactoring of almost all classes; some moving, renaming and splitting of classes
 - Updated build dependency: Freemarker 2.3.25-incubating to 2.3.26-incubating
@@ -25,4 +28,5 @@ All notable changes to BlogBuilder are documented in this file. The format is ba
 
 
 [Unreleased]: https://github.com/tortlepp/BlogBuilder
+[0.6]: https://github.com/tortlepp/BlogBuilder/releases/tag/v0.6
 [0.5]: https://github.com/tortlepp/BlogBuilder/releases/tag/v0.5
