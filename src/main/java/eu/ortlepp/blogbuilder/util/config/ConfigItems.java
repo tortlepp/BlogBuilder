@@ -22,8 +22,7 @@ public enum ConfigItems {
     LOCALE("blog.locale", "en-US", "The locale to use for number and date formats"),
 
     /** The configuration item for the name of the index file. */
-    INDEX_FILE("index.filename", "index",
-            "The filename(s) of the index file(s); only the prefix, extension \".html\" is added automatically"),
+    INDEX_FILE("index.filename", "index", "The prefix of the filename of the index file(s)"),
 
     /** The configuration item for the number of blog posts on each index page. */
     INDEX_POSTS("index.posts", "3", "The number of blog posts on each index page"),
@@ -35,16 +34,13 @@ public enum ConfigItems {
     FEED_POSTS("feed.posts", "3", "The number of blog posts in the feed"),
 
     /** The configuration item for the filename of the category pages. */
-    CATEGORY_FILE("category.filename", "category_",
-            "The filenames of the category pages; only the prefix,"
-            + " category names and the extension \".html\" are added automatically"),
+    CATEGORY_FILE("category.filename", "category_", "The prefix of the filenames of the category pages"),
 
     /** The configuration item for the filename of the sitemap. */
     SITEMAP_FILE("sitemap.filename", "sitemap.xml", "The filename of the sitemap"),
 
     /** The configuration item for the files to ignore while cleaning the blog directory. */
-    CLEAN_IGONRE("clean.ignore", ".gitkeep",
-            "Files in the \"Blog\" folder that are ignored while cleaning; separate multiple files with \";\"");
+    CLEAN_IGONRE("clean.ignore", ".gitkeep", "Files in the \"blog\" folder that are ignored while cleaning");
 
 
     /** The key (in the properties file) of a configuration item. */
