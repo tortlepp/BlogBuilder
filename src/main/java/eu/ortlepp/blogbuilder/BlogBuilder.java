@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public final class BlogBuilder {
 
     /** The current version of the application. */
-    private static final String VERSION = "0.5";
+    private static final String VERSION = "0.6";
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(BlogBuilder.class.getName());
