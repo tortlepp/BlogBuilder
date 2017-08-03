@@ -16,6 +16,7 @@ All notable changes to BlogBuilder are documented in this file. The format is ba
 - New sample project content based on [Cupcake Ipsum](http://www.cupcakeipsum.com/)
 - Custom Gradle task for Javadoc to include private members
 - Added a `package-info.java` to all packages
+- Added [Wiki](https://github.com/tortlepp/BlogBuilder/wiki)
 
 
 ## [0.5] - 2016-07-23
