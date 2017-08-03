@@ -1,7 +1,7 @@
 package eu.ortlepp.blogbuilder.model.freemarker;
 
 import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.tools.Tools;
+import eu.ortlepp.blogbuilder.util.Tools;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateHashModel;
@@ -10,8 +10,8 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.WrappingTemplateModel;
 
 /**
- * An adapter for Document data objects in Freemarker templates. Some fields of the Document data object are
- * exposed for the use in Freemarker templates.
+ * An adapter for Document data objects in FreeMarker templates. Some fields of the Document data object are
+ * exposed for the use in FreeMarker templates.
  *
  * @author Thorsten Ortlepp
  */
@@ -43,6 +43,7 @@ public class DocumentAdapter extends WrappingTemplateModel implements AdapterTem
      * @param hint A hint for the object
      * @return The Document data object
      */
+    @SuppressWarnings("rawtypes")
     @Override
     public Object getAdaptedObject(final Class hint) {
         return document;

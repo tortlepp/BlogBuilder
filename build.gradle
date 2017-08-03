@@ -17,8 +17,8 @@ repositories {
 
 // Dependencies for this project
 dependencies {
-    compile 'org.freemarker:freemarker:2.3.25-incubating'
-    compile 'org.pegdown:pegdown:1.6.0'
+    compile 'org.freemarker:freemarker:2.3.26-incubating'
+    compile 'com.vladsch.flexmark:flexmark-all:0.22.16'
 }
 
 
@@ -35,7 +35,7 @@ jar {
 
 
 // Configure FindBugs
-    findbugs {
+findbugs {
     ignoreFailures = true
     toolVersion = "3.0.1"
     effort = "max"
@@ -51,15 +51,23 @@ tasks.withType(FindBugs) {
 
 // Configure PMD
 pmd {
-  ignoreFailures = true
-  toolVersion = "5.5.0"
-  ruleSets = ["java-basic", "java-braces", "java-codesize", "java-design", "java-empty", "java-imports", "java-logging-java", "java-naming", "java-optimizations", "java-strings", "java-sunsecure", "java-typeresolution", "java-unnecessary", "java-unusedcode"]
+    ignoreFailures = true
+    toolVersion = "5.8.1"
+    ruleSets = ["java-basic", "java-braces", "java-codesize", "java-design", "java-empty", "java-imports", "java-logging-java", "java-naming", "java-optimizations", "java-strings", "java-sunsecure", "java-typeresolution", "java-unnecessary", "java-unusedcode"]
 }
 
 
 // Configure Checkstyle
 checkstyle {
-  ignoreFailures = true
-  toolVersion = "7.0"
-  configFile = new File(rootDir, "contrib/checkstyle_google.xml")
+    ignoreFailures = true
+    toolVersion = "8.1"
+    configFile = new File(rootDir, "contrib/checkstyle_google.xml")
+}
+
+
+// Configure Javadoc
+task javadocFull(type: Javadoc) {    
+    source = sourceSets.main.allJava
+    options.memberLevel = JavadocMemberLevel.PRIVATE
+    classpath = configurations.compile
 }

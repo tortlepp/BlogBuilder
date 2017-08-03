@@ -1,14 +1,17 @@
 package eu.ortlepp.blogbuilder.action;
 
 import eu.ortlepp.blogbuilder.model.Document;
-import eu.ortlepp.blogbuilder.tools.Cleaner;
-import eu.ortlepp.blogbuilder.tools.Config;
-import eu.ortlepp.blogbuilder.tools.FeedCreator;
-import eu.ortlepp.blogbuilder.tools.ResourceCopy;
-import eu.ortlepp.blogbuilder.tools.Scanner;
-import eu.ortlepp.blogbuilder.tools.SitemapCreator;
-import eu.ortlepp.blogbuilder.tools.Writer;
+import eu.ortlepp.blogbuilder.model.DocumentType;
+import eu.ortlepp.blogbuilder.util.Cleaner;
+import eu.ortlepp.blogbuilder.util.ResourceCopy;
+import eu.ortlepp.blogbuilder.util.Scanner;
+import eu.ortlepp.blogbuilder.util.Writer;
+import eu.ortlepp.blogbuilder.util.config.Config;
+import eu.ortlepp.blogbuilder.util.config.Directories;
+import eu.ortlepp.blogbuilder.util.xml.FeedCreator;
+import eu.ortlepp.blogbuilder.util.xml.SitemapCreator;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author Thorsten Ortlepp
  */
-public final class Build {
+public final class Build implements Action {
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(Build.class.getName());
@@ -38,22 +41,12 @@ public final class Build {
 
 
     /**
-     * Run the build process for the project.
-     *
-     * @param directory Directory of the project to build
-     */
-    public static void build(final Path directory) {
-        new Build(directory).process();
-    }
-
-
-    /**
      * Constructor, prepare the build process.
      *
      * @param directory Directory of the project to build
      */
-    private Build(final Path directory) {
-        this.directory = directory;
+    public Build(final String directory) {
+        this.directory = Paths.get(directory);
         blogposts = new ArrayList<Document>();
         pages = new ArrayList<Document>();
     }
@@ -62,14 +55,22 @@ public final class Build {
     /**
      * Run the build process step by step.
      */
-    private void process() {
-        Config.getInstance().loadConfig(directory.toFile());
-        Cleaner.clean(Paths.get(directory.toString(), Config.DIR_BLOG));
-        scanDirectory();
-        writeFiles();
-        ResourceCopy.copy(directory);
-        new FeedCreator(blogposts, directory.toString()).createFeed();
-        new SitemapCreator(directory.toString()).createSitemap(blogposts, pages);
+    @Override
+    public void run() {
+        if (Files.exists(directory) && Files.isDirectory(directory)) {
+            LOGGER.info(String.format("Starting build process for %s", directory.getFileName()));
+
+            Config.INSTANCE.loadConfig(directory.toFile());
+            new Cleaner(directory.toString()).clean();
+            scanDirectory();
+            writeFiles();
+            new ResourceCopy(directory.toString()).copyResources();
+            new FeedCreator(blogposts, directory.toString()).createFeed();
+            new SitemapCreator(directory.toString()).createSitemap(blogposts, pages);
+
+        } else {
+            LOGGER.severe(String.format("Directory %s does not exist, build aborted", directory.getFileName()));
+        }
     }
 
 
@@ -78,13 +79,13 @@ public final class Build {
      */
     private void scanDirectory() {
         /* Find all Markdown files */
-        blogposts = new Scanner().scanDirectory(Paths.get(directory.toString(), Config.DIR_CONTENT));
+        blogposts = new Scanner(directory.toString()).scanDirectory();
 
         /* Copy pages to pages list and remove them from blog post list */
         final Iterator<Document> iterator = blogposts.iterator();
         while (iterator.hasNext()) {
             final Document document = iterator.next();
-            if (!document.isBlog()) {
+            if (document.getType() == DocumentType.PAGE) {
                 pages.add(document);
                 iterator.remove();
             }
@@ -113,8 +114,8 @@ public final class Build {
     /**
      * Create a link to the previous or next HTML file.
      *
-     * @param doc1 The current document
-     * @param doc2 The previous or next document
+     * @param current The current document
+     * @param other The previous or next document
      * @return The link to the previous or next HTML file
      */
     private String getRelaviveLink(final Document current, final Document other) {
@@ -130,8 +131,8 @@ public final class Build {
      * Write all blog posts, pages and special pages to HTML files.
      */
     private void writeFiles() {
-        final Writer writer = new Writer(Paths.get(directory.toString(), Config.DIR_BLOG),
-                Paths.get(directory.toString(), Config.DIR_TEMPLATES));
+        final Writer writer = new Writer(Paths.get(directory.toString(), Directories.BLOG.toString()),
+                Paths.get(directory.toString(), Directories.TEMPLATES.toString()));
         writer.writeBlogPosts(blogposts);
         writer.writePages(pages);
         writer.writeIndex(blogposts);

@@ -2,11 +2,9 @@ package eu.ortlepp.blogbuilder;
 
 import eu.ortlepp.blogbuilder.action.Build;
 import eu.ortlepp.blogbuilder.action.Initialize;
+import eu.ortlepp.blogbuilder.model.Parameter;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -24,17 +22,22 @@ public final class BlogBuilder {
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(BlogBuilder.class.getName());
 
+    /** Message to print if no directory / project is specified at the start of the program. */
+    private static final String MESSAGE_NO_DIR = "No directory / project specified, start-up aborted";
+
 
     /**
-     * Main method to start the application.
+     * Main method to start the application. The first first parameter is checked for validity;
+     * if it is valid the program continues the start, otherwise a usage info is printed.
      *
-     * @param args Arguments for the application; Two arguments are necessary to start: The first argument
-     *     is the action to start (initialize or build), the second argument ist path to the project directory
+     * @param args Parameters for the application; all valid parameters are defined in Parameters
      *
      */
-    public static void main(final String[] args) {
-        if (args.length >= 2) {
-            new BlogBuilder().run(args[0], args[1]);
+    public static void main(final String... args) {
+        if (args.length >= 1 && Parameter.isValidParam(args[0])) {
+            /* Check if a second parameter exists */
+            final String optional = args.length >= 2 ? args[1] : "";
+            new BlogBuilder().run(args[0], optional);
         } else {
             printUsageInfo();
         }
@@ -49,7 +52,7 @@ public final class BlogBuilder {
             LogManager.getLogManager().readConfiguration(this.getClass().getClassLoader()
                     .getResourceAsStream("eu/ortlepp/blogbuilder/config/logging.properties"));
         } catch (SecurityException | IOException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException("Initializing the logger failed", ex);
         }
     }
 
@@ -57,38 +60,31 @@ public final class BlogBuilder {
     /**
      * Run the application, start the action specified by the first command line argument.
      *
-     * @param action The action to do (first command line argument)
-     * @param directory The directory / project (second command line argument)
+     * @param action The action to start (first command line argument); has to be validated before
+     * @param optional An optional parameter for the action (second command line argument); could
+     *     be an empty string but must not be null
      */
-    private void run(final String action, final String directory) {
-        final Path path = Paths.get(directory);
+    private void run(final String action, final String optional) {
 
-        /* Initialization */
-        if (action.equalsIgnoreCase("--init")) {
-            LOGGER.info(String.format("Starting initialization for %s", path.getFileName()));
-
-            if (Files.exists(path)) {
-                LOGGER.severe(String.format("Directory %s already exists, initialization aborted",
-                        path.getFileName()));
+        if (Parameter.INITIALIZE.toString().equalsIgnoreCase(action)) {
+            /* Run the initialization action */
+            if (optional.isEmpty()) {
+                LOGGER.severe(MESSAGE_NO_DIR);
             } else {
-                Initialize.initialize(path);
+                new Initialize(optional).run();
             }
-        }
 
-        /* Build */
-        else if (action.equalsIgnoreCase("--build")) {
-            LOGGER.info(String.format("Starting build process for %s", path.getFileName()));
-
-            if (Files.exists(path) && Files.isDirectory(path)) {
-                Build.build(path);
+        } else if (Parameter.BUILD.toString().equalsIgnoreCase(action)) {
+            /* Run the build action */
+            if (optional.isEmpty()) {
+                LOGGER.severe(MESSAGE_NO_DIR);
             } else {
-                LOGGER.severe(String.format("Directory %s does not exist, build aborted", path.getFileName()));
+                new Build(optional).run();
             }
-        }
 
-        /* Unknown / undefined */
-        else {
-            printUsageInfo();
+        } else {
+            /* Action is validated before, this error should never happen */
+            throw new AssertionError("No action for valid parameter!");
         }
     }
 
@@ -97,10 +93,10 @@ public final class BlogBuilder {
      * Print usage instructions for the application.
      */
     private static void printUsageInfo() {
-        System.out.printf("BlogBuilder %s%s%s", VERSION, System.lineSeparator(), System.lineSeparator());
-        System.out.println("Usage:");
-        System.out.println(" --init <DIRECTORY>   - Initialize a new project in <DIRECTORY>");
-        System.out.println(" --build <DIRECTORY>  - Build the project in <DIRECTORY>");
+        System.out.printf("BlogBuilder %s - Usage:%n", VERSION);
+        for (final Parameter param : Parameter.values()) {
+            System.out.println(param.getParamInfo());
+        }
     }
 
 }

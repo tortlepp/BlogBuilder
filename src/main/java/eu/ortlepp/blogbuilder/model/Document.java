@@ -1,12 +1,22 @@
 package eu.ortlepp.blogbuilder.model;
 
-import org.pegdown.PegDownProcessor;
+import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
+import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
+import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.ext.typographic.TypographicExtension;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.superscript.SuperscriptExtension;
+import com.vladsch.flexmark.util.options.MutableDataHolder;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,8 +46,8 @@ public class Document implements Comparable<Document> {
     /** The modification date of the document. */
     private LocalDateTime modified;
 
-    /** Document type: Is the document a blog post (true) or a simple page (false). */
-    private boolean blog;
+    /** Document type: Is the document a blog post or a simple page. */
+    private DocumentType type;
 
     /** The content of the document. */
     private final StringBuilder content;
@@ -51,15 +61,30 @@ public class Document implements Comparable<Document> {
     /** A list that contains the categories of the document. */
     private final List<Category> categories;
 
-    /** A Markdown processor to transform the content from Markdown to HTML. */
-    private static final PegDownProcessor PROCESSOR;
+    /** A parser to parse the Markdown content. */
+    private static final Parser PARSER;
+
+    /** A renderer to render the parsed Markdown to HTML. */
+    private static final HtmlRenderer RENDERER;
 
 
     /**
-     * Static initializer, initialize the Markdown processor.
+     * Static initializer, initialize the static Markdown parser and renderer.
      */
     static {
-        PROCESSOR = new PegDownProcessor();
+        final MutableDataHolder options = new MutableDataSet()
+                .set(TablesExtension.COLUMN_SPANS, false)
+                .set(TablesExtension.APPEND_MISSING_COLUMNS, true)
+                .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
+                .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true)
+                .set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(),
+                                                        StrikethroughSubscriptExtension.create(),
+                                                        SuperscriptExtension.create(),
+                                                        AutolinkExtension.create(),
+                                                        TaskListExtension.create(),
+                                                        TypographicExtension.create()));
+        PARSER = Parser.builder(options).build();
+        RENDERER = HtmlRenderer.builder(options).build();
     }
 
 
@@ -77,7 +102,7 @@ public class Document implements Comparable<Document> {
         this.title = "";
         this.created = LocalDateTime.MIN;
         this.modified = LocalDateTime.MIN;
-        this.blog = true;
+        this.type = DocumentType.POST;
         this.content = new StringBuilder();
         this.previous = "";
         this.next = "";
@@ -182,28 +207,20 @@ public class Document implements Comparable<Document> {
     /**
      * Getter for the document type (blog post or simple page).
      *
-     * @return Document type; true = blog post, false = simple page
+     * @return The type of the document
      */
-    public boolean isBlog() {
-        return blog;
+    public DocumentType getType() {
+        return type;
     }
 
 
     /**
      * Setter for the document type (blog post or simple page).
      *
-     * @param blog Document type; true = blog post, false = simple page
+     * @param type The type of the document
      */
-    protected void setBlog(final boolean blog) {
-        this.blog = blog;
-    }
-
-
-    /**
-     * Setter for the document type - changes the document type to simple page.
-     */
-    public void setNoBlog() {
-        this.blog = false;
+    public void setType(final DocumentType type) {
+        this.type = type;
     }
 
 
@@ -223,7 +240,7 @@ public class Document implements Comparable<Document> {
      * @return Content of the document as HTML
      */
     public String getContentAsHtml() {
-        return PROCESSOR.markdownToHtml(getContent());
+        return RENDERER.render(PARSER.parse(getContent()));
     }
 
 
@@ -326,7 +343,8 @@ public class Document implements Comparable<Document> {
 
 
     /**
-     * Compare the Document to another document (used to sort lists).
+     * Compare the Document to another document (used to sort lists). The comparison is
+     * done on the creation date of the documents. The order is newest first to oldest last.
      *
      * @param other The document to which this document is compared
      * @return The result of the comparison
@@ -364,14 +382,14 @@ public class Document implements Comparable<Document> {
 
 
     /**
-     * Custom implementation of hashCode(), uses Objects.hash().
+     * Custom implementation of hashCode(), implemented by using Objects.hash().
      *
      * @return The calculated hash code
      */
     @Override
     public int hashCode() {
         return Objects.hash(file, path, toBaseDir, title, created, modified,
-                blog, content, previous, next, categories);
+                type, content, previous, next, categories);
     }
 
 }

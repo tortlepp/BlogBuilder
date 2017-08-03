@@ -1,7 +1,8 @@
-package eu.ortlepp.blogbuilder.tools;
+package eu.ortlepp.blogbuilder.util;
+
+import eu.ortlepp.blogbuilder.util.config.Config;
 
 import java.nio.file.Path;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +36,7 @@ public final class Tools {
      * @return The content with changed links
      */
     public static String makeLinksAbsolute(final String content) {
-        String baseurl = Config.getInstance().getBaseUrl();
+        String baseurl = Config.INSTANCE.getBaseUrl();
         if (!baseurl.endsWith("/")) {
             baseurl += "/";
         }
@@ -80,16 +81,16 @@ public final class Tools {
      * @return The extracted filename; or "unknown" if path is not valid
      */
     public static String getFilenameFromPath(final Path path) {
-        final Optional<Path> optional = Optional.ofNullable(path.getFileName());
-        return optional.isPresent() ? optional.get().toString() : "unknown";
+        final Path filename = path.getFileName();
+        return filename == null ? "unknown" : filename.toString() ;
     }
 
 
     /**
-     * Private constructor for tool class - without any functionality.
+     * Private constructor for tool class - should never be called.
      */
     private Tools() {
-        /* Nothing happens here... */
+        throw new AssertionError();
     }
 
 }

@@ -20,7 +20,7 @@ public class DateModel implements TemplateDateModel {
 
     /**
      * Constructor, initialize the date and time value by converting the LocalDateTime to Date. The conversion is
-     * necessary because Freemarker does not support LocalDateTime so far.
+     * necessary because FreeMarker does not support LocalDateTime (from Java 8) so far.
      *
      * @param datetime The date and time value
      */
