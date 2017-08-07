@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -75,6 +77,7 @@ public final class Window extends JFrame {
         setSize(600, 300);
         setResizable(false);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new CloseListener());
 
         /* Center the window */
         final int xPos = (int) Toolkit.getDefaultToolkit().getScreenSize().width / 2 - (int) getSize().width / 2;
@@ -188,6 +191,10 @@ public final class Window extends JFrame {
     }
 
 
+
+
+
+
     /**
      * The ActionListener for the "Select a project..." button. Opens either an existing project
      * or prepares the initialization of a new project.
@@ -281,6 +288,21 @@ public final class Window extends JFrame {
         @Override
         public void actionPerformed(final ActionEvent event) {
             controller.runBuild();
+        }
+    }
+
+
+    /**
+     * Extended WindowAdapter to trigger the saving of the currently opened project.
+     *
+     * @author Thorsten Ortlepp
+     */
+    private class CloseListener extends WindowAdapter {
+
+        @Override
+        public void windowClosing(final WindowEvent event) {
+            super.windowClosing(event);
+            controller.saveProject();
         }
     }
 
