@@ -1,6 +1,8 @@
 package eu.ortlepp.blogbuilder.gui;
 
 import eu.ortlepp.blogbuilder.BlogBuilder;
+import eu.ortlepp.blogbuilder.action.Build;
+import eu.ortlepp.blogbuilder.action.Initialize;
 
 import java.io.Serializable;
 import java.util.prefs.Preferences;
@@ -9,6 +11,7 @@ import java.util.prefs.Preferences;
  * The controller for the GUI window. Manages all actions triggered in the GUI.
  *
  * @author Thorsten Ortlepp
+ * @since 0.8
  */
 class Controller implements Serializable {
 
@@ -69,21 +72,25 @@ class Controller implements Serializable {
 
 
     /**
-     * Run the initialization action.
+     * Run the initialization action. The action runs in a separate thread. The action is only
+     * started when a project was opened before.
      */
     public void runInitialization() {
         if (!project.isEmpty()) {
-            System.out.println("INIT...");
+            final Runnable task = () -> { new Initialize(project).run(); };
+            new Thread(task).start();
         }
     }
 
 
     /**
-     * Run the build action.
+     * Run the build action. The action runs in a separate thread. The action is only started
+     * when a project was opened before.
      */
     public void runBuild() {
         if (!project.isEmpty()) {
-            System.out.println("BUILD...");
+            final Runnable task = () -> { new Build(project).run(); };
+            new Thread(task).start();
         }
     }
 

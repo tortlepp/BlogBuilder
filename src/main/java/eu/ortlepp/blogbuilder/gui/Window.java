@@ -3,7 +3,6 @@ package eu.ortlepp.blogbuilder.gui;
 import eu.ortlepp.blogbuilder.BlogBuilder;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -21,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -33,6 +31,7 @@ import javax.swing.border.EmptyBorder;
  * A simple GUI for BlogBuilder. Makes all actions available in one GUI window.
  *
  * @author Thorsten Ortlepp
+ * @since 0.8
  */
 public final class Window extends JFrame {
 
@@ -43,7 +42,7 @@ public final class Window extends JFrame {
     final Controller controller;
 
     /** Text area to show logging messages. */
-    private JTextArea console;
+    JLoggingTextArea console;
 
     /** Status bar to show status messages. */
     private JLabel status;
@@ -74,7 +73,7 @@ public final class Window extends JFrame {
     private void initWindow() {
         /* Window properties */
         setTitle("BlogBuilder " + BlogBuilder.VERSION);
-        setSize(600, 300);
+        setSize(800, 300);
         setResizable(false);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new CloseListener());
@@ -146,12 +145,8 @@ public final class Window extends JFrame {
      * @return The ScrollPane which contains the initialized logging console
      */
     private JScrollPane createConsole() {
-        console = new JTextArea();
-        console.setFont(new Font(Font.MONOSPACED, Font.PLAIN, console.getFont().getSize()));
-        console.setLineWrap(true);
-        console.setWrapStyleWord(true);
-        console.setEditable(false);
-        console.setText("Logging messages...");
+        console = new JLoggingTextArea();
+        console.setText("");
         final JScrollPane scrollConsole = new JScrollPane(console);
         scrollConsole.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollConsole.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -272,6 +267,7 @@ public final class Window extends JFrame {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
+            console.setText("");
             controller.runInitialization();
         }
     }
@@ -287,6 +283,7 @@ public final class Window extends JFrame {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
+            console.setText("");
             controller.runBuild();
         }
     }
