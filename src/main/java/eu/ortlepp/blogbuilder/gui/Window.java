@@ -3,6 +3,7 @@ package eu.ortlepp.blogbuilder.gui;
 import eu.ortlepp.blogbuilder.BlogBuilder;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -11,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -47,6 +49,18 @@ public final class Window extends JFrame {
     /** Status bar to show status messages. */
     private JLabel status;
 
+    /** Button to open a project. */
+    private JButton btnOpenProject;
+
+    /** Button to start the initialization action on the currently opened project. */
+    private JButton btnActionInit;
+
+    /** Button to start the build action on the currently opened project. */
+    private JButton btnActionBuild;
+
+    /** Indicator for the GUI status: true = GUI locked, false = GUI not locked. */
+    boolean locked;
+
 
     /**
      * Constructor, initializes the window and its controller.
@@ -54,6 +68,7 @@ public final class Window extends JFrame {
     public Window() {
         super();
         controller = new Controller();
+        locked = false;
 
         /* Try to set System Look and Feel */
         try {
@@ -64,6 +79,7 @@ public final class Window extends JFrame {
         }
 
         initWindow();
+        new Thread(new Unlocker()).start();
     }
 
 
@@ -91,7 +107,8 @@ public final class Window extends JFrame {
         final JPanel projectPanel = new JPanel();
         projectPanel.setBorder(BorderFactory.createTitledBorder("Project"));
         projectPanel.setLayout(new GridLayout(0, 1));
-        projectPanel.add(createButton("Select a project...", new SelectListener()));
+        btnOpenProject = new JButton("Select a project...");
+        projectPanel.add(createButton(btnOpenProject, new SelectListener()));
 
         /* Container for actions (buttons) */
         final JPanel actionPanel = new JPanel();
@@ -99,8 +116,10 @@ public final class Window extends JFrame {
         actionPanel.setLayout(new GridLayout(0, 1));
 
         /* Add buttons to container */
-        actionPanel.add(createButton("Initialize a new project", new InitializeListener()));
-        actionPanel.add(createButton("Build an existing project", new BuildListener()));
+        btnActionInit = new JButton("Initialize a new project");
+        actionPanel.add(createButton(btnActionInit, new InitializeListener()));
+        btnActionBuild = new JButton("Build an existing project");
+        actionPanel.add(createButton(btnActionBuild, new BuildListener()));
 
         /* Put project selection and actions into a container */
         final JPanel leftPanel = new JPanel();
@@ -123,16 +142,15 @@ public final class Window extends JFrame {
 
 
     /**
-     * Initialize a button. The button is wrapped in a panel.
+     * Create a button. The button is wrapped in a panel.
      *
-     * @param caption The caption of the button
+     * @param button The button to initialize
      * @param listener The ActionListener that is connected with the button
      * @return The initialized button (wrapped in a panel)
      */
-    private JPanel createButton(final String caption, final ActionListener listener) {
+    private JPanel createButton(final JButton button, final ActionListener listener) {
         final JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        final JButton button = new JButton(caption);
         button.addActionListener(listener);
         panel.add(button);
         return panel;
@@ -179,6 +197,30 @@ public final class Window extends JFrame {
 
 
     /**
+     * Locks the GUI. No further action can be triggered when the GUI is locked.
+     */
+    void lockGui() {
+        locked = true;
+        setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        btnOpenProject.setEnabled(false);
+        btnActionInit.setEnabled(false);
+        btnActionBuild.setEnabled(false);
+    }
+
+
+    /**
+     * Unlocks the GUI. All actions can be triggered when the GUI is unlocked.
+     */
+    void unlockGui() {
+        btnOpenProject.setEnabled(true);
+        btnActionInit.setEnabled(true);
+        btnActionBuild.setEnabled(true);
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        locked = false;
+    }
+
+
+    /**
      * Show the window.
      */
     public void showWindow() {
@@ -195,6 +237,7 @@ public final class Window extends JFrame {
      * or prepares the initialization of a new project.
      *
      * @author Thorsten Ortlepp
+     * @since 0.8
      */
     private class SelectListener implements ActionListener {
 
@@ -262,11 +305,13 @@ public final class Window extends JFrame {
      * the currently selected directory.
      *
      * @author Thorsten Ortlepp
+     * @since 0.8
      */
     private class InitializeListener implements ActionListener {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
+            lockGui();
             console.setText("");
             controller.runInitialization();
         }
@@ -278,11 +323,13 @@ public final class Window extends JFrame {
      * currently opened project.
      *
      * @author Thorsten Ortlepp
+     * @since 0.8
      */
     private class BuildListener implements ActionListener {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
+            lockGui();
             console.setText("");
             controller.runBuild();
         }
@@ -293,6 +340,7 @@ public final class Window extends JFrame {
      * Extended WindowAdapter to trigger the saving of the currently opened project.
      *
      * @author Thorsten Ortlepp
+     * @since 0.8
      */
     private class CloseListener extends WindowAdapter {
 
@@ -300,6 +348,32 @@ public final class Window extends JFrame {
         public void windowClosing(final WindowEvent event) {
             super.windowClosing(event);
             controller.saveProject();
+        }
+    }
+
+
+    /**
+     * A thread that unlocks the GUI as soon as the action
+     * (in the controller) is finished.
+     *
+     * @author Thorsten Ortlepp
+     * @since 0.8
+     */
+    private class Unlocker implements Runnable {
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    if (locked && !controller.isActive()) {
+                        unlockGui();
+                    }
+
+                    TimeUnit.MILLISECONDS.sleep(300);
+                }
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 

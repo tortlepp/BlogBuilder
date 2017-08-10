@@ -1,6 +1,7 @@
 package eu.ortlepp.blogbuilder.gui;
 
 import eu.ortlepp.blogbuilder.BlogBuilder;
+import eu.ortlepp.blogbuilder.action.Action;
 import eu.ortlepp.blogbuilder.action.Build;
 import eu.ortlepp.blogbuilder.action.Initialize;
 
@@ -27,6 +28,9 @@ class Controller implements Serializable {
     /** The project that is currently opened. Empty if no project is opened. */
     private String project;
 
+    /** Indicator for activity. Is false if no action is in progress and true if an action is in progress. */
+    boolean active;
+
 
     /**
      * Constructor, initializes the controller. If a project was opened before, it is restored.
@@ -34,6 +38,7 @@ class Controller implements Serializable {
     public Controller() {
         final Preferences preferences = Preferences.userRoot().node(CONFIG_NODE);
         project = preferences.get(KEY_LAST, "");
+        active = false;
     }
 
 
@@ -72,13 +77,23 @@ class Controller implements Serializable {
 
 
     /**
+     * Returns the current status of activity. Returns false if no action is in progress
+     * and true if an action is in progress.
+     *
+     * @return The current status of activity
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+
+    /**
      * Run the initialization action. The action runs in a separate thread. The action is only
      * started when a project was opened before.
      */
     public void runInitialization() {
         if (!project.isEmpty()) {
-            final Runnable task = () -> { new Initialize(project).run(); };
-            new Thread(task).start();
+            runAction(new RunAction(new Initialize(project)));
         }
     }
 
@@ -89,8 +104,51 @@ class Controller implements Serializable {
      */
     public void runBuild() {
         if (!project.isEmpty()) {
-            final Runnable task = () -> { new Build(project).run(); };
-            new Thread(task).start();
+            runAction(new RunAction(new Build(project)));
+        }
+    }
+
+
+    /**
+     * Run an action. The action will run in a separate thread.
+     *
+     * @param action The action to run
+     */
+    private void runAction(final RunAction action) {
+        active = true;
+        new Thread(action).start();
+    }
+
+
+
+
+
+
+    /**
+     * Runner for actions. Run an action as Runnable.
+     *
+     * @author Thorsten Ortlepp
+     * @since 0.8
+     */
+    private class RunAction implements Runnable {
+
+        /** The action to run. */
+        private final Action action;
+
+        /**
+         * Initialize the runner.
+         *
+         * @param action The action to run
+         */
+        public RunAction(final Action action) {
+            super();
+            this.action = action;
+        }
+
+        @Override
+        public void run() {
+            action.run();
+            active = false;
         }
     }
 
