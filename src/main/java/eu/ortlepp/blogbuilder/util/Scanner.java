@@ -90,8 +90,21 @@ public final class Scanner extends SimpleFileVisitor<Path> {
             final Document document = readFile(file);
 
             if (document.isValidDocument()) {
-                files.add(document);
-                LOGGER.info(String.format("Found %s (%s)", Tools.getFilenameFromPath(file), document.getTitle()));
+
+                /* Creation date in the future = draft */
+                if (document.getCreated().isAfter(LocalDateTime.now())) {
+                    LOGGER.info(String.format("Draft %s (%s) ignored",
+                            Tools.getFilenameFromPath(file), document.getTitle()));
+
+                } else {
+                    files.add(document);
+                    LOGGER.info(String.format("Found %s (%s)",
+                            Tools.getFilenameFromPath(file), document.getTitle()));
+                }
+
+            } else {
+                LOGGER.warning(String.format("File %s is not valid and will be ignored",
+                        Tools.getFilenameFromPath(file)));
             }
         }
 

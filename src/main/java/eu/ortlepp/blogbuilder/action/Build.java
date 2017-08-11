@@ -67,6 +67,7 @@ public final class Build implements Action {
             new ResourceCopy(directory.toString()).copyResources();
             new FeedCreator(blogposts, directory.toString()).createFeed();
             new SitemapCreator(directory.toString()).createSitemap(blogposts, pages);
+            LOGGER.info("Build finished");
 
         } else {
             LOGGER.severe(String.format("Directory %s does not exist, build aborted", directory.getFileName()));
