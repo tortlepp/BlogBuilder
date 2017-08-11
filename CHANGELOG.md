@@ -3,6 +3,8 @@ All notable changes to BlogBuilder are documented in this file. The format is ba
 
 
 ## [Unreleased]
+### Added
+- Added a GUI and parameter `--gui`
 
 
 ## [0.6] - 2017-08-03

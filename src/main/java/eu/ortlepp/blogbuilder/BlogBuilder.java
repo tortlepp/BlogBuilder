@@ -1,6 +1,7 @@
 package eu.ortlepp.blogbuilder;
 
 import eu.ortlepp.blogbuilder.action.Build;
+import eu.ortlepp.blogbuilder.action.Gui;
 import eu.ortlepp.blogbuilder.action.Initialize;
 import eu.ortlepp.blogbuilder.model.Parameter;
 
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 public final class BlogBuilder {
 
     /** The current version of the application. */
-    private static final String VERSION = "0.6";
+    public static final String VERSION = "0.6";
 
     /** A logger to write out messages to the user. */
     private static final Logger LOGGER = Logger.getLogger(BlogBuilder.class.getName());
@@ -81,6 +82,10 @@ public final class BlogBuilder {
             } else {
                 new Build(optional).run();
             }
+
+        } else if (Parameter.GUI.toString().equalsIgnoreCase(action)) {
+            /* Initialize and show the GUI */
+            new Gui().run();
 
         } else {
             /* Action is validated before, this error should never happen */

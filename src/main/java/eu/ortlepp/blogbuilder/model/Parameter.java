@@ -11,7 +11,10 @@ public enum Parameter {
     BUILD("--build", "<DIRECTORY>" , "Build the project in <DIRECTORY>"),
 
     /** Parameter to initialize a project. */
-    INITIALIZE("--init", "<DIRECTORY>", "Initialize a new project in <DIRECTORY>");
+    INITIALIZE("--init", "<DIRECTORY>", "Initialize a new project in <DIRECTORY>"),
+
+    /** Parameter to start the program in GUI mode. */
+    GUI("--gui", "", "Show the graphical interface");
 
 
     /** The name of the parameter. */
