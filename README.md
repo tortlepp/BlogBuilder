@@ -38,4 +38,3 @@ BlogBuilder uses some 3rd party libraries:
 License
 =======
 BlogBuilder is developed and distributed under the terms of the MIT License. See [LICENSE.md](LICENSE.md) for more details.
-
