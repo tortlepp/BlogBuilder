@@ -1,0 +1,14 @@
+BlogBuilder
+===========
+BlogBuilder is a generator for static blogs written in Java. 
+The blog posts are written in Markdown and FreeMarker templates are used to generate the website. 
+The creation of BlogBuilder was inspired by JBake.
+
+
+Links
+=====
+
+* Project Website: https://ortlepp.eu/projects/blogbuilder.html
+* Original Git Repository: https://git.ortlepp.eu/stagit/blogbuilder
+* Download Releases: https://files.ortlepp.eu/blogbuilder/
+
